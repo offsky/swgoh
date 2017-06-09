@@ -423,28 +423,33 @@
 				$("#cur_shards").show();
 				$("#star_section").show();
 			}
-			var remain = 0;
+			var remain5 = 0;
+			var remain6 = 0;
+			var remain7 = 0;
 			if(stars==6) {
 				$('#star_max').html("100");
 				$('#star_total').html("1,000,000");
 				$('#ss7').html(100-shards);
-				remain = 100-shards;
-				$('#shard_total').html(remain);
+				remain7 = 100-shards;
+				$('#shard_total').html(remain7);
 			} else if(stars==5) {
 				$('#star_max').html("85");
 				$('#star_total').html("1,500,000");
 				$('#ss7').html(100);
 				$('#ss6').html(85-shards);
-				remain = 185-shards;
-				$('#shard_total').html(remain);
+				remain7 = 185-shards;
+				remain6 = remain7-100;
+				$('#shard_total').html(remain7);
 			} else if(stars==4) {
 				$('#star_max').html("65");
 				$('#star_total').html("1,750,000");
 				$('#ss7').html(100);
 				$('#ss6').html(85);
 				$('#ss5').html(65-shards);
-				remain = 250-shards;
-				$('#shard_total').html(remain);
+				remain7 = 250-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
 			} else if(stars==3) {
 				$('#star_max').html("30");
 				$('#star_total').html("1,850,000");
@@ -452,8 +457,10 @@
 				$('#ss6').html(85);
 				$('#ss5').html(65);
 				$('#ss4').html(30-shards);
-				remain = 280-shards;
-				$('#shard_total').html(remain);
+				remain7 = 280-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
 			} else if(stars==2) {
 				$('#star_max').html("25");
 				$('#star_total').html("1,870,000");
@@ -462,8 +469,10 @@
 				$('#ss5').html(65);
 				$('#ss4').html(30);
 				$('#ss3').html(25-shards);
-				remain = 305-shards;
-				$('#shard_total').html(remain);
+				remain7 = 305-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
 			} else if(stars==1) {
 				$('#star_max').html("15");
 				$('#star_total').html("1,880,000");
@@ -473,8 +482,10 @@
 				$('#ss4').html(30);
 				$('#ss3').html(25);
 				$('#ss2').html(15-shards);
-				remain = 320-shards;
-				$('#shard_total').html(remain);
+				remain7 = 320-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
 			} else {
 				$('#star_max').html("10");
 				$('#star_total').html("1,880,100");
@@ -485,8 +496,10 @@
 				$('#ss3').html(25);
 				$('#ss2').html(15);
 				$('#ss1').html(10-shards);
-				remain = 330-shards;
-				$('#shard_total').html(remain);
+				remain7 = 330-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
 			}
 
 			$('#star_data').show();
@@ -499,10 +512,10 @@
 			if(stars>=2) $('#sl2').hide();
 			if(stars>=1) $('#sl1').hide();
 
-			updateShardLocations(remain);
+			updateShardLocations(remain5,remain6,remain7);
 		}
 
-		function updateShardLocations(shards) {
+		function updateShardLocations(shards5,shards6,shards7) {
 			$('#shard_data').html("<b>Shard Farming</b><br />");
 			
 			var guild_store = $("#"+selected).data('gs');
@@ -553,7 +566,9 @@
 			if(hard) perday+=hard;
 			
 			$('#shard_summary').html("~"+perday+" shards per day possible<br />");
-			$('#shard_summary').append("~"+Math.ceil(shards/perday)+" days of farming<br />");
+			if(shards5) $('#shard_summary').append("~"+Math.ceil(shards5/perday)+" days of farming to 5&#9733;<br />");
+			if(shards6) $('#shard_summary').append("~"+Math.ceil(shards6/perday)+" days of farming to 6&#9733;<br />");
+			if(shards7) $('#shard_summary').append("~"+Math.ceil(shards7/perday)+" days of farming to 7&#9733;<br />");
 		}
 
 		function updateGear() {
