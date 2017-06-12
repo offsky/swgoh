@@ -593,7 +593,7 @@
 			if(gw_store) perday+=15;
 			
 			var refreshes = parseInt($('#cantina_refresh').val());
-			perday+=Math.ceil((120*(1+refreshes))/(cantina*4));
+			perday+=Math.ceil((120*(1+refreshes)+45)/(cantina*4)); //assumes 25% drop rate (thats the 4)
 			// if(cantina==8) perday+=12;
 			// if(cantina==10) perday+=9;
 			// if(cantina==12) perday+=7;
