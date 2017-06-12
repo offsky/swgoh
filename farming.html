@@ -568,7 +568,8 @@
 
 			/*
 			Guild Store
-				2 shards/day guestimate based on random appearances
+				3 shards/day guestimate based on random appearances
+				https://docs.google.com/spreadsheets/d/1Q-UyeOukxolBDsVXqpKcpwyd1tI6awdZWqx5Re4bl3o/htmlview#
 			Cantina Battles 
 				(120 energy per day) Assumes 25% drop rate + 120/refresh
 				8e = 45 battles = 12 shards/day (585 credits)
@@ -590,19 +591,17 @@
 			*/
 
 			var perday = 0;
-			if(guild_store) perday+=2; //guestimate based on random appearances
+			if(guild_store) perday+=3; //https://docs.google.com/spreadsheets/d/1Q-UyeOukxolBDsVXqpKcpwyd1tI6awdZWqx5Re4bl3o/htmlview#
 			if(cantina_store) perday+=7;
 			if(arena_store) perday+=10;
 			if(fleet_store) perday+=2;
 			if(gw_store) perday+=15;
 			
-			var refreshes = parseInt($('#cantina_refresh').val());
-			if(isNaN(refreshes)) refreshes = 0;
-			perday+=Math.ceil((120*(1+refreshes)+45)/(cantina*4)); //assumes 25% drop rate (thats the 4)
-			// if(cantina==8) perday+=12;
-			// if(cantina==10) perday+=9;
-			// if(cantina==12) perday+=7;
-			// if(cantina==16) perday+=5;
+			if(cantina>0) {
+				var refreshes = parseInt($('#cantina_refresh').val());
+				if(isNaN(refreshes)) refreshes = 0;
+				perday+=Math.ceil((120*(1+refreshes)+45)/(cantina*4)); //assumes 25% drop rate (thats the 4)
+			}
 
 			if(hard) perday+=hard;
 			
