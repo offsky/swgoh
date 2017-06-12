@@ -597,6 +597,7 @@
 			if(gw_store) perday+=15;
 			
 			var refreshes = parseInt($('#cantina_refresh').val());
+			if(isNaN(refreshes)) refreshes = 0;
 			perday+=Math.ceil((120*(1+refreshes)+45)/(cantina*4)); //assumes 25% drop rate (thats the 4)
 			// if(cantina==8) perday+=12;
 			// if(cantina==10) perday+=9;
@@ -616,6 +617,7 @@
 			var gg = gear[selected];
 
 			var current_gear = parseInt($('#current_gear').val());
+			if(isNaN(current_gear)) current_gear = 0;
 			store("gear_"+selected,current_gear);
 
 			var gs1 = $('#gs1:checked').length;
@@ -684,6 +686,7 @@
 				if(loc[0].indexOf("Challenge")>=0) minDays += Math.ceil(coll[key].num/10);//average 10 per day from challenges
 			});
 			var refreshes = parseInt($('#hard_refresh').val());
+			if(isNaN(refreshes)) refreshes = 0;
 			var crystals = 420+(120*refreshes);
 			var days = Math.ceil(total/crystals);
 			if(minDays>days) days = minDays;
