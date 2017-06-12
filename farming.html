@@ -238,6 +238,12 @@
 		$('#current_shards').on("keyup",updateStars);
 		$('#current_gear').on("change",updateGear);
 		$('#current_gear').on("keyup",updateGear);
+		$('#hard_refresh').on("change",updateGear);
+		$('#hard_refresh').on("keyup",updateGear);
+		
+		$('#cantina_refresh').on("change",updateStars);
+		$('#cantina_refresh').on("keyup",updateStars);
+
 		$('#gs1').on("change",updateGear);
 		$('#gs2').on("change",updateGear);
 		$('#gs3').on("change",updateGear);
@@ -560,7 +566,7 @@
 			Guild Store
 				2 shards/day guestimate based on random appearances
 			Cantina Battles 
-				(360 energy per day) Assumes 25% drop rate
+				(120 energy per day) Assumes 25% drop rate + 120/refresh
 				8e = 45 battles = 12 shards/day (585 credits)
 				10e = 36 battles = 9 shards/day (612 credits)
 				12e = 30 battles = 7 shards/day (630 credits)
@@ -585,10 +591,14 @@
 			if(arena_store) perday+=10;
 			if(fleet_store) perday+=2;
 			if(gw_store) perday+=15;
-			if(cantina==8) perday+=12;
-			if(cantina==10) perday+=9;
-			if(cantina==12) perday+=7;
-			if(cantina==16) perday+=5;
+			
+			var refreshes = parseInt($('#cantina_refresh').val());
+			perday+=Math.ceil((120*(1+refreshes))/(cantina*4));
+			// if(cantina==8) perday+=12;
+			// if(cantina==10) perday+=9;
+			// if(cantina==12) perday+=7;
+			// if(cantina==16) perday+=5;
+
 			if(hard) perday+=hard;
 			
 			$('#shard_summary').html("~"+perday+" shards per day possible<br />");
@@ -669,7 +679,9 @@
 				if(loc[0]=="Raid Only") raid = "+ several raids";
 				if(loc[0].indexOf("Challenge")>=0) minDays += Math.ceil(coll[key].num/10);//average 10 per day from challenges
 			});
-			var days = Math.ceil(total/660);
+			var refreshes = parseInt($('#hard_refresh').val());
+			var crystals = 420+(120*refreshes);
+			var days = Math.ceil(total/crystals);
 			if(minDays>days) days = minDays;
 
 			$('#g'+g).append("<div class='summary red'>Estimated Energy Required: "+total.toLocaleString()+"<br />Estimated Days Farming: "+days+" "+raid+"</div>");
@@ -757,6 +769,9 @@
 					&nbsp;&nbsp;<input type="checkbox" id="gs5" value="5" /><br />
 					<input type="checkbox" id="gs6" value="6" /><br />
 				</div>
+				<br />
+				Hard Battle Refreshes: <input type="text" size="3" id="hard_refresh" value="2" /> / day<br />
+				Cantina Refreshes:  <input type="text" size="3" id="cantina_refresh" value="2" /> / day<br />
 			</div>
 		</div>
 
