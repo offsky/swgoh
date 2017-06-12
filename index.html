@@ -1,9 +1,65 @@
 <html>
 <head>
 	<title>SWGOH Tools</title>
+  <style>
+  body {
+    padding:0;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    flex-wrap:nowrap;
+  }
+  #top {
+    height:90px;
+    flex:0 0 auto;
+    background-color: #41432b;
+    background-image: url("logo.png");
+    background-repeat: no-repeat;
+    padding-left:200px;
+    z-index: 1;
+  }
+  #middle {
+    flex:1 1 auto;
+    background-color: #fff;
+    padding:20px;
+  }
+  .swgoh_ad {
+    position: absolute;
+    left:0;
+    top:90px;
+    width:0;
+    height:0px;
+  }
+  #ad {
+    width:100%;
+    height:60px;
+  }
+  @media(min-width: 600px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
+  @media(min-width: 800px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
+  @media(min-width: 1000px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
+  @media(min-width: 1300px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
+
+  </style>
 </head>
 <body>
-<h1>SWGOH.LIFE</h1>
+  <div id="top">
+  <div id="ad">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- Swgoh.life -->
+  <ins class="adsbygoogle swgoh_ad"
+       style="display:block"
+       data-ad-client="ca-pub-0176506581219642"
+       data-ad-slot="9855290481"
+       data-ad-format="horizontal"></ins>
+  <script>
+  //https://support.google.com/adsense/answer/6307124
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+    </div>
+
+</div>
+<div id="middle">
+
 <p>A collection of useful tools and resources for people playing <a href="https://www.ea.com/games/starwars/galaxy-of-heroes">Star Wars&trade; Galaxy of Heroes</a></p>
 
 <h1>Tools</h1>
@@ -31,6 +87,7 @@ A tool that shows you the best way to farm a toon's shards and gear and gives an
 
 <br /><br /><br /><br /><hr />
 SWGOH.GG is not affiliated with EA, EA Capital Games, Disney or Lucasfilm LTD.
+</div>
 
 </body>
 </html>
