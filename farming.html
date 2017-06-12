@@ -6,34 +6,43 @@
 	body {
 		padding:0;
 		margin:0;
-		min-width:1000px;
-		overflow: hidden;
+		display:flex;
+		flex-direction:column;
+		flex-wrap:nowrap;
+	}
+	#top {
+		height:90px;
+		flex:0 0 auto;
+		background-color: #41432b;
+		background-image: url("logo.png");
+		background-repeat: no-repeat;
+		padding-left:200px;
+		z-index: 1;
+	}
+	#middle {
+		flex:1 1 auto;
+		display:flex;
+		flex-direction:row;
+		flex-wrap:nowrap;
+		z-index: 100000;
+		background-color: #fff;
 	}
 	#col1 {
-		float:left;
 		border-right:1px solid black;
-		height:100%;
-		overflow-x: hidden;
-		overflow-y: auto;
+		overflow: hidden;
 		background-color: #efefef;
-		max-width: 200px;
+		min-width: 200px;
+		max-width: 250px;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 	}
 	#col2 {
-		float:left;
 		border-right:1px solid black;
-		height:100%;
-		overflow-x: hidden;
-		overflow-y: auto;
+		overflow: hidden;
+		min-width: 250px;
 		max-width: 300px;
 	}
 	#col3 {
-		float:left;
-		height:100%;
-		overflow-x: hidden;
-		overflow-y: auto;
-		max-width: 500px;
 	}
 	#col1 h1 {
  		padding:6px;
@@ -186,6 +195,22 @@
  	.red {
  		color:#800;
  	}
+
+  	.swgoh_ad {
+ 		position: absolute;
+ 		left:0;
+ 		top:90px;
+ 		width:0;
+ 		height:0px;
+ 	}
+ 	#ad {
+ 		width:100%;
+ 		height:60px;
+ 	}
+	@media(min-width: 600px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
+	@media(min-width: 800px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
+	@media(min-width: 1000px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
+	@media(min-width: 1300px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
 </style>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 <script>
@@ -594,7 +619,11 @@
 			$('.g_lvl').html("").hide();
 
 			var total = 0;
+			var total11 = 0;
+			var total10 = 0;
 			var days = 0;
+			var days11 = 0;
+			var days10 = 0;
 			for(var g=current_gear;g<12;g++) {
 				if(gg[g]) {
 					var coll = [];
@@ -607,9 +636,20 @@
 					var subtotal = printGear(g,coll);
 					total += subtotal[0];
 					days += subtotal[1];
+					if(g<11) {
+						total11 += subtotal[0];
+						days11 += subtotal[1];
+					}
+					if(g<10) {
+						total10 += subtotal[0];
+						days10 += subtotal[1];
+					}
 				}
 			}
-			$('#gear_total').html("Estimated Energy Required: "+total.toLocaleString()+"<br />Estimated Days Farming: "+days+" + several raids");
+			$('#gear_total').html("Estimated Energy Spend/Days Required<br />");
+			$('#gear_total').append("Gear 10: ~"+total10.toLocaleString()+" energy. ~"+days10+" days<br />");
+			$('#gear_total').append("Gear 11: ~"+total11.toLocaleString()+" energy. ~"+days11+" days<br />");
+			$('#gear_total').append("Max Gear: ~"+total.toLocaleString()+" energy. ~"+days+" days<br />");
 
 		}
 
@@ -674,93 +714,109 @@
 </script>
 </head>
 <body>
+<div id="top">
+	<div id="ad">
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!-- Swgoh.life -->
+	<ins class="adsbygoogle swgoh_ad"
+	     style="display:block"
+	     data-ad-client="ca-pub-0176506581219642"
+	     data-ad-slot="9855290481"
+	     data-ad-format="horizontal"></ins>
+	<script>
+	//https://support.google.com/adsense/answer/6307124
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+		</div>
 
-<div id="col1">
-	<h1>Step 1: Pick a Toon</h1>
-<a href='#' id='aayla-secura' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='0' class='js_toon'>Aayla Secura</a><br /><a href='#' id='admiral-ackbar' data-gs='0' data-cs='0' data-as='1' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Admiral Ackbar</a><br /><a href='#' id='ahsoka-tano' data-gs='0' data-cs='1' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='2' class='js_toon'>Ahsoka Tano</a><br /><a href='#' id='ahsoka-tano-fulcrum' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Ahsoka Tano (Fulcrum)</a><br /><a href='#' id='asajj-ventress' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Asajj Ventress</a><br /><a href='#' id='b2-super-battle-droid' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='0' class='js_toon'>B2 Super Battle Droid</a><br /><a href='#' id='barriss-offee' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='3' class='js_toon'>Barriss Offee</a><br /><a href='#' id='baze-malbus' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Baze Malbus</a><br /><a href='#' id='biggs-darklighter' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='1' data-c='10' data-h='1' class='js_toon'>Biggs Darklighter</a><br /><a href='#' id='bistan' data-gs='0' data-cs='1' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Bistan</a><br /><a href='#' id='boba-fett' data-gs='0' data-cs='1' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='3' class='js_toon'>Boba Fett</a><br /><a href='#' id='bodhi-rook' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Bodhi Rook</a><br /><a href='#' id='cad-bane' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Cad Bane</a><br /><a href='#' id='captain-phasma' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Captain Phasma</a><br /><a href='#' id='cassian-andor' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Cassian Andor</a><br /><a href='#' id='cc-2224-cody' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>CC-2224 "Cody"</a><br /><a href='#' id='chief-chirpa' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='0' class='js_toon'>Chief Chirpa</a><br /><a href='#' id='chief-nebit' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Chief Nebit</a><br /><a href='#' id='chirrut-imwe' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Chirrut Îmwe</a><br /><a href='#' id='chopper' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Chopper</a><br /><a href='#' id='clone-sergeant-phase-i' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>Clone Sergeant - Phase I</a><br /><a href='#' id='clone-wars-chewbacca' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='2' class='js_toon'>Clone Wars Chewbacca</a><br /><a href='#' id='coruscant-underworld-police' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Coruscant Underworld Police</a><br /><a href='#' id='count-dooku' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='2' class='js_toon'>Count Dooku</a><br /><a href='#' id='ct-21-0408-echo' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>CT-21-0408 "Echo"</a><br /><a href='#' id='ct-5555-fives' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>CT-5555 "Fives"</a><br /><a href='#' id='ct-7567-rex' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>CT-7567 "Rex"</a><br /><a href='#' id='darth-maul' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Darth Maul</a><br /><a href='#' id='darth-nihilus' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Darth Nihilus</a><br /><a href='#' id='darth-sidious' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Darth Sidious</a><br /><a href='#' id='darth-vader' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Darth Vader</a><br /><a href='#' id='dathcha' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='8' data-h='2' class='js_toon'>Dathcha</a><br /><a href='#' id='death-trooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='0' class='js_toon'>Death Trooper</a><br /><a href='#' id='dengar' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Dengar</a><br /><a href='#' id='director-krennic' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Director Krennic</a><br /><a href='#' id='eeth-koth' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Eeth Koth</a><br /><a href='#' id='emperor-palpatine' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Emperor Palpatine</a><br /><a href='#' id='ewok-elder' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Ewok Elder</a><br /><a href='#' id='ewok-scout' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Ewok Scout</a><br /><a href='#' id='ezra-bridger' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='8' data-h='0' class='js_toon'>Ezra Bridger</a><br /><a href='#' id='finn' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='1' class='js_toon'>Finn</a><br /><a href='#' id='first-order-officer' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>First Order Officer</a><br /><a href='#' id='first-order-stormtrooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>First Order Stormtrooper</a><br /><a href='#' id='first-order-tie-pilot' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>First Order TIE Pilot</a><br /><a href='#' id='gamorrean-guard' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Gamorrean Guard</a><br /><a href='#' id='gar-saxon' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Gar Saxon</a><br /><a href='#' id='garazeb-zeb-orrelios' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Garazeb "Zeb" Orrelios</a><br /><a href='#' id='general-grievous' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>General Grievous</a><br /><a href='#' id='general-kenobi' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>General Kenobi</a><br /><a href='#' id='general-veers' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>General Veers</a><br /><a href='#' id='geonosian-soldier' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='8' data-h='0' class='js_toon'>Geonosian Soldier</a><br /><a href='#' id='geonosian-spy' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='10' data-h='0' class='js_toon'>Geonosian Spy</a><br /><a href='#' id='grand-master-yoda' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Grand Master Yoda</a><br /><a href='#' id='grand-moff-tarkin' data-gs='0' data-cs='0' data-as='1' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Grand Moff Tarkin</a><br /><a href='#' id='greedo' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Greedo</a><br /><a href='#' id='han-solo' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Han Solo</a><br /><a href='#' id='hera-syndulla' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='0' class='js_toon'>Hera Syndulla</a><br /><a href='#' id='hk-47' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>HK-47</a><br /><a href='#' id='hoth-rebel-scout' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Hoth Rebel Scout</a><br /><a href='#' id='hoth-rebel-soldier' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Hoth Rebel Soldier</a><br /><a href='#' id='ig-100-magnaguard' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='1' class='js_toon'>IG-100 MagnaGuard</a><br /><a href='#' id='ig-86-sentinel-droid' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='10' data-h='2' class='js_toon'>IG-86 Sentinel Droid</a><br /><a href='#' id='ig-88' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>IG-88</a><br /><a href='#' id='ima-gun-di' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='2' class='js_toon'>Ima-Gun Di</a><br /><a href='#' id='imperial-super-commando' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Imperial Super Commando</a><br /><a href='#' id='jawa' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='2' class='js_toon'>Jawa</a><br /><a href='#' id='jawa-engineer' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Jawa Engineer</a><br /><a href='#' id='jawa-scavenger' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Jawa Scavenger</a><br /><a href='#' id='jedi-consular' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='10' data-h='3' class='js_toon'>Jedi Consular</a><br /><a href='#' id='jedi-knight-anakin' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='3' class='js_toon'>Jedi Knight Anakin</a><br /><a href='#' id='jedi-knight-guardian' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Jedi Knight Guardian</a><br /><a href='#' id='jyn-erso' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Jyn Erso</a><br /><a href='#' id='k-2so' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>K-2SO</a><br /><a href='#' id='kanan-jarrus' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Kanan Jarrus</a><br /><a href='#' id='kit-fisto' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='0' class='js_toon'>Kit Fisto</a><br /><a href='#' id='kylo-ren' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='0' class='js_toon'>Kylo Ren</a><br /><a href='#' id='lando-calrissian' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='0' class='js_toon'>Lando Calrissian</a><br /><a href='#' id='lobot' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Lobot</a><br /><a href='#' id='luke-skywalker' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='1' class='js_toon'>Luke Skywalker</a><br /><a href='#' id='luminara-unduli' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='3' class='js_toon'>Luminara Unduli</a><br /><a href='#' id='mace-windu' data-gs='0' data-cs='0' data-as='1' data-fs='1' data-ws='0' data-c='10' data-h='1' class='js_toon'>Mace Windu</a><br /><a href='#' id='magmatrooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Magmatrooper</a><br /><a href='#' id='mob-enforcer' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Mob Enforcer</a><br /><a href='#' id='nightsister-acolyte' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='0' class='js_toon'>Nightsister Acolyte</a><br /><a href='#' id='nightsister-initiate' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Nightsister Initiate</a><br /><a href='#' id='nute-gunray' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Nute Gunray</a><br /><a href='#' id='obi-wan-kenobi-old-ben' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='0' class='js_toon'>Obi-Wan Kenobi (Old Ben)</a><br /><a href='#' id='old-daka' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Old Daka</a><br /><a href='#' id='pao' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Pao</a><br /><a href='#' id='plo-koon' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='10' data-h='1' class='js_toon'>Plo Koon</a><br /><a href='#' id='poe-dameron' data-gs='0' data-cs='1' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='2' class='js_toon'>Poe Dameron</a><br /><a href='#' id='poggle-the-lesser' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='2' class='js_toon'>Poggle the Lesser</a><br /><a href='#' id='princess-leia' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Princess Leia</a><br /><a href='#' id='qui-gon-jinn' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Qui-Gon Jinn</a><br /><a href='#' id='r2-d2' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>R2-D2</a><br /><a href='#' id='resistance-pilot' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='1' data-c='0' data-h='0' class='js_toon'>Resistance Pilot</a><br /><a href='#' id='resistance-trooper' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Resistance Trooper</a><br /><a href='#' id='rey' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>Rey</a><br /><a href='#' id='royal-guard' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='2' class='js_toon'>Royal Guard</a><br /><a href='#' id='sabine-wren' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Sabine Wren</a><br /><a href='#' id='savage-opress' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Savage Opress</a><br /><a href='#' id='scarif-rebel-pathfinder' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='8' data-h='0' class='js_toon'>Scarif Rebel Pathfinder</a><br /><a href='#' id='shoretrooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Shoretrooper</a><br /><a href='#' id='sith-assassin' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='0' class='js_toon'>Sith Assassin</a><br /><a href='#' id='sith-trooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='0' class='js_toon'>Sith Trooper</a><br /><a href='#' id='snowtrooper' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='1' class='js_toon'>Snowtrooper</a><br /><a href='#' id='stormtrooper' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>Stormtrooper</a><br /><a href='#' id='stormtrooper-han' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Stormtrooper Han</a><br /><a href='#' id='sun-fac' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Sun Fac</a><br /><a href='#' id='talia' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='2' class='js_toon'>Talia</a><br /><a href='#' id='teebo' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='2' class='js_toon'>Teebo</a><br /><a href='#' id='tie-fighter-pilot' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='0' class='js_toon'>TIE Fighter Pilot</a><br /><a href='#' id='tusken-raider' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='16' data-h='1' class='js_toon'>Tusken Raider</a><br /><a href='#' id='tusken-shaman' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Tusken Shaman</a><br /><a href='#' id='ugnaught' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Ugnaught</a><br /><a href='#' id='wedge-antilles' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='12' data-h='0' class='js_toon'>Wedge Antilles</a><br /><a href='#' id='zam-wesell' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Zam Wesell</a><br /><br /><br />
 </div>
-<div id="col2">
-	<div id="your_section">
-		<h1>Step 2: Enter your Stats</h1>
-		<div class="space">
-			Your stats for <span id="toon_name"></span>:<br />
-			Current Level: <input type="text" size="3" id="current_level" value="1" /> / 85<br />
-			Current Stars: <input type="text" size="3" id="current_star" value="0" /> / 7<br />
-			<span id="cur_shards">Current Shards: <input type="text" size="3" id="current_shards" value="0" /> / <span id="star_max">10</span></span><br />
-			Current Gear Tier: <input type="text" size="3" id="current_gear" value="1" /> / 11<br />
+<div id="middle">
+	<div id="col1">
+		<h1>Step 1: Pick a Toon</h1>
+		<a href='#' id='aayla-secura' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='0' class='js_toon'>Aayla Secura</a><br /><a href='#' id='admiral-ackbar' data-gs='0' data-cs='0' data-as='1' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Admiral Ackbar</a><br /><a href='#' id='ahsoka-tano' data-gs='0' data-cs='1' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='2' class='js_toon'>Ahsoka Tano</a><br /><a href='#' id='ahsoka-tano-fulcrum' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Ahsoka Tano (Fulcrum)</a><br /><a href='#' id='asajj-ventress' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Asajj Ventress</a><br /><a href='#' id='b2-super-battle-droid' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='0' class='js_toon'>B2 Super Battle Droid</a><br /><a href='#' id='barriss-offee' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='3' class='js_toon'>Barriss Offee</a><br /><a href='#' id='baze-malbus' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Baze Malbus</a><br /><a href='#' id='biggs-darklighter' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='1' data-c='10' data-h='1' class='js_toon'>Biggs Darklighter</a><br /><a href='#' id='bistan' data-gs='0' data-cs='1' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Bistan</a><br /><a href='#' id='boba-fett' data-gs='0' data-cs='1' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='3' class='js_toon'>Boba Fett</a><br /><a href='#' id='bodhi-rook' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Bodhi Rook</a><br /><a href='#' id='cad-bane' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Cad Bane</a><br /><a href='#' id='captain-phasma' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Captain Phasma</a><br /><a href='#' id='cassian-andor' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Cassian Andor</a><br /><a href='#' id='cc-2224-cody' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>CC-2224 "Cody"</a><br /><a href='#' id='chief-chirpa' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='0' class='js_toon'>Chief Chirpa</a><br /><a href='#' id='chief-nebit' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Chief Nebit</a><br /><a href='#' id='chirrut-imwe' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Chirrut Îmwe</a><br /><a href='#' id='chopper' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Chopper</a><br /><a href='#' id='clone-sergeant-phase-i' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>Clone Sergeant - Phase I</a><br /><a href='#' id='clone-wars-chewbacca' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='2' class='js_toon'>Clone Wars Chewbacca</a><br /><a href='#' id='coruscant-underworld-police' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Coruscant Underworld Police</a><br /><a href='#' id='count-dooku' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='12' data-h='2' class='js_toon'>Count Dooku</a><br /><a href='#' id='ct-21-0408-echo' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>CT-21-0408 "Echo"</a><br /><a href='#' id='ct-5555-fives' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>CT-5555 "Fives"</a><br /><a href='#' id='ct-7567-rex' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>CT-7567 "Rex"</a><br /><a href='#' id='darth-maul' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Darth Maul</a><br /><a href='#' id='darth-nihilus' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Darth Nihilus</a><br /><a href='#' id='darth-sidious' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Darth Sidious</a><br /><a href='#' id='darth-vader' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Darth Vader</a><br /><a href='#' id='dathcha' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='8' data-h='2' class='js_toon'>Dathcha</a><br /><a href='#' id='death-trooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='0' class='js_toon'>Death Trooper</a><br /><a href='#' id='dengar' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Dengar</a><br /><a href='#' id='director-krennic' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Director Krennic</a><br /><a href='#' id='eeth-koth' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Eeth Koth</a><br /><a href='#' id='emperor-palpatine' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Emperor Palpatine</a><br /><a href='#' id='ewok-elder' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Ewok Elder</a><br /><a href='#' id='ewok-scout' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Ewok Scout</a><br /><a href='#' id='ezra-bridger' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='8' data-h='0' class='js_toon'>Ezra Bridger</a><br /><a href='#' id='finn' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='1' class='js_toon'>Finn</a><br /><a href='#' id='first-order-officer' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>First Order Officer</a><br /><a href='#' id='first-order-stormtrooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>First Order Stormtrooper</a><br /><a href='#' id='first-order-tie-pilot' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>First Order TIE Pilot</a><br /><a href='#' id='gamorrean-guard' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Gamorrean Guard</a><br /><a href='#' id='gar-saxon' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Gar Saxon</a><br /><a href='#' id='garazeb-zeb-orrelios' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Garazeb "Zeb" Orrelios</a><br /><a href='#' id='general-grievous' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>General Grievous</a><br /><a href='#' id='general-kenobi' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>General Kenobi</a><br /><a href='#' id='general-veers' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>General Veers</a><br /><a href='#' id='geonosian-soldier' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='8' data-h='0' class='js_toon'>Geonosian Soldier</a><br /><a href='#' id='geonosian-spy' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='10' data-h='0' class='js_toon'>Geonosian Spy</a><br /><a href='#' id='grand-master-yoda' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Grand Master Yoda</a><br /><a href='#' id='grand-moff-tarkin' data-gs='0' data-cs='0' data-as='1' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Grand Moff Tarkin</a><br /><a href='#' id='greedo' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Greedo</a><br /><a href='#' id='han-solo' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Han Solo</a><br /><a href='#' id='hera-syndulla' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='0' class='js_toon'>Hera Syndulla</a><br /><a href='#' id='hk-47' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>HK-47</a><br /><a href='#' id='hoth-rebel-scout' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Hoth Rebel Scout</a><br /><a href='#' id='hoth-rebel-soldier' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Hoth Rebel Soldier</a><br /><a href='#' id='ig-100-magnaguard' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='1' class='js_toon'>IG-100 MagnaGuard</a><br /><a href='#' id='ig-86-sentinel-droid' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='10' data-h='2' class='js_toon'>IG-86 Sentinel Droid</a><br /><a href='#' id='ig-88' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>IG-88</a><br /><a href='#' id='ima-gun-di' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='2' class='js_toon'>Ima-Gun Di</a><br /><a href='#' id='imperial-super-commando' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Imperial Super Commando</a><br /><a href='#' id='jawa' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='2' class='js_toon'>Jawa</a><br /><a href='#' id='jawa-engineer' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Jawa Engineer</a><br /><a href='#' id='jawa-scavenger' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Jawa Scavenger</a><br /><a href='#' id='jedi-consular' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='10' data-h='3' class='js_toon'>Jedi Consular</a><br /><a href='#' id='jedi-knight-anakin' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='3' class='js_toon'>Jedi Knight Anakin</a><br /><a href='#' id='jedi-knight-guardian' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Jedi Knight Guardian</a><br /><a href='#' id='jyn-erso' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Jyn Erso</a><br /><a href='#' id='k-2so' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>K-2SO</a><br /><a href='#' id='kanan-jarrus' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Kanan Jarrus</a><br /><a href='#' id='kit-fisto' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='0' class='js_toon'>Kit Fisto</a><br /><a href='#' id='kylo-ren' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='0' class='js_toon'>Kylo Ren</a><br /><a href='#' id='lando-calrissian' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='0' class='js_toon'>Lando Calrissian</a><br /><a href='#' id='lobot' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Lobot</a><br /><a href='#' id='luke-skywalker' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='1' class='js_toon'>Luke Skywalker</a><br /><a href='#' id='luminara-unduli' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='3' class='js_toon'>Luminara Unduli</a><br /><a href='#' id='mace-windu' data-gs='0' data-cs='0' data-as='1' data-fs='1' data-ws='0' data-c='10' data-h='1' class='js_toon'>Mace Windu</a><br /><a href='#' id='magmatrooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Magmatrooper</a><br /><a href='#' id='mob-enforcer' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Mob Enforcer</a><br /><a href='#' id='nightsister-acolyte' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='0' class='js_toon'>Nightsister Acolyte</a><br /><a href='#' id='nightsister-initiate' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='0' class='js_toon'>Nightsister Initiate</a><br /><a href='#' id='nute-gunray' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Nute Gunray</a><br /><a href='#' id='obi-wan-kenobi-old-ben' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='0' class='js_toon'>Obi-Wan Kenobi (Old Ben)</a><br /><a href='#' id='old-daka' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Old Daka</a><br /><a href='#' id='pao' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Pao</a><br /><a href='#' id='plo-koon' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='10' data-h='1' class='js_toon'>Plo Koon</a><br /><a href='#' id='poe-dameron' data-gs='0' data-cs='1' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='2' class='js_toon'>Poe Dameron</a><br /><a href='#' id='poggle-the-lesser' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='2' class='js_toon'>Poggle the Lesser</a><br /><a href='#' id='princess-leia' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Princess Leia</a><br /><a href='#' id='qui-gon-jinn' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Qui-Gon Jinn</a><br /><a href='#' id='r2-d2' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>R2-D2</a><br /><a href='#' id='resistance-pilot' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='1' data-c='0' data-h='0' class='js_toon'>Resistance Pilot</a><br /><a href='#' id='resistance-trooper' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='2' class='js_toon'>Resistance Trooper</a><br /><a href='#' id='rey' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>Rey</a><br /><a href='#' id='royal-guard' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='2' class='js_toon'>Royal Guard</a><br /><a href='#' id='sabine-wren' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Sabine Wren</a><br /><a href='#' id='savage-opress' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Savage Opress</a><br /><a href='#' id='scarif-rebel-pathfinder' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='8' data-h='0' class='js_toon'>Scarif Rebel Pathfinder</a><br /><a href='#' id='shoretrooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='1' class='js_toon'>Shoretrooper</a><br /><a href='#' id='sith-assassin' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='0' class='js_toon'>Sith Assassin</a><br /><a href='#' id='sith-trooper' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='0' class='js_toon'>Sith Trooper</a><br /><a href='#' id='snowtrooper' data-gs='1' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='16' data-h='1' class='js_toon'>Snowtrooper</a><br /><a href='#' id='stormtrooper' data-gs='0' data-cs='1' data-as='0' data-fs='0' data-ws='0' data-c='0' data-h='3' class='js_toon'>Stormtrooper</a><br /><a href='#' id='stormtrooper-han' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Stormtrooper Han</a><br /><a href='#' id='sun-fac' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Sun Fac</a><br /><a href='#' id='talia' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='8' data-h='2' class='js_toon'>Talia</a><br /><a href='#' id='teebo' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='0' data-h='2' class='js_toon'>Teebo</a><br /><a href='#' id='tie-fighter-pilot' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='0' data-c='10' data-h='0' class='js_toon'>TIE Fighter Pilot</a><br /><a href='#' id='tusken-raider' data-gs='0' data-cs='0' data-as='0' data-fs='0' data-ws='1' data-c='16' data-h='1' class='js_toon'>Tusken Raider</a><br /><a href='#' id='tusken-shaman' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Tusken Shaman</a><br /><a href='#' id='ugnaught' data-gs='0' data-cs='0' data-as='1' data-fs='0' data-ws='0' data-c='0' data-h='0' class='js_toon'>Ugnaught</a><br /><a href='#' id='wedge-antilles' data-gs='0' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='12' data-h='0' class='js_toon'>Wedge Antilles</a><br /><a href='#' id='zam-wesell' data-gs='1' data-cs='0' data-as='0' data-fs='1' data-ws='0' data-c='0' data-h='0' class='js_toon'>Zam Wesell</a><br />		<br /><br />
+	</div>
+	<div id="col2">
+		<div id="your_section">
+			<h1>Step 2: Enter your Stats</h1>
+			<div class="space">
+				Your stats for <span id="toon_name"></span>:<br />
+				Current Level: <input type="text" size="3" id="current_level" value="1" /> / 85<br />
+				Current Stars: <input type="text" size="3" id="current_star" value="0" /> / 7<br />
+				<span id="cur_shards">Current Shards: <input type="text" size="3" id="current_shards" value="0" /> / <span id="star_max">10</span></span><br />
+				Current Gear Tier: <input type="text" size="3" id="current_gear" value="1" /> / 11<br />
 
-			Currently Filled Gear Slots:<br />
-			<div style="display:inline-block;margin-left:20px;">
-				&nbsp;&nbsp;<input type="checkbox" id="gs1" value="1" /><br />
-				<input type="checkbox" id="gs2" value="2" /><br />
-				&nbsp;&nbsp;<input type="checkbox" id="gs3" value="3" /><br />
+				Currently Filled Gear Slots:<br />
+				<div style="display:inline-block;margin-left:20px;">
+					&nbsp;&nbsp;<input type="checkbox" id="gs1" value="1" /><br />
+					<input type="checkbox" id="gs2" value="2" /><br />
+					&nbsp;&nbsp;<input type="checkbox" id="gs3" value="3" /><br />
+				</div>
+				<div style="display:inline-block">
+					<input type="checkbox" id="gs4" value="4" /><br />
+					&nbsp;&nbsp;<input type="checkbox" id="gs5" value="5" /><br />
+					<input type="checkbox" id="gs6" value="6" /><br />
+				</div>
 			</div>
-			<div style="display:inline-block">
-				<input type="checkbox" id="gs4" value="4" /><br />
-				&nbsp;&nbsp;<input type="checkbox" id="gs5" value="5" /><br />
-				<input type="checkbox" id="gs6" value="6" /><br />
+		</div>
+
+		<div id="level_section">
+			<h1>Level Costs</h1>
+			<div id="level_data">
+				<table>
+					<tr><th>Level</th><th>Total Credits</th></tr>
+					<tr id="ll60"><td>60</td><td id="lc60"></td></tr>
+					<tr id="ll70"><td>70</td><td id="lc70"></td></tr>
+					<tr id="ll75"><td>75</td><td id="lc75"></td></tr>
+					<tr id="ll80"><td>80</td><td id="lc80"></td></tr>
+					<tr id="ll81"><td>81</td><td id="lc81"></td></tr>
+					<tr id="ll82"><td>82</td><td id="lc82"></td></tr>
+					<tr id="ll83"><td>83</td><td id="lc83"></td></tr>
+					<tr id="ll84"><td>84</td><td id="lc84"></td></tr>
+					<tr id="ll85"><td>85</td><td id="lc85"></td></tr>
+				</table>
+			</div>
+		</div>
+
+		<div id="star_section">
+			<h1>Stars / Rarity Costs</h1><br />
+			<div id="star_data">
+				<table>
+					<tr><th>Star Level</th><th>Shards</th><th>Credits</th></tr>
+					<tr id="sl1"><td>1 &#9733;</td><td id="ss1">10</td><td>100</td></tr>
+					<tr id="sl2"><td>2 &#9733;</td><td id="ss2">15</td><td>10,000</td></tr>
+					<tr id="sl3"><td>3 &#9733;</td><td id="ss3">25</td><td>20,000</td></tr>
+					<tr id="sl4"><td>4 &#9733;</td><td id="ss4">30</td><td>100,000</td></tr>
+					<tr id="sl5"><td>5 &#9733;</td><td id="ss5">65</td><td>250,000</td></tr>
+					<tr id="sl6"><td>6 &#9733;</td><td id="ss6">85</td><td>500,000</td></tr>
+					<tr id="sl7"><td>7 &#9733;</td><td id="ss7">100</td><td>1,000,000</td></tr>
+					<tr id="sl8"><td>Total</td><td id="shard_total">330</td><td id="star_total">1,880,100</td></tr>
+				</table>
+				<div id="shard_data">
+
+				</div>
+				<div id="shard_summary" class="red">
+
+				</div>
 			</div>
 		</div>
 	</div>
+	<div id="col3">
+		<p>All required gear has been broken down into its farmable components and the cheapest location has been listed. Totals for each level assume a 22% drop rate and that you spend all of your energy including 2 refreshes each day on farming that gear. You probably have some gear stockpiled, so it will be faster.</p>
+		<div id="gear_total" class="red"></div>
 
-	<div id="level_section">
-		<h1>Level Costs</h1>
-		<div id="level_data">
-			<table>
-				<tr><th>Level</th><th>Total Credits</th></tr>
-				<tr id="ll60"><td>60</td><td id="lc60"></td></tr>
-				<tr id="ll70"><td>70</td><td id="lc70"></td></tr>
-				<tr id="ll75"><td>75</td><td id="lc75"></td></tr>
-				<tr id="ll80"><td>80</td><td id="lc80"></td></tr>
-				<tr id="ll81"><td>81</td><td id="lc81"></td></tr>
-				<tr id="ll82"><td>82</td><td id="lc82"></td></tr>
-				<tr id="ll83"><td>83</td><td id="lc83"></td></tr>
-				<tr id="ll84"><td>84</td><td id="lc84"></td></tr>
-				<tr id="ll85"><td>85</td><td id="lc85"></td></tr>
-			</table>
-		</div>
+		<div id="g1" class="g_lvl"></div>
+		<div id="g2" class="g_lvl"></div>
+		<div id="g3" class="g_lvl"></div>
+		<div id="g4" class="g_lvl"></div>
+		<div id="g5" class="g_lvl"></div>
+		<div id="g6" class="g_lvl"></div>
+		<div id="g7" class="g_lvl"></div>
+		<div id="g8" class="g_lvl"></div>
+		<div id="g9" class="g_lvl"></div>
+		<div id="g10" class="g_lvl"></div>
+		<div id="g11" class="g_lvl"></div>
+		<div id="g12" class="g_lvl"></div>
 	</div>
-
-	<div id="star_section">
-		<h1>Stars / Rarity Costs</h1><br />
-		<div id="star_data">
-			<table>
-				<tr><th>Star Level</th><th>Shards</th><th>Credits</th></tr>
-				<tr id="sl1"><td>1 &#9733;</td><td id="ss1">10</td><td>100</td></tr>
-				<tr id="sl2"><td>2 &#9733;</td><td id="ss2">15</td><td>10,000</td></tr>
-				<tr id="sl3"><td>3 &#9733;</td><td id="ss3">25</td><td>20,000</td></tr>
-				<tr id="sl4"><td>4 &#9733;</td><td id="ss4">30</td><td>100,000</td></tr>
-				<tr id="sl5"><td>5 &#9733;</td><td id="ss5">65</td><td>250,000</td></tr>
-				<tr id="sl6"><td>6 &#9733;</td><td id="ss6">85</td><td>500,000</td></tr>
-				<tr id="sl7"><td>7 &#9733;</td><td id="ss7">100</td><td>1,000,000</td></tr>
-				<tr id="sl8"><td>Total</td><td id="shard_total">330</td><td id="star_total">1,880,100</td></tr>
-			</table>
-			<div id="shard_data">
-
-			</div>
-			<div id="shard_summary" class="red">
-
-			</div>
-		</div>
-	</div>
-</div>
-<div id="col3">
-	<p>All required gear has been broken down into its farmable components and the cheapest location has been listed. Totals for each level assume a 22% drop rate and that you spend all of your energy including 2 refreshes each day on farming that gear. You probably have some gear stockpiled, so it will be faster.</p>
-	<div id="gear_total" class="red"></div>
-
-	<div id="g1" class="g_lvl"></div>
-	<div id="g2" class="g_lvl"></div>
-	<div id="g3" class="g_lvl"></div>
-	<div id="g4" class="g_lvl"></div>
-	<div id="g5" class="g_lvl"></div>
-	<div id="g6" class="g_lvl"></div>
-	<div id="g7" class="g_lvl"></div>
-	<div id="g8" class="g_lvl"></div>
-	<div id="g9" class="g_lvl"></div>
-	<div id="g10" class="g_lvl"></div>
-	<div id="g11" class="g_lvl"></div>
-	<div id="g12" class="g_lvl"></div>
-	
 </div>
 
 <script>
