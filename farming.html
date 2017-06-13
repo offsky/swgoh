@@ -689,7 +689,9 @@
 
 			var total = 0;
 			var raid = "";
-			var minDays = 0;
+			var minDaysSTR = 0;
+			var minDaysAGI = 0;
+			var minDaysTAC = 0;
 			var keys = Object.keys(coll);
 			keys.forEach(function(key) {
 				var loc = getLocation(key);
@@ -697,13 +699,17 @@
 				$('#g'+g).append("<div class='dim'>"+loc[0]+"</div>");
 				total += (loc[1]*coll[key].num)*4.5; //assumes 22% drop rate
 				if(loc[0]=="Raid Only") raid = "+ several raids";
-				if(loc[0].indexOf("Challenge")>=0) minDays += Math.ceil(coll[key].num/10);//average 10 per day from challenges
+				if(loc[0].indexOf("STR")>=0) minDaysSTR = Math.max(minDaysSTR,Math.ceil(coll[key].num/10));//average 10 per day from challenges
+				if(loc[0].indexOf("AGI")>=0) minDaysAGI = Math.max(minDaysAGI,Math.ceil(coll[key].num/10));//average 10 per day from challenges
+				if(loc[0].indexOf("TAC")>=0) minDaysTAC = Math.max(minDaysTAC,Math.ceil(coll[key].num/10));//average 10 per day from challenges
 			});
 			var refreshes = parseInt($('#hard_refresh').val());
 			if(isNaN(refreshes)) refreshes = 0;
 			var crystals = 420+(120*refreshes);
 			var days = Math.ceil(total/crystals);
-			if(minDays>days) days = minDays;
+			if(minDaysSTR>days) days = minDaysSTR;
+			if(minDaysAGI>days) days = minDaysAGI;
+			if(minDaysTAC>days) days = minDaysTAC;
 
 			$('#g'+g).append("<div class='summary red'>Estimated Energy Required: "+total.toLocaleString()+"<br />Estimated Days Farming: "+days+" "+raid+"</div>");
 			return [total,days];
