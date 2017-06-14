@@ -1,0 +1,728 @@
+
+<html>
+<head>
+<title>SWGOH Tools - Ship Farming Calculator</title>
+<style>
+	body {
+		padding:0;
+		margin:0;
+		display:flex;
+		flex-direction:column;
+		flex-wrap:nowrap;
+	}
+	#top {
+		height:90px;
+		flex:0 0 auto;
+		background-color: #000;
+		background-image: url("logo.png");
+		background-repeat: no-repeat;
+		padding-left:170px;
+		z-index: 1;
+	}
+	#logoClick {
+		position: absolute;
+		top:0;
+		left:0;
+		width: 170px;
+		height:90px;
+	}
+	#middle {
+		border-top:1px solid black;
+		flex:1 1 auto;
+		display:flex;
+		flex-direction:row;
+		flex-wrap:nowrap;
+		z-index: 100000;
+		background-color: #fff;
+	}
+ 	#foot {
+    padding-left:20px;
+    border-top:1px solid black;
+    flex:0;
+    background-color: #000;
+    color: #fff;
+    height:50px;
+	}
+	#col1 {
+		border-right:1px solid black;
+		overflow: hidden;
+		background-color: #efefef;
+		min-width: 220px;
+		max-width: 260px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	#col2 {
+		border-right:1px solid black;
+		overflow: hidden;
+		min-width: 250px;
+		max-width: 300px;
+	}
+	#col3 {
+		min-width:400px; 
+	}
+	#col1 h1 {
+ 		padding:6px;
+ 		margin: 0px;
+ 		background-color: #ddd;
+ 		font-size: 1.1em;
+ 		margin-bottom:10px;
+ 	}
+ 	#col1 a {
+ 		margin-left: 6px;
+ 	}
+ 	#col1 #sort {
+ 		margin-bottom:10px;
+ 	}
+	a {
+		color:#333;
+		text-decoration: none;
+	}
+	a:hover {
+		text-decoration: underline;
+	}
+ 	a.selected {
+ 		color:#000;
+ 		font-weight: bold;
+ 	}
+ 	#level_section {
+ 		background-color: #caf6fd;
+ 		padding-bottom: 20px;
+ 	}
+ 	#level_section p {
+ 		padding:6px;
+ 	}
+ 	table {
+ 		padding: 0;
+ 		margin: 0 0 0 5px;
+ 		border-collapse: separate;
+ 		border-spacing: 0px;
+ 	}
+ 	td,
+ 	th {
+ 		text-align: left;
+ 		padding: 0 10px;
+ 		border-left: 1px solid #666;
+ 	}
+ 	td:first-child,
+ 	th:first-child {
+ 		border-left: 0px solid #666;
+ 	}
+ 	#level_section h1 {
+ 		padding:6px;
+ 		margin: 0px;
+ 		background-color: #3cb5c7;
+ 		font-size: 1.1em;
+ 		margin-bottom:10px;
+ 	}
+ 	#star_section {
+ 		background-color: #f9fab9;
+ 		padding-bottom: 20px;
+ 	}
+ 	#star_section h1 {
+ 		padding:6px;
+ 		margin: 0px;
+ 		background-color: #eaca48;
+ 		font-size: 1.1em;
+ 	}
+ 	#shard_data {
+ 		padding:6px;
+ 		margin-top:10px;
+ 	}
+ 	#shard_summary {
+ 		padding:6px;
+ 	}
+ 	#star_section p {
+ 		padding:0px 6px;
+ 	}
+ 	#your_section {
+ 		padding-bottom: 20px;
+ 	}
+ 	#your_section h1 {
+ 		padding:6px;
+ 		margin: 0px;
+ 		background-color: #ddd;
+ 		font-size: 1.1em;
+ 	}
+ 	#your_section .space {
+ 		padding: 6px;
+ 		line-height: 1.6em;
+ 	}
+ 	#col3 h1 {
+ 		padding:6px;
+ 		margin: 0px;
+ 		background-color: #99f399;
+ 		font-size: 1.1em;
+ 	}
+ 	#col3 #g1,
+ 	#col3 #g2,
+ 	#col3 #g3 {
+ 		background-color: #eefdee;
+ 	}
+
+ 	#col3 #g4,
+ 	#col3 #g5,
+ 	#col3 #g6 {
+ 		background-color: #eafafc;
+ 	}
+ 	#col3 #g7,
+ 	#col3 #g8,
+ 	#col3 #g9,
+ 	#col3 #g10,
+ 	#col3 #g11 {
+ 		background-color: #f5effa;
+ 	}
+ 	#col3 #g12 {
+ 		background-color: #f9fab9;
+ 	}
+ 	#col3 #g4 h1,
+ 	#col3 #g5 h1,
+ 	#col3 #g6 h1{
+ 		background-color: #3cb5c7;
+ 	}
+ 	#col3 #g7 h1,
+ 	#col3 #g8 h1,
+ 	#col3 #g9 h1,
+ 	#col3 #g10 h1,
+ 	#col3 #g11 h1 {
+ 		background-color: #7914d7;
+ 		color:#fff;
+ 	}
+ 	#col3 #g12 h1 {
+ 		background-color: #eaca48;
+ 	}
+ 	
+ 	#col3 p {
+ 		padding:6px;
+ 		margin: 0;
+ 	}
+ 	.g_lvl {
+ 		padding-bottom:10px;
+ 	}
+ 	.g_lvl b {
+ 		padding: 6px;
+ 	}
+ 	.g_lvl .summary {
+ 		margin-top: 10px;
+ 		padding:0px 0px 0px 6px;
+ 	}
+ 	.g_lvl .dim {
+ 		padding: 0px 0px 5px 6px;
+ 		font-size: 0.9em;
+ 		color: #666;
+ 	}
+ 	#gear_total {
+ 		padding:6px;
+ 	}
+ 	.red {
+ 		color:#800;
+ 	}
+
+			.swgoh_ad {
+			position: absolute;
+			left:0;
+			top:90px;
+			width:0;
+			height:0px; 
+		}
+		#ad {
+			width:100%;
+			height:60px;
+		}
+	@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
+	@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
+	@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
+	@media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
+	</style>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script>
+	$(document).ready(function() {
+
+		var storage = null;
+		if(window.localStorage) storage = window.localStorage;
+		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
+
+		var selected = fetch("selected_ship");
+		if(!selected) selected = "tie-advanced-x1";
+
+		if(window.location.hash.length) {
+			selected = window.location.hash.substr(1);
+		}
+
+		$('.js_toon').on("click",function(e) {
+			selected = $(e.target).data('toon');
+			store("selected",selected);
+			updateToon();
+			window.scrollTo(0,0);
+		});
+
+		$('#current_level').on("change",updateLevel);
+		$('#current_level').on("keyup",updateLevel);
+		$('#current_star').on("change",updateStars);
+		$('#current_star').on("keyup",updateStars);
+		$('#current_shards').on("change",updateStars);
+		$('#current_shards').on("keyup",updateStars);
+		$('#sort').on("change",sortList);
+
+		var locations = JSON.parse('{"ahsoka-tanos-jedi-starfighter":[["Fleet Store",400],["Galactic War Shipments",400]],"biggs-darklighters-x-wing":[["Fleet Store",400],["Galactic War Shipments",400]],"bistans-u-wing":[["Fleet Store",400]],"clone-sergeants-arc-170":[["Fleet Store",400],["Galactic War Shipments",400]],"first-order-tie-fighter":[["Fleet Store",400],["Galactic War Shipments",400]],"genosian-soldiers-starfighter":[["Fleet Store",400],["Galactic War Shipments",400],["Light Hard 9-D",20]],"geonosian-spys-starfighter":[["Fleet Store",400],["Galactic War Shipments",400]],"imperial-tie-fighter":[["Fleet Store",400],["Galactic War Shipments",400]],"jedi-consulars-starfighter":[["Dark Hard 8-B",20],["Fleet Store",400],["Galactic War Shipments",400]],"plo-koons-jedi-starfighter":[["Cantina 7-F",16],["Fleet Store",400],["Galactic War Shipments",400]],"poe-damerons-x-wing":[["Fleet Store",400]],"resistance-x-wing":[["Fleet Store",400],["Galactic War Shipments",400]],"rexs-arc-170":[["Fleet Store",400]],"scimitar":[["Fleet Store",400]],"slave-1":[["Fleet Store",400]],"sun-facs-geonosian-starfighter":[["Fleet Store",400],["Galactic War Shipments",400]],"tie-advanced-x1":[["Fleet Store",400]],"umbaran-starfighter":[["Fleet Store",400],["Galactic War Shipments",400]],"wedge-antilless-x-wing":[["Fleet Store",400],["Galactic War Shipments",400]]}');
+
+		updateToon();
+		updateStars();
+		updateLevel();
+
+		function sortList() {
+			var sort = $('#sort').val();
+			console.log("sort",sort);
+
+			$('#sort_alpha').hide();
+			$('#sort_shard').hide();
+			$('#sort_gear').hide();
+
+			if(sort==1) $('#sort_shard').show();
+			else if(sort==2) $('#sort_gear').show();
+			else $('#sort_alpha').show();
+		}
+		function updateToon() {
+			var toonLink = $(".t-"+selected);
+			var title = $(toonLink[0]).text();
+
+			$('#toon_name').html(title);
+			
+			$('a.selected').removeClass("selected");
+			toonLink.addClass("selected");
+
+			var l = fetch("lvl_"+selected);
+			if(!l) l = 1;
+			$('#current_level').val(l);
+			
+			var st = fetch("stars_"+selected);
+			if(!st) st = 1;
+			$('#current_star').val(st);
+
+			var sh = fetch("shards_"+selected);
+			if(!sh) sh = 0;
+			$('#current_shards').val(sh);
+
+			updateStars();
+			updateLevel();
+		}
+
+		function levelCost(level) {
+			//http://apps.crouchingrancor.com/Calculators/ShipCost
+			//http://lordskunk.com/index.php/2016/11/21/ultimate-swgoh-ships-guide-star-wars-galaxy-heroes/
+			switch(level) {
+				case 84: return 323988;
+				case 83: return 309738;
+				case 82: return 295488;
+				case 81: return 281238;
+				case 80: return 266988;
+				case 79: return 252738;
+				case 78: return 241338;
+				case 77: return 229938;
+				case 76: return 218538;
+				case 75: return 207138;
+				case 74: return 195738;
+				case 73: return 184338;
+				case 72: return 172938;
+				case 71: return 161538;
+				case 70: return 150138;
+				case 69: return 138738;
+				case 68: return 127338;
+				case 67: return 115938;
+				case 66: return 104538;
+				case 65: return 93138;
+				case 64: return 81738;
+				case 63: return 76038;
+				case 62: return 70338;
+				case 61: return 64638;
+				case 60: return 58938;
+				case 59: return 53238;
+				case 58: return 47538;
+				case 57: return 41838;
+				case 56: return 36138;
+				case 55: return 30438;
+				case 54: return 24738;
+				case 53: return 23598;
+				case 52: return 22458;
+				case 51: return 21318;
+				case 50: return 20178;
+				case 49: return 19038;
+				case 48: return 17898;
+				case 47: return 16758;
+				case 46: return 15618;
+				case 45: return 14478;
+				case 44: return 13338;
+				case 43: return 12198;
+				case 42: return 11058;
+				case 41: return 9918;
+				case 40: return 8778;
+				case 39: return 7638;
+				case 38: return 7068;
+				case 37: return 6498;
+				case 36: return 5928;
+				case 35: return 5358;
+				case 34: return 4788;
+				case 33: return 4503;
+				case 32: return 4218;
+				case 31: return 3933;
+				case 30: return 3648;
+				case 29: return 3363;
+				case 28: return 3192;
+				case 27: return 3021;
+				case 26: return 2850;
+				case 25: return 2679;
+				case 24: return 2508;
+				case 23: return 2337;
+				case 22: return 2166;
+				case 21: return 1995;
+				case 20: return 1824;
+				case 19: return 1653;
+				case 18: return 1539;
+				case 17: return 1425;
+				case 16: return 1311;
+				case 15: return 1197;
+				case 14: return 1083;
+				case 13: return 969;
+				case 12: return 855;
+				case 11: return 741;
+				case 10: return 627;
+				case 9: return 513;
+				case 8: return 456;
+				case 7: return 399;
+				case 6: return 342;
+				case 5: return 285;
+				case 4: return 228;
+				case 3: return 171;
+				case 2: return 114;
+				case 1: return 57;
+			}
+			return 0;
+		}
+
+		function updateLevel() {
+			var level = parseInt($('#current_level').val());
+			if(isNaN(level)) level = 0;
+
+			var toonLink = $($(".t-"+selected)[0]);
+			var capital = toonLink.data('capital');
+
+			store("lvl_"+selected,level);
+
+			$('#level_section').hide();
+			if(level>=85) return;
+			$('#level_section').show();
+			$('#level_data tr').show();
+
+			if(level>=60) $('#ll60').hide();
+			if(level>=70) $('#ll70').hide();
+			if(level>=75) $('#ll75').hide();
+			if(level>=80) $('#ll80').hide();
+			if(level>=81) $('#ll81').hide();
+			if(level>=82) $('#ll82').hide();
+			if(level>=83) $('#ll83').hide();
+			if(level>=84) $('#ll84').hide();
+			if(level>=85) $('#ll85').hide();
+			
+			var total60 = 0;
+			var total70 = 0;
+			var total75 = 0;
+			var total80 = 0;
+			var total81 = 0;
+			var total82 = 0;
+			var total83 = 0;
+			var total84 = 0;
+			var total85 = 0;
+			for(var i=level;i<85;i++) {
+				var cost = levelCost(i);
+				if(capital) cost = 2*cost;
+
+				if(i<60) total60 += cost;
+				if(i<70) total70 += cost;
+				if(i<75) total75 += cost;
+				if(i<80) total80 += cost;
+				if(i<81) total81 += cost;
+				if(i<82) total82 += cost;
+				if(i<83) total83 += cost;
+				if(i<84) total84 += cost;
+				total85 += cost;
+			}
+			$('#lc60').html(total60.toLocaleString());
+			$('#lc70').html(total70.toLocaleString());
+			$('#lc75').html(total75.toLocaleString());
+			$('#lc80').html(total80.toLocaleString());
+			$('#lc81').html(total81.toLocaleString());
+			$('#lc82').html(total82.toLocaleString());
+			$('#lc83').html(total83.toLocaleString());
+			$('#lc84').html(total84.toLocaleString());
+			$('#lc85').html(total85.toLocaleString());
+		}
+
+		function updateStars() {
+			if(selected=="home-one" || selected=="endurance" || selected=="executrix") {
+				$('#star_data table').hide();
+				$('#star_data p').hide();
+				$('#shard_data').html("Shards are only available via events.");
+				$('#shard_summary').hide();
+				return;
+			}
+
+			$('#star_data table').show();
+			$('#star_data p').show();
+			$('#shard_data').show();
+			$('#shard_summary').show();
+
+			var stars = parseInt($('#current_star').val());
+			var shards = parseInt($('#current_shards').val());
+			if(isNaN(stars)) stars = 0;
+			if(isNaN(shards)) shards = 0;
+
+			store("stars_"+selected,stars);
+			store("shards_"+selected,shards);
+
+			if(stars>=7) {
+				$("#cur_shards").hide();
+				$("#star_section").hide();
+			} else {
+				$("#cur_shards").show();
+				$("#star_section").show();
+			}
+			var remain5 = 0;
+			var remain6 = 0;
+			var remain7 = 0;
+			if(stars==6) {
+				$('#star_max').html("100");
+				$('#star_total').html("1,000,000");
+				$('#ss7').html(100-shards);
+				remain7 = 100-shards;
+				$('#shard_total').html(remain7);
+			} else if(stars==5) {
+				$('#star_max').html("85");
+				$('#star_total').html("1,500,000");
+				$('#ss7').html(100);
+				$('#ss6').html(85-shards);
+				remain7 = 185-shards;
+				remain6 = remain7-100;
+				$('#shard_total').html(remain7);
+			} else if(stars==4) {
+				$('#star_max').html("65");
+				$('#star_total').html("1,750,000");
+				$('#ss7').html(100);
+				$('#ss6').html(85);
+				$('#ss5').html(65-shards);
+				remain7 = 250-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
+			} else if(stars==3) {
+				$('#star_max').html("30");
+				$('#star_total').html("1,850,000");
+				$('#ss7').html(100);
+				$('#ss6').html(85);
+				$('#ss5').html(65);
+				$('#ss4').html(30-shards);
+				remain7 = 280-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
+			} else if(stars==2) {
+				$('#star_max').html("25");
+				$('#star_total').html("1,870,000");
+				$('#ss7').html(100);
+				$('#ss6').html(85);
+				$('#ss5').html(65);
+				$('#ss4').html(30);
+				$('#ss3').html(25-shards);
+				remain7 = 305-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
+			} else if(stars==1) {
+				$('#star_max').html("15");
+				$('#star_total').html("1,880,000");
+				$('#ss7').html(100);
+				$('#ss6').html(85);
+				$('#ss5').html(65);
+				$('#ss4').html(30);
+				$('#ss3').html(25);
+				$('#ss2').html(15-shards);
+				remain7 = 320-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
+			} else {
+				$('#star_max').html("10");
+				$('#star_total').html("1,880,100");
+				$('#ss7').html(100);
+				$('#ss6').html(85);
+				$('#ss5').html(65);
+				$('#ss4').html(30);
+				$('#ss3').html(25);
+				$('#ss2').html(15);
+				$('#ss1').html(10-shards);
+				remain7 = 330-shards;
+				remain6 = remain7-100;
+				remain5 = remain6-85;
+				$('#shard_total').html(remain7);
+			}
+
+			$('#star_data').show();
+			$('#star_data tr').show();
+			if(stars>=7) $('#star_data').hide();
+			if(stars>=6) $('#sl6').hide();
+			if(stars>=5) $('#sl5').hide();
+			if(stars>=4) $('#sl4').hide();
+			if(stars>=3) $('#sl3').hide();
+			if(stars>=2) $('#sl2').hide();
+			if(stars>=1) $('#sl1').hide();
+
+			updateShardLocations(remain5,remain6,remain7);
+		}
+
+		function updateShardLocations(shards5,shards6,shards7) {
+			$('#shard_data').html("<b>Shard Farming</b><br />");
+			
+			if(locations && locations[selected]) {
+				locations[selected].forEach(function(loc) {
+					$('#shard_data').append(loc[0]+" ("+loc[1]+" "+(loc[1]<100?'energy':'credits')+")<br />");
+				});
+			}
+
+			var toonLink = $($(".t-"+selected)[0]);
+			var perday = toonLink.data('perday');
+			
+			$('#shard_summary').html("~"+perday+" shards per day possible<br />");
+			if(shards5) $('#shard_summary').append("~"+Math.ceil(shards5/perday)+" days of farming to 5&#9733;<br />");
+			if(shards6) $('#shard_summary').append("~"+Math.ceil(shards6/perday)+" days of farming to 6&#9733;<br />");
+			if(shards7) $('#shard_summary').append("~"+Math.ceil(shards7/perday)+" days of farming to 7&#9733;<br />");
+		}
+
+		function getLocation(gear) {
+			var locs = locations[gear];
+			if(!locs) return ["Raid Only",0];
+			var title = "";
+			var cost = 100;
+			for(var i =0; locs[i]; i++) {
+				if(locs[i][1]<cost) {
+					title = locs[i][0];
+					cost = locs[i][1];
+				}
+			}
+			if(cost==0) return [title,0];
+			return [title+" ("+cost+" energy)",cost];
+		}
+		
+		function store(key,val) {
+			storage.setItem(key,val);
+		}
+		function fetch(key) {
+			return storage.getItem(key);
+		}
+	});
+</script>
+</head>
+<body>
+<div id="top">
+	<a href="index.html" id="logoClick"></a>
+
+	<div id="ad">
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!-- Swgoh.life -->
+	<ins class="adsbygoogle swgoh_ad"
+	     style="display:block"
+	     data-ad-client="ca-pub-0176506581219642"
+	     data-ad-slot="9855290481"
+	     data-ad-format="horizontal"></ins>
+	<script>
+	//https://support.google.com/adsense/answer/6307124
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+		</div>
+
+</div>
+<div id="middle">
+	<div id="col1">
+		<h1>Step 1: Pick a Ship</h1>
+		<select id="sort">
+			<option value="0">Sort Alphabetical</option>
+			<option value="1">Sort by Shards Per Day Possible</option>
+		</select>
+		<br />
+		<div id="sort_alpha">
+		<a href='#ahsoka-tanos-jedi-starfighter' data-toon='ahsoka-tanos-jedi-starfighter' data-perday='11' data-capital='0' data-gw='45' data-fs='50' data-c='0' data-h='0' class='js_toon t-ahsoka-tanos-jedi-starfighter'>Ahsoka Tano's Jedi Starfighter</a><br /><a href='#biggs-darklighters-x-wing' data-toon='biggs-darklighters-x-wing' data-perday='10' data-capital='0' data-gw='30' data-fs='50' data-c='0' data-h='0' class='js_toon t-biggs-darklighters-x-wing'>Biggs Darklighter's X-wing</a><br /><a href='#bistans-u-wing' data-toon='bistans-u-wing' data-perday='2' data-capital='0' data-gw='0' data-fs='18' data-c='0' data-h='0' class='js_toon t-bistans-u-wing'>Bistan's U-wing</a><br /><a href='#cassians-u-wing' data-toon='cassians-u-wing' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-cassians-u-wing'>Cassian's U-wing</a><br /><a href='#clone-sergeants-arc-170' data-toon='clone-sergeants-arc-170' data-perday='11' data-capital='0' data-gw='11' data-fs='82' data-c='0' data-h='0' class='js_toon t-clone-sergeants-arc-170'>Clone Sergeant's ARC-170</a><br /><a href='#endurance' data-toon='endurance' data-perday='0' data-capital='1' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-endurance'>Endurance</a><br /><a href='#executrix' data-toon='executrix' data-perday='0' data-capital='1' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-executrix'>Executrix</a><br /><a href='#first-order-tie-fighter' data-toon='first-order-tie-fighter' data-perday='8' data-capital='0' data-gw='13' data-fs='50' data-c='0' data-h='0' class='js_toon t-first-order-tie-fighter'>First Order TIE Fighter</a><br /><a href='#gauntlet-starfighter' data-toon='gauntlet-starfighter' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-gauntlet-starfighter'>Gauntlet Starfighter</a><br /><a href='#genosian-soldiers-starfighter' data-toon='genosian-soldiers-starfighter' data-perday='11' data-capital='0' data-gw='37' data-fs='50' data-c='0' data-h='1' class='js_toon t-genosian-soldiers-starfighter'>Geonosian Soldier's Starfighter</a><br /><a href='#geonosian-spys-starfighter' data-toon='geonosian-spys-starfighter' data-perday='10' data-capital='0' data-gw='32' data-fs='50' data-c='0' data-h='0' class='js_toon t-geonosian-spys-starfighter'>Geonosian Spy's Starfighter</a><br /><a href='#ghost' data-toon='ghost' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-ghost'>Ghost</a><br /><a href='#home-one' data-toon='home-one' data-perday='0' data-capital='1' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-home-one'>Home One</a><br /><a href='#imperial-tie-fighter' data-toon='imperial-tie-fighter' data-perday='8' data-capital='0' data-gw='11' data-fs='55' data-c='0' data-h='0' class='js_toon t-imperial-tie-fighter'>Imperial TIE Fighter</a><br /><a href='#jedi-consulars-starfighter' data-toon='jedi-consulars-starfighter' data-perday='12' data-capital='0' data-gw='38' data-fs='50' data-c='0' data-h='1' class='js_toon t-jedi-consulars-starfighter'>Jedi Consular's Starfighter</a><br /><a href='#kylo-rens-command-shuttle' data-toon='kylo-rens-command-shuttle' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-kylo-rens-command-shuttle'>Kylo Ren's Command Shuttle</a><br /><a href='#millennium-falcon-ep-vii' data-toon='millennium-falcon-ep-vii' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-millennium-falcon-ep-vii'>Millennium Falcon (Ep VII)</a><br /><a href='#phantom-ii' data-toon='phantom-ii' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-phantom-ii'>Phantom II</a><br /><a href='#plo-koons-jedi-starfighter' data-toon='plo-koons-jedi-starfighter' data-perday='14' data-capital='0' data-gw='10' data-fs='50' data-c='16' data-h='0' class='js_toon t-plo-koons-jedi-starfighter'>Plo Koon's Jedi Starfighter</a><br /><a href='#poe-damerons-x-wing' data-toon='poe-damerons-x-wing' data-perday='2' data-capital='0' data-gw='0' data-fs='17' data-c='0' data-h='0' class='js_toon t-poe-damerons-x-wing'>Poe Dameron's X-wing</a><br /><a href='#resistance-x-wing' data-toon='resistance-x-wing' data-perday='9' data-capital='0' data-gw='8' data-fs='64' data-c='0' data-h='0' class='js_toon t-resistance-x-wing'>Resistance X-wing</a><br /><a href='#rexs-arc-170' data-toon='rexs-arc-170' data-perday='2' data-capital='0' data-gw='0' data-fs='17' data-c='0' data-h='0' class='js_toon t-rexs-arc-170'>Rex's ARC-170</a><br /><a href='#scimitar' data-toon='scimitar' data-perday='2' data-capital='0' data-gw='0' data-fs='16' data-c='0' data-h='0' class='js_toon t-scimitar'>Scimitar</a><br /><a href='#slave-1' data-toon='slave-1' data-perday='2' data-capital='0' data-gw='0' data-fs='13' data-c='0' data-h='0' class='js_toon t-slave-1'>Slave 1</a><br /><a href='#sun-facs-geonosian-starfighter' data-toon='sun-facs-geonosian-starfighter' data-perday='8' data-capital='0' data-gw='18' data-fs='50' data-c='0' data-h='0' class='js_toon t-sun-facs-geonosian-starfighter'>Sun Fac's Geonosian Starfighter</a><br /><a href='#tie-advanced-x1' data-toon='tie-advanced-x1' data-perday='2' data-capital='0' data-gw='0' data-fs='16' data-c='0' data-h='0' class='js_toon t-tie-advanced-x1'>Tie Advanced X1</a><br /><a href='#tie-reaper' data-toon='tie-reaper' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-tie-reaper'>TIE Reaper</a><br /><a href='#umbaran-starfighter' data-toon='umbaran-starfighter' data-perday='8' data-capital='0' data-gw='17' data-fs='50' data-c='0' data-h='0' class='js_toon t-umbaran-starfighter'>Umbaran Starfighter</a><br /><a href='#wedge-antilless-x-wing' data-toon='wedge-antilless-x-wing' data-perday='10' data-capital='0' data-gw='30' data-fs='50' data-c='0' data-h='0' class='js_toon t-wedge-antilless-x-wing'>Wedge Antilles's X-wing</a><br />		</div>
+		<div id="sort_shard" style="display:none">
+		<a href='#plo-koons-jedi-starfighter' data-toon='plo-koons-jedi-starfighter' data-perday='14' data-capital='0' data-gw='10' data-fs='50' data-c='16' data-h='0' class='js_toon t-plo-koons-jedi-starfighter'>Plo Koon's Jedi Starfighter (14)</a><br /><a href='#jedi-consulars-starfighter' data-toon='jedi-consulars-starfighter' data-perday='12' data-capital='0' data-gw='38' data-fs='50' data-c='0' data-h='1' class='js_toon t-jedi-consulars-starfighter'>Jedi Consular's Starfighter (12)</a><br /><a href='#genosian-soldiers-starfighter' data-toon='genosian-soldiers-starfighter' data-perday='11' data-capital='0' data-gw='37' data-fs='50' data-c='0' data-h='1' class='js_toon t-genosian-soldiers-starfighter'>Geonosian Soldier's Starfighter (11)</a><br /><a href='#ahsoka-tanos-jedi-starfighter' data-toon='ahsoka-tanos-jedi-starfighter' data-perday='11' data-capital='0' data-gw='45' data-fs='50' data-c='0' data-h='0' class='js_toon t-ahsoka-tanos-jedi-starfighter'>Ahsoka Tano's Jedi Starfighter (11)</a><br /><a href='#clone-sergeants-arc-170' data-toon='clone-sergeants-arc-170' data-perday='11' data-capital='0' data-gw='11' data-fs='82' data-c='0' data-h='0' class='js_toon t-clone-sergeants-arc-170'>Clone Sergeant's ARC-170 (11)</a><br /><a href='#geonosian-spys-starfighter' data-toon='geonosian-spys-starfighter' data-perday='10' data-capital='0' data-gw='32' data-fs='50' data-c='0' data-h='0' class='js_toon t-geonosian-spys-starfighter'>Geonosian Spy's Starfighter (10)</a><br /><a href='#biggs-darklighters-x-wing' data-toon='biggs-darklighters-x-wing' data-perday='10' data-capital='0' data-gw='30' data-fs='50' data-c='0' data-h='0' class='js_toon t-biggs-darklighters-x-wing'>Biggs Darklighter's X-wing (10)</a><br /><a href='#wedge-antilless-x-wing' data-toon='wedge-antilless-x-wing' data-perday='10' data-capital='0' data-gw='30' data-fs='50' data-c='0' data-h='0' class='js_toon t-wedge-antilless-x-wing'>Wedge Antilles's X-wing (10)</a><br /><a href='#resistance-x-wing' data-toon='resistance-x-wing' data-perday='9' data-capital='0' data-gw='8' data-fs='64' data-c='0' data-h='0' class='js_toon t-resistance-x-wing'>Resistance X-wing (9)</a><br /><a href='#first-order-tie-fighter' data-toon='first-order-tie-fighter' data-perday='8' data-capital='0' data-gw='13' data-fs='50' data-c='0' data-h='0' class='js_toon t-first-order-tie-fighter'>First Order TIE Fighter (8)</a><br /><a href='#umbaran-starfighter' data-toon='umbaran-starfighter' data-perday='8' data-capital='0' data-gw='17' data-fs='50' data-c='0' data-h='0' class='js_toon t-umbaran-starfighter'>Umbaran Starfighter (8)</a><br /><a href='#imperial-tie-fighter' data-toon='imperial-tie-fighter' data-perday='8' data-capital='0' data-gw='11' data-fs='55' data-c='0' data-h='0' class='js_toon t-imperial-tie-fighter'>Imperial TIE Fighter (8)</a><br /><a href='#sun-facs-geonosian-starfighter' data-toon='sun-facs-geonosian-starfighter' data-perday='8' data-capital='0' data-gw='18' data-fs='50' data-c='0' data-h='0' class='js_toon t-sun-facs-geonosian-starfighter'>Sun Fac's Geonosian Starfighter (8)</a><br /><a href='#bistans-u-wing' data-toon='bistans-u-wing' data-perday='2' data-capital='0' data-gw='0' data-fs='18' data-c='0' data-h='0' class='js_toon t-bistans-u-wing'>Bistan's U-wing (2)</a><br /><a href='#tie-advanced-x1' data-toon='tie-advanced-x1' data-perday='2' data-capital='0' data-gw='0' data-fs='16' data-c='0' data-h='0' class='js_toon t-tie-advanced-x1'>Tie Advanced X1 (2)</a><br /><a href='#slave-1' data-toon='slave-1' data-perday='2' data-capital='0' data-gw='0' data-fs='13' data-c='0' data-h='0' class='js_toon t-slave-1'>Slave 1 (2)</a><br /><a href='#scimitar' data-toon='scimitar' data-perday='2' data-capital='0' data-gw='0' data-fs='16' data-c='0' data-h='0' class='js_toon t-scimitar'>Scimitar (2)</a><br /><a href='#rexs-arc-170' data-toon='rexs-arc-170' data-perday='2' data-capital='0' data-gw='0' data-fs='17' data-c='0' data-h='0' class='js_toon t-rexs-arc-170'>Rex's ARC-170 (2)</a><br /><a href='#poe-damerons-x-wing' data-toon='poe-damerons-x-wing' data-perday='2' data-capital='0' data-gw='0' data-fs='17' data-c='0' data-h='0' class='js_toon t-poe-damerons-x-wing'>Poe Dameron's X-wing (2)</a><br /><a href='#tie-reaper' data-toon='tie-reaper' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-tie-reaper'>TIE Reaper (0)</a><br /><a href='#gauntlet-starfighter' data-toon='gauntlet-starfighter' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-gauntlet-starfighter'>Gauntlet Starfighter (0)</a><br /><a href='#cassians-u-wing' data-toon='cassians-u-wing' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-cassians-u-wing'>Cassian's U-wing (0)</a><br /><a href='#phantom-ii' data-toon='phantom-ii' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-phantom-ii'>Phantom II (0)</a><br /><a href='#endurance' data-toon='endurance' data-perday='0' data-capital='1' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-endurance'>Endurance (0)</a><br /><a href='#kylo-rens-command-shuttle' data-toon='kylo-rens-command-shuttle' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-kylo-rens-command-shuttle'>Kylo Ren's Command Shuttle (0)</a><br /><a href='#executrix' data-toon='executrix' data-perday='0' data-capital='1' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-executrix'>Executrix (0)</a><br /><a href='#home-one' data-toon='home-one' data-perday='0' data-capital='1' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-home-one'>Home One (0)</a><br /><a href='#ghost' data-toon='ghost' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-ghost'>Ghost (0)</a><br /><a href='#millennium-falcon-ep-vii' data-toon='millennium-falcon-ep-vii' data-perday='0' data-capital='0' data-gw='0' data-fs='0' data-c='0' data-h='0' class='js_toon t-millennium-falcon-ep-vii'>Millennium Falcon (Ep VII) (0)</a><br />		</div>
+		
+		<br /><br /><br />
+	</div>
+	<div id="col2">
+		<div id="your_section">
+			<h1>Step 2: Enter your Stats</h1>
+			<div class="space">
+				<b id="toon_name"></b>:<br />
+				Current Level: <input type="text" size="3" id="current_level" value="1" /> / 85<br />
+				Current Stars: <input type="text" size="3" id="current_star" value="0" /> / 7<br />
+				<span id="cur_shards">Current Shards: <input type="text" size="3" id="current_shards" value="0" /> / <span id="star_max">10</span></span><br />
+			</div>
+		</div>
+
+		<div id="level_section">
+			<h1>Level Costs</h1>
+			<div id="level_data">
+				<table>
+					<tr><th>Level</th><th>Total Credits</th></tr>
+					<tr id="ll60"><td>60</td><td id="lc60"></td></tr>
+					<tr id="ll70"><td>70</td><td id="lc70"></td></tr>
+					<tr id="ll75"><td>75</td><td id="lc75"></td></tr>
+					<tr id="ll80"><td>80</td><td id="lc80"></td></tr>
+					<tr id="ll81"><td>81</td><td id="lc81"></td></tr>
+					<tr id="ll82"><td>82</td><td id="lc82"></td></tr>
+					<tr id="ll83"><td>83</td><td id="lc83"></td></tr>
+					<tr id="ll84"><td>84</td><td id="lc84"></td></tr>
+					<tr id="ll85"><td>85</td><td id="lc85"></td></tr>
+				</table>
+			</div>
+		</div>
+
+		<div id="star_section">
+			<h1>Stars / Rarity Costs</h1><br />
+			<div id="star_data">
+				<table>
+					<tr><th>Star Level</th><th>Shards</th><th>Credits</th></tr>
+					<tr id="sl1"><td>1 &#9733;</td><td id="ss1">10</td><td>100</td></tr>
+					<tr id="sl2"><td>2 &#9733;</td><td id="ss2">15</td><td>10,000</td></tr>
+					<tr id="sl3"><td>3 &#9733;</td><td id="ss3">25</td><td>20,000</td></tr>
+					<tr id="sl4"><td>4 &#9733;</td><td id="ss4">30</td><td>100,000</td></tr>
+					<tr id="sl5"><td>5 &#9733;</td><td id="ss5">65</td><td>250,000</td></tr>
+					<tr id="sl6"><td>6 &#9733;</td><td id="ss6">85</td><td>500,000</td></tr>
+					<tr id="sl7"><td>7 &#9733;</td><td id="ss7">100</td><td>1,000,000</td></tr>
+					<tr id="sl8"><td>Total</td><td id="shard_total">330</td><td id="star_total">1,880,100</td></tr>
+				</table>
+				<div id="shard_data">
+
+				</div>
+				<div id="shard_summary" class="red">
+
+				</div>
+				<p>The approximate drop rate for each ship has been worked into the calculation and will be refined over time.</p>
+
+			</div>
+		</div>
+	</div>
+</div>
+<div id="foot">
+	<p>SWGOH.GG is not affiliated with EA, EA Capital Games, Disney or Lucasfilm LTD.</p>
+</div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-92624-14', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
