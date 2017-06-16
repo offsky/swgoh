@@ -198,11 +198,10 @@
 		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
 
 		var selected = fetch("selected_ship");
-		if(!selected) selected = "tie-advanced-x1";
-
 		if(window.location.hash.length) {
 			selected = window.location.hash.substr(1);
 		}
+		if(!selected) selected = "ahsoka-tanos-jedi-starfighter";
 
 		$('.js_toon').on("click",function(e) {
 			selected = $(e.target).data('toon');
