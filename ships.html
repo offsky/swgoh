@@ -434,14 +434,6 @@
 		}
 
 		function updateStars() {
-			if(selected=="home-one" || selected=="endurance" || selected=="executrix") {
-				$('#star_data table').hide();
-				$('#star_data p').hide();
-				$('#shard_data').html("Shards are only available via events.");
-				$('#shard_summary').hide();
-				return;
-			}
-
 			$('#star_data table').show();
 			$('#star_data p').show();
 			$('#shard_data').show();
@@ -551,6 +543,14 @@
 			if(stars>=2) $('#sl2').hide();
 			if(stars>=1) $('#sl1').hide();
 
+			if(selected=="home-one" || selected=="endurance" || selected=="executrix") {
+				$('#star_data table').hide();
+				$('#star_data p').hide();
+				$('#shard_data').html("Shards are only available via events.");
+				$('#shard_summary').hide();
+				return;
+			}
+			
 			updateShardLocations(remain5,remain6,remain7);
 		}
 

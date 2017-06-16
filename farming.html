@@ -1,7 +1,7 @@
 
 <html>
 <head>
-	<title>SWGOH Tools - Farming Calculator</title>
+	<title>SWGOH Tools - Shard/Gear Farming Calculator</title>
 <style>
 	body {
 		padding:0;
@@ -243,11 +243,10 @@
 		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
 
 		var selected = fetch("selected");
-		if(!selected) selected = "aayla-secura";
-
 		if(window.location.hash.length) {
 			selected = window.location.hash.substr(1);
 		}
+		if(!selected) selected = "aayla-secura";
 
 		$('.js_toon').on("click",function(e) {
 			selected = $(e.target).data('toon');
@@ -481,14 +480,6 @@
 		}
 
 		function updateStars() {
-			if(selected=="grand-master-yoda" || selected=="han-solo" || selected=="general-kenobi" || selected=="emperor-palpatine" || selected=="r2-d2" || selected=="grand-admiral-thrawn") {
-				$('#star_data table').hide();
-				$('#star_data p').hide();
-				$('#shard_data').html("Shards are only available via events or raids.");
-				$('#shard_summary').hide();
-				return;
-			}
-
 			$('#star_data table').show();
 			$('#star_data p').show();
 			$('#shard_data').show();
@@ -598,6 +589,14 @@
 			if(stars>=2) $('#sl2').hide();
 			if(stars>=1) $('#sl1').hide();
 
+			if(selected=="grand-master-yoda" || selected=="han-solo" || selected=="general-kenobi" || selected=="emperor-palpatine" || selected=="r2-d2" || selected=="grand-admiral-thrawn") {
+				$('#star_data table').hide();
+				$('#star_data p').hide();
+				$('#shard_data').html("Shards are only available via events or raids.");
+				$('#shard_summary').hide();
+				return;
+			}
+			
 			updateShardLocations(remain5,remain6,remain7);
 		}
 
@@ -919,6 +918,7 @@
 <div id="foot">
 	<p>SWGOH.GG is not affiliated with EA, EA Capital Games, Disney or Lucasfilm LTD.</p>
 </div>
+
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
