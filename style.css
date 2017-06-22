@@ -257,6 +257,7 @@ table.info td {
 }
 .squad {
 	display: inline-block;
+	margin:5px;
 }
 .squad img {
 	display: block;
