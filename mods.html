@@ -1,44 +1,9 @@
 <html>
 <head>
 	<title>SWGOH Tools - Mod Farming</title>
-  <style>
-  body {
-    padding:0;
-    margin:0;
-    display:flex;
-    flex-direction:column;
-    flex-wrap:nowrap;
-  }
-  #top {
-    height:90px;
-    flex:0 0 auto;
-    background-color: #000;
-    background-image: url("logo.png");
-    background-repeat: no-repeat;
-    padding-left:100px;
-    z-index: 1;
-  }
-  #logoClick {
-    position: absolute;
-    top:0;
-    left:0;
-    width: 170px;
-    height:90px;
-  }
-  #middle {
-    flex:1 1 auto;
-    background-color: #fff;
-    padding:20px;
-  }
-  #foot {
-    padding-left:20px;
-    border-top:1px solid black;
-    flex:0;
-    background-color: #000;
-    color: #fff;
-    height:50px;
-  }
+  <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 
+  <style>
   .swgoh_ad {
     position: absolute;
     left:0;
@@ -55,11 +20,6 @@
   @media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
   @media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
 
-  table th {
-    text-align: left;
-    background-color: #000;
-    color: #fff;
-  }
   </style>
 </head>
 <body>
@@ -80,7 +40,7 @@
     </div>
 
 </div>
-<div id="middle">
+<div id="middleSolo">
   
   <h1>Mod Leveling</h1>
 
@@ -88,7 +48,7 @@
 
   <p>When you level up a mod, its primary stat will increase up to the maximum allowed by its dots.  Here are the possible primary stats for each mod shape, and the maximum value that you will get when you level the mod up to 15.</p>
 
-  <table>
+  <table class="info">
     <tr><th>Shape</th><th>Stat</th><th>&bull;</th><th>&bull;&bull;</th><th>&bull;&bull;&bull;</th><th>&bull;&bull;&bull;&bull;</th><th>&bull;&bull;&bull;&bull;&bull;</th></tr>
     <tr><td>Square</td><td>Offense</td><td>1.88%</td><td>2%</td><td>3.88%</td><td>4%</td><td>5.88%</td></tr>
     <tr><td>Diamond</td><td>Defense</td><td>3.75%</td><td>4%</td><td>7.75%</td><td>8%</td><td>11.75%</td></tr>
@@ -127,7 +87,7 @@
   <b>Mod Store</b>
   <p>Mods will randomly appear in the store, giving you a chance to preview them before you purchase them with crystals or credits. They are quite expensive.</p>
 
-  <table>
+  <table class="info">
     <tr><th>Mod Level</th><th>Crystals</th><th>Credits</th></tr>
     <tr><td>5&bull; white</td><td>2016</td><td>2.17M</td></tr>
     <tr><td>5&bull; green</td><td>2318</td><td>2.5M</td></tr>
@@ -142,7 +102,7 @@
 
   <p>If you complete the hardest tier with three stars, you will be able to farm the best mods. For 16 energy, you will get one mod. Here are the odds that it will have various qualities:</p>
 
-  <table>
+  <table class="info">
     <tr><th>Mod Level</th><th>Drop Rate</th></tr>
     <tr><td>4&bull; and lower</td><td>73%</td></tr>
     <tr><td>5&bull; white</td><td>16%</td></tr>
@@ -151,8 +111,8 @@
     <tr><td>5&bull; purple</td><td>2%</td></tr>
     <tr><td>5&bull; gold</td><td>&lt;1%</td></tr>
   </table>
-
-  <table>
+  <br />
+  <table class="info">
     <tr><th>Mod Shape</th><th>Drop Rate</th></tr>
     <tr><td>Square</td><td>23%</td></tr>
     <tr><td>Arrow</td><td>9%</td></tr>

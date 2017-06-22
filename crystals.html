@@ -1,44 +1,10 @@
 <html>
 <head>
 	<title>SWGOH Tools - Crystal Farming</title>
-  <style>
-  body {
-    padding:0;
-    margin:0;
-    display:flex;
-    flex-direction:column;
-    flex-wrap:nowrap;
-  }
-  #top {
-    height:90px;
-    flex:0 0 auto;
-    background-color: #000;
-    background-image: url("logo.png");
-    background-repeat: no-repeat;
-    padding-left:100px;
-    z-index: 1;
-  }
-  #logoClick {
-    position: absolute;
-    top:0;
-    left:0;
-    width: 170px;
-    height:90px;
-  }
-  #middle {
-    flex:1 1 auto;
-    background-color: #fff;
-    padding:20px;
-  }
-  #foot {
-    padding-left:20px;
-    border-top:1px solid black;
-    flex:0;
-    background-color: #000;
-    color: #fff;
-    height:50px;
-  }
+  <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 
+  <style>
+  
   .swgoh_ad {
     position: absolute;
     left:0;
@@ -55,11 +21,6 @@
   @media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
   @media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
 
-  table th {
-    text-align: left;
-    background-color: #000;
-    color: #fff;
-  }
   </style>
 </head>
 <body>
@@ -80,14 +41,14 @@
     </div>
 
 </div>
-<div id="middle">
+<div id="middleSolo">
 
 
   <h1>Crystal Farming</h1>
 
   <p>If you complete all of the daily challenges and finish Galactic War, you will get at least 165 free crystals every day. If you do all of this and finish first in Squad Arena, you'll take home 615 free crystals.  So the best thing you can do is to do well in Squad Arena.</p>
 
-  <table>
+  <table class="info">
   <tr><th>Daily Challenges</th><th colspan="2">Crystals</th></tr>
   <tr><td>Hard Won (5 Hard Battles)</td><td>2</td><td></td></tr>
   <tr><td>Daily Squad Arena (2 Battles)</td><td>2</td><td></td></tr>
