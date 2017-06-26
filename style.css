@@ -258,6 +258,7 @@ table.info td {
 .squad {
 	display: inline-block;
 	margin:5px;
+	vertical-align: top;
 }
 .squad img {
 	display: block;
@@ -265,4 +266,8 @@ table.info td {
 }
 .squad .yt {
 	float: right;
+}
+.squad i {
+	display: block;
+	max-width: 400px;
 }
