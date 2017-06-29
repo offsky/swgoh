@@ -126,16 +126,16 @@ table.info.space td {
 	padding: 5px;
 }
 
+#star_section {
+	background-color: #f9fab9;
+	padding-bottom: 20px;
+}
 #level_section h1 {
 	padding:6px;
 	margin: 0px;
 	background-color: #3cb5c7;
 	font-size: 1.1em;
 	margin-bottom:10px;
-}
-#star_section {
-	background-color: #f9fab9;
-	padding-bottom: 20px;
 }
 #star_section h1 {
 	padding:6px;
@@ -166,7 +166,7 @@ table.info.space td {
 	padding: 6px;
 	line-height: 1.6em;
 }
-#col3 h1 {
+#col3.toons h1 {
 	padding:6px;
 	margin: 0px;
 	background-color: #99f399;
@@ -261,7 +261,6 @@ table.info.space td {
 .squad {
 	display: inline-block;
 	margin:5px;
-	vertical-align: top;
 }
 .squad img {
 	display: block;
@@ -271,6 +270,6 @@ table.info.space td {
 	float: right;
 }
 .squad i {
+	clear:both;
 	display: block;
-	max-width: 400px;
 }
