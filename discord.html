@@ -1,0 +1,85 @@
+<html>
+<head>
+	<title>SWGOH Tools - Automatic Discord Game Updates</title>
+  <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+
+  <style>
+  h3 {
+    margin-top: 50px;
+  }
+  .swgoh_ad {
+    position: absolute;
+    left:0;
+    top:90px;
+    width:0;
+    height:0px;
+  }
+  #ad {
+    width:100%;
+    height:60px;
+  }
+  @media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
+  @media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
+  @media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
+  @media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
+
+  </style>
+</head>
+<body>
+  <div id="top">
+      <a href="index.html" id="logoClick"></a>
+  <div id="ad">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- Swgoh.life -->
+  <ins class="adsbygoogle swgoh_ad"
+       style="display:block"
+       data-ad-client="ca-pub-0176506581219642"
+       data-ad-slot="9855290481"
+       data-ad-format="horizontal"></ins>
+  <script>
+  //https://support.google.com/adsense/answer/6307124
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+    </div>
+
+</div>
+<div id="middleSolo">
+  <h1>Automatic Discord Game Updates</h1>
+
+  <p>This tutorial will explain how to set it up so that official SWGOH game updates will be automatically posted to a channel of your choice on your <a href="https://discordapp.com/">Discord</a> server.</p>
+
+  <h3>Step 1: Zapier</h3>
+  <p>Create a free account at <a href="http://www.zapier.com">Zapier.com</a>. Zapier allows you to connect different web sites and automate certain actions. We will set it up to monitor the official SWGOH forums and when an official game update is posted, Zapier will push this into a channel on your Discord Server.</p>
+
+  <h3>Step 2: Create a Zap Trigger</h3>
+  <p>Click the "Make a Zap" button and on the "Choose a Trigger" page, select "RSS by Zapier". Click the "show less common options" link and select the "Multiple Feeds" option.</p>
+  <img src="images/step2.png" width="500" border="1" />
+  <p>Enter the following two URLs and select "Anything is Different" from the "What Triggers a New Feed Item" section.</p>
+    <ul>
+      <li>https://forums.galaxy-of-heroes.starwars.ea.com/categories/developer-updates/feed.rss</li>
+      <li>https://forums.galaxy-of-heroes.starwars.ea.com/categories/game-updates/feed.rss</li>
+    </ul>
+  <img src="images/step2b.png" width="500" border="1" />
+  <p>Select "continue" and it should test it and give you a success screen.</p>
+
+  <h3>Step 3: Create a Discord Webhook</h3>
+
+  <p>You must have Admin Privileges to your Discord Server.  This step won't work from a mobile client, so you'll need to use a desktop client or be signed into the Discord website. Select "Server Settings" from the menu in your Discord Server. Select the "Webhooks" option and then click the "Create Webhook" button. This will be the "user" who appears to be posting the news, so give it a clever name and avatar (this can be done later). Select the channel that you want the automatic posts to go into. Copy the "Webhook URL" and save your changes.</p>
+  <img src="images/step3.png" width="500" border="1" />
+
+  <h3>Step 4: Create a Zap Action</h3>
+  
+  <p>Back on Zapier.com, for the "Choose an Action App" page, select "Webhooks by Zapier" and then select "POST".</p>
+  <img src="images/step4.png" width="500" border="1"/>
+
+  <p>Copy and paste the Webhook URL from step 3 into the field at the top. For the "Data" field, enter "content" in the left box and setup the right box to look like the image below. All the other fields can be left at the default settings.</p>
+  <img src="images/step4b.png" width="500" border="1"/>
+  
+  <p>The next page should give you the option of testing the Zap. If all goes well, you should get a notification in Discord with the last developer update that was posted. If you get an error, go back and make sure you setup step 4 correctly.</p>
+
+</div>
+<div id="foot">
+  <p>SWGOH.GG is not affiliated with EA, EA Capital Games, Disney or Lucasfilm LTD.</p>
+</div>
+</body>
+</html>
