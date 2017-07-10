@@ -261,6 +261,8 @@ table.info.space td {
 .squad {
 	display: inline-block;
 	margin:5px;
+	max-width: 420px;
+	vertical-align: top;
 }
 .squad img {
 	display: block;
