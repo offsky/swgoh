@@ -24,7 +24,22 @@ body {
 #middleSolo {
 	flex:1 1 auto;
 	background-color: #fff;
-	padding:20px;
+	padding:0px 20px 20px 20px;
+}
+#middleSolo h1 {
+	font-size: 22px;
+}
+#middleSolo h2 {
+	margin: 10px 0 5px 0;
+	font-size: 18px;
+}
+#middleSolo h1 a,
+#middleSolo h2 a {
+	text-decoration: none;
+}
+#middleSolo h1 a:hover,
+#middleSolo h2 a:hover {
+	text-decoration: underline;
 }
 #middle {
 	border-top:1px solid black;
