@@ -290,3 +290,62 @@ table.info.space td {
 	clear:both;
 	display: block;
 }
+.square {
+	display: inline-block;
+	width:200px;
+	height:350px;
+	background-color: #eee;
+	padding:10px;
+	border-radius: 5px;
+	vertical-align: top;
+	margin: 0px 20px 20px 0px;
+	text-align: center;
+}
+.square img {
+	border-radius: 5px;
+	margin-bottom:10px;
+}
+.square b a {
+	font-size: 18px;
+	text-decoration: none;
+}
+.square b a:hover {
+	text-decoration: underline;
+}
+.square p {
+	text-align: left;
+	margin-top:10px;
+	font-size: 14px;
+	line-height: 16px;
+	color:#222;
+}
+
+@media (max-width: 800px) {
+	.square {
+		width:150px;
+		height:290px;
+		margin: 0px 10px 10px 0px;
+	}
+	.square img {
+		width: 100px;
+		height:100px;
+	}
+}
+
+@media (max-width: 620px) {
+	.square {
+		width:41%;
+		height:280px;
+		padding: 3%;
+		margin: 0px 2% 2% 0px;
+	}
+}
+
+@media (max-width: 430px) {
+	.square {
+		width:92%;
+		height:auto;
+		padding: 4%;
+		margin: 0px 8% 10px 0px;
+	}
+}
