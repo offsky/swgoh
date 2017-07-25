@@ -13,6 +13,7 @@ body {
 	background-repeat: no-repeat;
 	padding-left:170px;
 	z-index: 1;
+	border-bottom:1px solid black;
 }
 #logoClick {
 	position: absolute;
@@ -119,6 +120,9 @@ th {
 	padding: 0 10px;
 	border-left: 1px solid #666;
 }
+th {
+	white-space: nowrap;
+}
 td:first-child,
 th:first-child {
 	border-left: 0px solid #666;
@@ -132,7 +136,7 @@ table.info th {
  color: #fff;
 }
 table.info td {
-	padding: 2px;
+	padding: 3px;
 	border-right: 0;
 	border-left: 0;
 	border-bottom: 1px solid #ddd;
@@ -319,6 +323,29 @@ table.info.space td {
 	line-height: 16px;
 	color:#222;
 }
+
+input[type=text],textarea { font-size: 14px; padding:4px;margin:3px;}
+
+.btn {
+  -webkit-border-radius: 11;
+  -moz-border-radius: 11;
+  border-radius: 11px;
+  font-family: Georgia;
+  color: #422e07;
+  font-size: 17px;
+  background: #e0af1d;
+  padding: 10px 20px 10px 20px;
+  border: solid #bd8b28 2px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  color: #e0af1d;
+  background: #422e07;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 
 @media (max-width: 800px) {
 	.square {
