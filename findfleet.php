@@ -21,7 +21,7 @@ for($i=1;$i<=10;$i++) {
 
 //Insert me, or update me
 if(!empty($me) && !empty($ally)) {
-	$rs = $db->query("SELECT * FROM swgoh_shard WHERE ally='".$db->str($ally)."'");
+	$rs = $db->query("SELECT * FROM swgoh_fleet WHERE ally='".$db->str($ally)."'");
 	if($user = $db->getNext($rs,1)) {
 		$set = "";
 		if(!empty($gg)) $set .= ",gg='".$db->str($gg)."'";
@@ -35,18 +35,18 @@ if(!empty($me) && !empty($ally)) {
 			$mm = str_replace(",,", ",", $mm);
 			$set .= ",mates=',".$db->str($mm).",'";
 		}
-		if(!empty($set)) $db->query("UPDATE swgoh_shard SET t=".time()."".$set." WHERE user='".$db->str($me)."' AND ally='".$db->str($ally)."'");
+		if(!empty($set)) $db->query("UPDATE swgoh_fleet SET t=".time()."".$set." WHERE user='".$db->str($me)."' AND ally='".$db->str($ally)."'");
 	} else {
 		$mm = implode(",", $mates);
 		$mm = str_replace(",".$me.",", ",", $mm);
-		$db->query("INSERT INTO swgoh_shard(user,mates,t,ally,gg,contact) VALUES('".$db->str($me)."',',".$db->str($mm).",',".time().",'".$db->str($ally)."','".$db->str($gg)."','".$db->str($contact)."')");
+		$db->query("INSERT INTO swgoh_fleet(user,mates,t,ally,gg,contact) VALUES('".$db->str($me)."',',".$db->str($mm).",',".time().",'".$db->str($ally)."','".$db->str($gg)."','".$db->str($contact)."')");
 	}
 }
 
 ?><!DOCTYPE html>
 <html>
 	<head>
-		<title>SWGOH Tools - Find your SWGOH Squad Arena Shard</title>
+		<title>SWGOH Tools - Find your SWGOH Fleet Arena Shard</title>
 	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 		<meta charset="utf-8" />
 		<style>
@@ -87,10 +87,10 @@ if(!empty($me) && !empty($ally)) {
 
 	</div>
 	<div id="middleSolo">
-		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Find your SWGOH Squad Arena Shard</h1>
+		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Find your SWGOH Fleet Arena Shard</h1>
 
 		<?	
-			$rs = $db->query("SELECT * FROM swgoh_shard WHERE user='".$db->str($me)."' AND ally='".$db->str($ally)."'");
+			$rs = $db->query("SELECT * FROM swgoh_fleet WHERE user='".$db->str($me)."' AND ally='".$db->str($ally)."'");
 			if($user = $db->getNext($rs,1)) {
 				?>
 				<b>Your Name:</b> <?=$user['user']?><br />
@@ -103,7 +103,7 @@ if(!empty($me) && !empty($ally)) {
 
 
 		<? if(empty($me) || empty($ally) || empty($user)) { ?>
-			<p>Do you want to get in touch with the other players on your SWGOH Squad Arena shard?  Please enter as much information as you can, and we'll try to find your shardmates and give you their contact information, if possible.</p>
+			<p>Do you want to get in touch with the other players on your SWGOH Fleet Arena shard?  Please enter as much information as you can, and we'll try to find your shardmates and give you their contact information, if possible.</p>
 
 			<?
 				$self = explode("/",$_SERVER['PHP_SELF']);
@@ -127,8 +127,8 @@ if(!empty($me) && !empty($ally)) {
 				This helps people find you. (optional)<br />
 				https://swgoh.gg/u/<input type="text" name="gg" />/<br /><br />
 
-				<b>Enter the names of the top 10 people in your shard's Squad Arena:</b><br />
-				Looking for Fleet Arena? That's <a href="fleet.php">over here</a>. This is for Squad Arena only.<br />
+				<b>Enter the names of the top 10 people in your shard's Fleet Arena:</b><br />
+				Looking for Squad Arena? That's <a href="index.php">over here</a>. This is for Fleet Arena only.<br />
 				<input type="text" name="mate1" /><br />
 				<input type="text" name="mate2" /><br />
 				<input type="text" name="mate3" /><br />
@@ -166,7 +166,7 @@ if(!empty($me) && !empty($ally)) {
 					$where3 .= ")";
 
 					//find people who listed me as mates
-					$rs = $db->query("SELECT * FROM swgoh_shard WHERE (".$where1.") OR (".$where2.") OR (".$where3.")");
+					$rs = $db->query("SELECT * FROM swgoh_fleet WHERE (".$where1.") OR (".$where2.") OR (".$where3.")");
 					while($row = $db->getNext($rs,1)) {
 						$any = true;
 						?>
