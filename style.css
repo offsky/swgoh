@@ -324,6 +324,27 @@ table.info.space td {
 	color:#222;
 }
 
+.rect {
+	display: inline-block;
+	background-color: #eee;
+	padding:10px;
+	border-radius: 5px;
+	vertical-align: middle;
+	margin: 0px 20px 20px 0px;
+	text-align: left;
+}
+.rect img {
+	border-radius: 5px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.rect p {
+	display: inline-block;
+	vertical-align: middle;
+}
+br.clear {
+	clear:both;
+}
 input[type=text],textarea { font-size: 14px; padding:4px;margin:3px;}
 
 .btn {
