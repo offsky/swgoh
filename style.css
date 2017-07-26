@@ -367,6 +367,12 @@ input[type=text],textarea { font-size: 14px; padding:4px;margin:3px;}
   cursor: pointer;
 }
 
+.half {
+	display: inline-block;
+	width:45%;
+	min-width: 400px;
+	vertical-align: top;
+}
 
 @media (max-width: 800px) {
 	.square {

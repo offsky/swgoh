@@ -47,10 +47,10 @@ if(!empty($me) && !empty($ally)) {
 <html>
 	<head>
 		<title>SWGOH Tools - Find your SWGOH Squad Arena Shard</title>
-	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+	  	<link rel="stylesheet" type="text/css" href="style.css?2" media="screen" />
 		<meta charset="utf-8" />
 		<style>
-			p { max-width: 600px;}
+			p { max-width: 800px;}
 			.swgoh_ad {
 			position: absolute;
 			left:0;
@@ -66,25 +66,65 @@ if(!empty($me) && !empty($ally)) {
 			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
 			@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
 			@media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
-  </style>
-  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  	</style>
+  	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+  	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script>
+	$(document).ready(function() {
+
+		var storage = null;
+		if(window.localStorage) storage = window.localStorage;
+		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
+
+		var name = fetch("name");
+		if(name) $('#gamename').val(name);
+		$('#gamename').on("change",function(e) {
+			store("name",$('#gamename').val());
+		});
+
+		var ally = fetch("ally");
+		if(ally) $('#ally').val(ally);
+		$('#ally').on("change",function(e) {
+			store("ally",$('#ally').val());
+		});
+
+		var gg = fetch("gg");
+		if(gg) $('#gg').val(gg);
+		$('#gg').on("change",function(e) {
+			store("gg",$('#gg').val());
+		});
+
+		var contact = fetch("contact");
+		if(contact) $('#contact').val(contact);
+		$('#contact').on("change",function(e) {
+			store("contact",$('#contact').val());
+		});
+
+		function store(key,val) {
+			storage.setItem(key,val);
+		}
+		function fetch(key) {
+			return storage.getItem(key);
+		}
+	});
+	</script>
 	</head>
 	<body>
 		<div id="top">
-      <a href="http://www.swgoh.life/index.html" id="logoClick"></a>
-	  <div id="ad">
-	  <!-- Swgoh.life -->
-	  <ins class="adsbygoogle swgoh_ad"
-	       style="display:block"
-	       data-ad-client="ca-pub-0176506581219642"
-	       data-ad-slot="9855290481"
-	       data-ad-format="horizontal"></ins>
-	  <script>
-	  //https://support.google.com/adsense/answer/6307124
-	  (adsbygoogle = window.adsbygoogle || []).push({});
-	  </script>
-	    </div>
-
+      	<a href="http://www.swgoh.life/index.html" id="logoClick"></a>
+			<div id="ad">
+			<!-- Swgoh.life -->
+			<ins class="adsbygoogle swgoh_ad"
+			 style="display:block"
+			 data-ad-client="ca-pub-0176506581219642"
+			 data-ad-slot="9855290481"
+			 data-ad-format="horizontal"></ins>
+			<script>
+			//https://support.google.com/adsense/answer/6307124
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			</div>
 	</div>
 	<div id="middleSolo">
 		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Find your SWGOH Squad Arena Shard</h1>
@@ -104,31 +144,33 @@ if(!empty($me) && !empty($ally)) {
 
 		<? if(empty($me) || empty($ally) || empty($user)) { ?>
 			<p>Do you want to get in touch with the other players on your SWGOH Squad Arena shard?  Please enter as much information as you can, and we'll try to find your shardmates and give you their contact information, if possible.</p>
-
+			<p>Looking for Fleet Arena? That's <a href="fleet.php">over here</a>.</p>
 			<?
 				$self = explode("/",$_SERVER['PHP_SELF']);
 				$self = array_pop($self);
 			?>
 			<form action="<?=$self?>" method="post">
-				<b>Your Game Name:</b><br />
+				<div class="half">
+				<b>Your Game Name:</b> (required)<br />
 				Found in the upper left corner inside the game on the home screen.<br />
-				<input type="text" name="gamename" value="<?=$me?>" /><br /><br />
+				<input type="text" id="gamename" name="gamename" value="<?=$me?>" /><br /><br />
 
-				<b>Your Ally Code:</b><br />
+				<b>Your Ally Code:</b> (required)<br />
 				Found in the Allies section of the game at the top. Ex: 123-456-789.<br />
-				<input type="text" name="ally" /><br /><br />
+				<input type="text" id="ally" name="ally" /><br /><br />
 				
-				<b>Your Contact Info:</b><br />
+				<b>Your Contact Info:</b> (optional)<br />
 				Explain how you want to be contacted. Ex: "Message me on Discord at User#1234"<br />
-				<textarea type="text" name="contact" rows="3" cols="40"></textarea>
+				<textarea type="text" id="contact" name="contact" rows="3" cols="40"></textarea>
 				<br /><br />
 
-				<b>Your SWGOH.GG Name:</b><br />
-				This helps people find you. (optional)<br />
-				https://swgoh.gg/u/<input type="text" name="gg" />/<br /><br />
+				<b>Your SWGOH.GG Name:</b> (optional)<br />
+				This helps people find you.<br />
+				https://swgoh.gg/u/<input type="text" id="gg" name="gg" />/<br /><br />
+				</div>
+				<div class="half">
 
 				<b>Enter the names of the top 10 people in your shard's Squad Arena:</b><br />
-				Looking for Fleet Arena? That's <a href="fleet.php">over here</a>. This is for Squad Arena only.<br />
 				<input type="text" name="mate1" /><br />
 				<input type="text" name="mate2" /><br />
 				<input type="text" name="mate3" /><br />
@@ -142,11 +184,16 @@ if(!empty($me) && !empty($ally)) {
 
 				<br />
 				<input type="submit" value="Search for Shard" class="btn" />
+				</div>
 			</form>
 		<? } else { ?>
-			<p>We found the following people who might be in your shard.</p>
-			<p><b>Note:</b> This tool is very new, so it hasn't collected enough names to be useful yet. Please encourage other people to enter their info so that this can work better.</p>
+			<? 
+				$rs = $db->query("SELECT count(*) FROM swgoh_shard");
+				$num = $db->getFirst($rs);
+			?>
+			<p><b>Note:</b> This tool is very new, so it hasn't collected enough names to be useful yet (<?=$num?> so far). Please encourage other people to enter their info so that this can work better.</p>
 
+			<p>We found the following people who might be in your shard.</p>
 			<br />
 			<table class="info">
 				<tr><th>Name</th><th>SWGOH.GG Link</th><th>Contact Info</th></tr>
@@ -186,7 +233,7 @@ if(!empty($me) && !empty($ally)) {
 
 
 
-	<br /><br /><br /><ins class="adsbygoogle"
+	<br /><br /><hr /><ins class="adsbygoogle"
 			 style="display:block; text-align:center;"
 			 data-ad-format="fluid"
 			 data-ad-layout="in-article"
