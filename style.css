@@ -345,7 +345,12 @@ table.info.space td {
 br.clear {
 	clear:both;
 }
-input[type=text],textarea { font-size: 14px; padding:4px;margin:3px;}
+input[type=text],
+textarea { font-size: 14px; padding:4px;margin:3px;}
+
+input[type=text]::placeholder {
+	color: #bbb;
+}
 
 .btn {
   -webkit-border-radius: 11;
