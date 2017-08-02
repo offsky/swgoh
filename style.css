@@ -31,8 +31,8 @@ body {
 	font-size: 22px;
 }
 #middleSolo h2 {
-	margin: 10px 0 5px 0;
-	font-size: 18px;
+	margin: 20px 0 5px 0;
+	font-size: 20px;
 }
 #middleSolo h1 a,
 #middleSolo h2 a {
@@ -144,7 +144,9 @@ table.info td {
 table.info.space td {
 	padding: 5px;
 }
-
+td.center {
+	text-align: center;
+}
 #star_section {
 	background-color: #f9fab9;
 	padding-bottom: 20px;
@@ -332,6 +334,14 @@ table.info.space td {
 	vertical-align: middle;
 	margin: 0px 20px 20px 0px;
 	text-align: left;
+	max-width: 650px;
+}
+.rect.promo {
+	background-color: #f3f09b;
+	font-size: 20px;
+}
+.rect.promo a {
+	font-weight: bold;
 }
 .rect img {
 	border-radius: 5px;
@@ -345,12 +355,7 @@ table.info.space td {
 br.clear {
 	clear:both;
 }
-input[type=text],
-textarea { font-size: 14px; padding:4px;margin:3px;}
-
-input[type=text]::placeholder {
-	color: #bbb;
-}
+input[type=text],textarea { font-size: 14px; padding:4px;margin:3px;}
 
 .btn {
   -webkit-border-radius: 11;
