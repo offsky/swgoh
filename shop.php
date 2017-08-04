@@ -141,24 +141,30 @@ while($row = $db->getNext($rs,1)) {
 			<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Shipments Price Tool</h1>
 			<p>Thinking of buying something from Shipments? Wondering if it's worth it?</p>
 			
-			<form action="<?=$self?>" method="post">
-				<b>What do you want to buy?</b><br />
-				<select name="gear">
-					<? foreach($options as $name=>$url) { ?>
-						<option value="<?=$url?>" <? if($url==$gear) echo "selected='selected'";?>><?=$name?></option>
-					<? } ?>
-				</select>
-				<br /><br />
+			<div class="half">
+				<form action="<?=$self?>" method="post">
+					<b>What do you want to buy?</b><br />
+					<select name="gear">
+						<? foreach($options as $name=>$url) { ?>
+							<option value="<?=$url?>" <? if($url==$gear) echo "selected='selected'";?>><?=$name?></option>
+						<? } ?>
+					</select>
+					<br /><br />
 
-				<b>Cost:</b><br />
-				<input type="text" name="cost" size="10" placeholder="1400" value="<?=$cost?>" /> crystals<br /><br />
-			
-				<b>Quantity:</b><br />
-				<input type="text" name="qty" size="10" placeholder="20" value="<?=$qty?>" /><br /><br />
-	
-				<br />
-				<input type="submit" value="Calculate" class="btn" />
-			</form>
+					<b>Cost:</b><br />
+					<input type="text" name="cost" size="10" placeholder="1400" value="<?=$cost?>" /> crystals<br /><br />
+				
+					<b>Quantity:</b><br />
+					<input type="text" name="qty" size="10" placeholder="20" value="<?=$qty?>" /><br /><br />
+		
+					<br />
+					<input type="submit" value="Calculate" class="btn" />
+				</form>
+			</div>
+			<div class="half">
+				<p>In the Shipments section you can use crystals or credits to purchase gear and character shards. The four gear items at the bottom are very cheap and you should purchase these every chance you get to fulfill your daily challenge requirement and to stockpile gear that you may need in the future.  If you do well in arena, you'll have free crystals to spend, otherwise you'll have to purchase crystals with real money.</p>
+				<p>If you want to spend your crystals wisely, its important to understand that some items are a good value, and other items are a bad value. For example, a full "Mk 3 Carbanti Sensor Array" costs 1400 crystals.  With those 1400 crystal you could do 28 refreshes of your Battle Energy which is 3360 energy. If you spend all of that energy farming nodes 6-G-Dark, 7-G-Light, and 8-F-Light you'll get between 70 and 90 "Mk 3 Carbanti Sensor Array Salvage" (It only takes 50 to craft a full array) as well as hundreds of other gear items that you probably need. So, for this gear item, it's a better deal to spend your crystals on refreshes and avoid purchasing it directly from the store.  On the other hand, you can purchase a full "Mk 8 Biotech Implant Prototype" for only 750 crystals. With these 750 crystals you could refresh your energy 15 times for 1800 energy.  Use this to farm node 9-E-Dark and you'll only get 40 of the Biotech Implant Components (you need 50), so in this case it's a better use of crystals to buy it from the store.</p>
+			</div>
 
 			<?  if(!empty($collection)) { ?>
 				<h3>Farming Requirements:</h3>
