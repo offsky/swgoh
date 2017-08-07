@@ -110,7 +110,7 @@ while($row = $db->getNext($rs,1)) {
 
 					if(alt>=sum && raid) $('#conclusion').html("It is cheaper to farm this, but you'll have to be very patient for the raid gear. If you can't wait for raids, buy!");
 					else if(alt>=sum) $('#conclusion').html("It is better to farm this item.");
-					else $('#conclusion').html("This is better to buy this item from shipments.");
+					else $('#conclusion').html("It is better to buy this item from shipments.");
 				}
 			}
 
@@ -152,47 +152,172 @@ while($row = $db->getNext($rs,1)) {
 					<br /><br />
 
 					<b>Cost:</b><br />
-					<input type="text" name="cost" size="10" placeholder="1400" value="<?=$cost?>" /> crystals<br /><br />
+					<input type="text" name="cost" size="10" placeholder="200" value="<?=$cost?>" /> crystals<br /><br />
 				
 					<b>Quantity:</b><br />
-					<input type="text" name="qty" size="10" placeholder="20" value="<?=$qty?>" /><br /><br />
+					<input type="text" name="qty" size="10" placeholder="10" value="<?=$qty?>" /><br /><br />
 		
 					<br />
 					<input type="submit" value="Calculate" class="btn" />
 				</form>
 			</div>
 			<div class="half">
-				<p>In the Shipments section you can use crystals or credits to purchase gear and character shards. The four gear items at the bottom are very cheap and you should purchase these every chance you get to fulfill your daily challenge requirement and to stockpile gear that you may need in the future.  If you do well in arena, you'll have free crystals to spend, otherwise you'll have to purchase crystals with real money.</p>
-				<p>If you want to spend your crystals wisely, its important to understand that some items are a good value, and other items are a bad value. For example, a full "Mk 3 Carbanti Sensor Array" costs 1400 crystals.  With those 1400 crystal you could do 28 refreshes of your Battle Energy which is 3360 energy. If you spend all of that energy farming nodes 6-G-Dark, 7-G-Light, and 8-F-Light you'll get between 70 and 90 "Mk 3 Carbanti Sensor Array Salvage" (It only takes 50 to craft a full array) as well as hundreds of other gear items that you probably need. So, for this gear item, it's a better deal to spend your crystals on refreshes and avoid purchasing it directly from the store.  On the other hand, you can purchase a full "Mk 8 Biotech Implant Prototype" for only 750 crystals. With these 750 crystals you could refresh your energy 15 times for 1800 energy.  Use this to farm node 9-E-Dark and you'll only get 40 of the Biotech Implant Components (you need 50), so in this case it's a better use of crystals to buy it from the store.</p>
+				<? if(!empty($collection)) { ?>
+					<h3>Farming Requirements:</h3>
+					
+					<table class="info">
+					<tr><th>Gear</th><th>Needed</th><th>You Have</th></tr>
+					<?
+					$i=0;
+					foreach($collection as $url=>$data) {
+						$i++;
+						$hide = "";
+						if($url==$gear) $hide = "style='display:none'";
+						echo "<tr><td>".$data['title']."</td><td class='center'>".($data['num']*$qty)."</td>";
+						echo "<td><input type='hidden' class='js_energy' value='".$data['energy']."' data-item='".$i."' /><input type='hidden' value='".($data['num']*$qty)."' id='n".$i."' />";
+						echo "<input type='text' size='10' class='js_has' id='h".$i."' value='0' ".$hide." /></td></tr>";
+					}
+					?>
+					</table>
+					<br />
+					<div class="rect">
+						It will require <span id="energyspend">??</span> energy <span id="raid" style="display:none">and several raids</span> to farm <?=$qty?> of these.
+						<br />
+						With those <?=$cost?> crystals, you could use refreshes to get <span id="alternative"><?= ($cost/50)*120 ?></span> energy.
+						<br /><br />
+						<b id="conclusion"></b>
+					</div>
+
+				<? } ?>
 			</div>
 
-			<?  if(!empty($collection)) { ?>
-				<h3>Farming Requirements:</h3>
-				
-				<table class="info">
-				<tr><th>Gear</th><th>Needed</th><th>You Have</th></tr>
-				<?
-				$i=0;
-				foreach($collection as $url=>$data) {
-					$i++;
-					$hide = "";
-					if($url==$gear) $hide = "style='display:none'";
-					echo "<tr><td>".$data['title']."</td><td class='center'>".($data['num']*$qty)."</td>";
-					echo "<td><input type='hidden' class='js_energy' value='".$data['energy']."' data-item='".$i."' /><input type='hidden' value='".($data['num']*$qty)."' id='n".$i."' />";
-					echo "<input type='text' size='10' class='js_has' id='h".$i."' value='0' ".$hide." /></td></tr>";
-				}
-				?>
-				</table>
-				<br />
-				<div class="rect">
-					It will require <span id="energyspend">??</span> energy <span id="raid" style="display:none">and several raids</span> to farm <?=$qty?> of these.
-					<br />
-					With those <?=$cost?> crystals, you could use refreshes to get <span id="alternative"><?= ($cost/50)*120 ?></span> energy.
-					<br /><br />
-					<b id="conclusion"></b>
-				</div>
+			<br /><br /><hr />
 
-			<? } ?>
+			<p>In the Shipments section you can use crystals or credits to purchase gear and character shards. The four gear items at the bottom are very cheap and you should purchase these every chance you get to fulfill your daily challenge requirement and to stockpile gear that you may need in the future.  If you do well in arena, you'll have free crystals to spend, otherwise you'll have to purchase crystals with real money.</p>
+			<p>If you want to spend your crystals wisely, its important to understand that some items are a good value, and other items are a bad value. For example, a full "Mk 3 Carbanti Sensor Array" costs 1400 crystals.  With those 1400 crystal you could do 28 refreshes of your Battle Energy which is 3360 energy. If you spend all of that energy farming nodes 6-G-Dark, 7-G-Light, and 8-F-Light you'll get between 70 and 90 "Mk 3 Carbanti Sensor Array Salvage" (It only takes 50 to craft a full array) as well as hundreds of other gear items that you probably need. So, for this gear item, it's a better deal to spend your crystals on refreshes and avoid purchasing it directly from the store.  On the other hand, you can purchase a full "Mk 8 Biotech Implant Prototype" for only 750 crystals. With these 750 crystals you could refresh your energy 15 times for 1800 energy.  Use this to farm node 9-E-Dark and you'll only get 40 of the Biotech Implant Components (you need 50), so in this case it's a better use of crystals to buy it from the store.</p>
+
+			<table class='info'><tr><th>Raid Only Gear</th><th>Store Price</th><th>Farming Price</th></tr>	
+			<tr><td>Mk 10 TaggeCo Holo Lens Salvage</td><td>1250</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 11 BlasTech Weapon Mod Salvage</td><td>560</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 11 BlasTech Weapon Mod Salvage</td><td>1400</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 3 Zaltin Bacta Gel Salvage</td><td>1400</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 4 Sienar Holo Projector Salvage</td><td>1400</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 5 CEC Fusion Furnace Salvage</td><td>560</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 6 CEC Fusion Furnace Salvage</td><td>1400</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 6 Merr-Sonn Thermal Detonator Salvage</td><td>560</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 6 Merr-Sonn Thermal Detonator Salvage</td><td>1400</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 7 Nubian Security Scanner Salvage</td><td>560</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 10 TaggeCo Holo Lens</td><td>1250</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 5 Arakyd Droid Caller</td><td>1400</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 6 Nubian Design Tech</td><td>1400</td>
+			<td>-</td></tr>	
+			<tr><td>Mk 4 Sienar Holo Projector</td><td>2800</td>
+			<td>-</td></tr><tr><th>Good Deal to buy from Shipments</th><th>Store Price</th><th>Farming Price</th></tr>	
+			<tr><td>Mk 6 BioTech Implant</td><td>273</td>
+			<td>379</td></tr>	
+			<tr><td>Mk 2 Zaltin Bacta Gel</td><td>273</td>
+			<td>356</td></tr>	
+			<tr><td>Mk 3 Chedak Comlink</td><td>545</td>
+			<td>713</td></tr>	
+			<tr><td>Mk 10 BlasTech Weapon Mod Component</td><td>375</td>
+			<td>469</td></tr>	
+			<tr><td>Mk 10 BlasTech Weapon Mod Prototype</td><td>750</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 5 Athakam Medpac Prototype</td><td>750</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 8 BioTech Implant Component</td><td>375</td>
+			<td>469</td></tr>	
+			<tr><td>Mk 8 BioTech Implant Prototype</td><td>750</td>
+			<td>938</td></tr>	
+			<tr><td>MK 8 Neuro-Saav Electrobinoculars Prototype</td><td>750</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 9 Fabritech Data Pad Prototype</td><td>750</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 5 A/KT Stun Gun</td><td>1400</td>
+			<td>1699</td></tr>	
+			<tr><td>Mk 6 Nubian Security Scanner</td><td>545</td>
+			<td>623</td></tr>	
+			<tr><td>Mk 2 Zaltin Bacta Gel Prototype</td><td>273</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 3 Chedak Comlink Prototype</td><td>273</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 4 CEC Fusion Furnace Prototype</td><td>273</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 5 Chiewab Hypo Syringe Prototype</td><td>273</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 5 Nubian Design Tech Prototype</td><td>273</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 6 BioTech Implant Prototype</td><td>273</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 6 Nubian Security Scanner Prototype</td><td>273</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 8 BlasTech Weapon Mod Prototype</td><td>273</td>
+			<td>300</td></tr><tr><th>Neutral</th><th>Store Price</th><th>Farming Price</th></tr>	
+			<tr><td>Mk 3 Sienar Holo Projector</td><td>300</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 4 SoroSuub Keypad</td><td>300</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 5 SoroSuub Keypad</td><td>300</td>
+			<td>300</td></tr><tr><th>Bad Deal to buy. Farm instead.</th><th>Store Price</th><th>Farming Price</th></tr>	
+			<tr><td>Mk 5 Athakam Medpac</td><td>2250</td>
+			<td>2063</td></tr>	
+			<tr><td>Mk 10 BlasTech Weapon Mod Salvage</td><td>1250</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 10 Neuro-Saav Electrobinoculars Salvage</td><td>500</td>
+			<td>375</td></tr>	
+			<tr><td>Mk 10 Neuro-Saav Electrobinoculars Salvage</td><td>1250</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 4 Carbanti Sensor Array Prototype</td><td>1274</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 4 Chedak Comlink Prototype</td><td>1274</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 5 A/KT Stun Gun Prototype</td><td>1274</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 5 Athakam Medpac Salvage</td><td>1500</td>
+			<td>1125</td></tr>	
+			<tr><td>Mk 5 Merr-Sonn Thermal Detonator Prototype</td><td>1274</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 7 Merr-Sonn Shield Generator Salvage</td><td>1250</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 8 BioTech Implant Salvage</td><td>1500</td>
+			<td>1125</td></tr>	
+			<tr><td>MK 8 Neuro-Saav Electrobinoculars Salvage</td><td>1250</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 9 Fabritech Data Pad Salvage</td><td>500</td>
+			<td>375</td></tr>	
+			<tr><td>Mk 9 Neuro-Saav Electrobinoculars Salvage</td><td>1250</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 9 Neuro-Saav Electrobinoculars</td><td>1250</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 3 Czerka Stun Cuffs Salvage</td><td>560</td>
+			<td>375</td></tr>	
+			<tr><td>Mk 3 Czerka Stun Cuffs</td><td>1400</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 6 Chiewab Hypo Syringe</td><td>1400</td>
+			<td>938</td></tr>	
+			<tr><td>Mk 7 Merr-Sonn Shield Generator</td><td>2800</td>
+			<td>1838</td></tr>	
+			<tr><td>Mk 5 Merr-Sonn Shield Generator</td><td>300</td>
+			<td>180</td></tr>	
+			<tr><td>Mk 3 Carbanti Sensor Array Salvage</td><td>560</td>
+			<td>300</td></tr>	
+			<tr><td>Mk 3 Carbanti Sensor Array</td><td>1400</td>
+			<td>750</td></tr>	
+			<tr><td>Mk 4 A/KT Stun Gun</td><td>1400</td>
+			<td>300</td></tr></table>
+
 
 			<br /><br /><hr />
 			<? if($ads) { ?>
