@@ -63,7 +63,7 @@ body {
 	border-right:1px solid black;
 	overflow: hidden;
 	background-color: #efefef;
-	min-width: 220px;
+	min-width: 240px;
 	max-width: 260px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
