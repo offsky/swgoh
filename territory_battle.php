@@ -18,12 +18,12 @@ $gg = empty($_POST['gg']) ? "" : trim($_POST['gg']);
 if(!empty($gg)) {
 	$rs = $db->query("SELECT * FROM player WHERE username='".$db->str($gg)."'");
 	if($row = $db->getNext($rs,1)) {
-		if($row['last']<time()-86400) {
+		if($row['last']<time()-86400*3) {
 			$db->query("UPDATE player SET last = ".time()." WHERE username='".$db->str($gg)."'");
 			$data = getUserFromGG($gg);
 			foreach($data as $toonKey=>$toon) {	
 				$flags = getToonFlags($toon['title']);
-				$db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
+				if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
 			}
 		}
 	} else {
@@ -31,7 +31,7 @@ if(!empty($gg)) {
 		$data = getUserFromGG($gg);
 		foreach($data as $toonKey=>$toon) {	
 			$flags = getToonFlags($toon['title']);
-			$db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
+			if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
 		}
 	}
 }
@@ -68,6 +68,12 @@ if(!empty($gg)) {
 			}
 			.tooncell i {
 				margin-right: 5px;
+			}
+			.tooncell .red {
+				color: #c00;
+			}
+			.tooncell .green {
+				color: #090;
 			}
 			.tooncell i.last {
 				margin-right: 0px;
@@ -136,7 +142,7 @@ if(!empty($gg)) {
 			</form>
 		<? } else { ?>
 
-			SWGOHG Account: <?=$gg?> (<a href="territory_battle.php">pick another</a>)
+			SWGOH Account: <?=$gg?> (<a href="territory_battle.php">pick another</a>)
 
 
 			<br /><br /><h2>Hoth Rebel Brothers</h2>
