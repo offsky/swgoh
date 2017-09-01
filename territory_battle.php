@@ -18,7 +18,7 @@ $gg = empty($_POST['gg']) ? "" : trim($_POST['gg']);
 if(!empty($gg)) {
 	$rs = $db->query("SELECT * FROM player WHERE username='".$db->str($gg)."'");
 	if($row = $db->getNext($rs,1)) {
-		if($row['last']<time()-86400*3) {
+		if($row['last']<time()-(86400*3)) {
 			$db->query("UPDATE player SET last = ".time()." WHERE username='".$db->str($gg)."'");
 			$data = getUserFromGG($gg);
 			foreach($data as $toonKey=>$toon) {	
@@ -190,7 +190,7 @@ if(!empty($gg)) {
 			?>
 
 			<br /><br /><h2>Rebels</h2>
-			<p>You will need three entire squads of Light Side characters including one Rebel Squad at 7<i class="fa fa-star"></i>, but the more rebels the better. Here are the rebels not already mentioned above.</p>
+			<p>You will need three entire squads of Light Side characters including one Rebel Squad at 7<i class="fa fa-star"></i>, but the more rebels the better because they get a buff (Protection up if you use a special and no enemies where defeated). Dont feel like you have to use all rebels. If you have a great Resistance team, use it. Here are the rebels not already mentioned above.</p>
 			<? 
 				$red = 0;
 				$rs = $db->query("SELECT * from toons WHERE rebel=1 AND phoenix=0 AND rogue=0 AND toon!='Hoth Rebel Soldier' AND toon!='Hoth Rebel Scout' AND toon!='Captain Han Solo' AND toon!='Commander Luke Skywalker' AND toon!='Rebel Officer Leia Organa' AND user='".$db->str($gg)."'");
@@ -200,7 +200,7 @@ if(!empty($gg)) {
 			?>
 
 			<br /><br /><h2>Ships</h2>
-			<p>You will need a fleet of 7<i class="fa fa-star"></i> ships. We cant display your readiness for that yet, so you'll have to check manually.</p>
+			<p>You will need a fleet of 7<i class="fa fa-star"></i> light side ships. We cant display your readiness for that yet, so you'll have to check manually.</p>
 		
 
 			<br /><br /><br /><h2>Notes</h2>
