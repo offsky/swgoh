@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SWGOH Tools - Territory Battle Planner</title>
+	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+		<meta charset="utf-8" />
+		<style>
+			p { max-width: 800px;}
+			.swgoh_ad {
+			position: absolute;
+			left:0;
+			top:90px;
+			width:0;
+			height:0px;
+			}
+			#ad {
+			width:100%;
+			height:60px;
+			}
+
+			table { margin-left: 0; border: 1px solid #000;}
+			td,th { border: 1px solid #666; padding: 10px;}
+			td:first-child,
+			th:first-child {
+				border-left: 1px solid #666;
+			}
+			td.red {
+				background-color: #f99;
+				color: #000;
+			}
+			td.unlikely {
+				background-color: #fcc;
+			}
+			td.likely {
+				background-color: #cfc;
+			}
+			td.green {
+				background-color: #9f9;
+			}
+			@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
+			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
+			@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
+			@media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
+  	</style>
+  	<script src="https://use.fontawesome.com/c278e2b3ff.js"></script>
+  	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+  	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script>
+	$(document).ready(function() {
+
+		var storage = null;
+		if(window.localStorage) storage = window.localStorage;
+		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
+
+		function cacheForm(name) {
+			var val = fetch(name);
+			if(val) $('#'+name).val(val);
+			$('#'+name).on("change",function(e) {
+				store(name,$('#'+name).val());
+			});
+		}
+
+		function store(key,val) {
+			storage.setItem(key,val);
+		}
+		function fetch(key) {
+			return storage.getItem(key);
+		}
+
+		var stars = {
+			1: [[],[885000,6580000,45600000],[]],
+			2: [[],[1900000,19800000,55000000],[1900000,15400000,43800000]],
+			3: [[1920000,16500000,26300000],[3510000,27600000,64800000],[3510000,22400000,52200000]],
+			4: [[2176000,18700000,29800000],[5220000,34700000,78100000],[5220000,28300000,62600000]],
+			5: [[18000000,34000000,50000000],[14100000,49300000,89800000],[11100000,41000000,71600000]],
+			6: [[21600000,40800000,60000000],[31000000,72000000,100000000],[26400000,59300000,81500000]]
+		};
+
+		var combat = {
+			1: [0,(291000+291000),0],
+			2: [0,(329000+329000),329000],
+			3: [371000,(372000+372000),372000],
+			4: [478000,(423000+423000),423000],
+			5: [536000,(470000+470000),470000],
+			6: [614000,(541000+541000),541000]
+		}
+
+		var platoon = {
+			1: [0,700000,0],
+			2: [0,840000,840000],
+			3: [840000,980000,980000],
+			4: [960000,1120000,1120000],
+			5: [1080000,1260000,1260000],
+			6: [1200000,1400000,1400000]
+		}
+
+		function percent(GP,CMPL,target) {
+			var leftover = target-GP;
+			var percent = Math.round(leftover*100/CMPL);
+			if(percent<0) percent=0;
+			
+			return percent;
+		}
+
+		function update() {
+			var members = parseInt($('#members').val());
+			var GPtroop = parseInt($('#toons').val().replace(/,/g, ""));
+			var GPship = parseInt($('#ships').val().replace(/,/g, ""));
+
+			var phase = parseInt($('#phase').val());
+
+			console.log(members,GPtroop,GPship);
+
+			var t1 = null;
+			var t2 = null;
+			var t3 = null;
+			if(stars[phase][0].length) t1 = stars[phase][0];
+			if(stars[phase][1].length) t2 = stars[phase][1];
+			if(stars[phase][2].length) t3 = stars[phase][2];
+
+			$('#t1s1').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+			$('#t1s2').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+			$('#t1s3').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+			$('#t2s1').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+			$('#t2s2').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+			$('#t2s3').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+			$('#t3s1').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+			$('#t3s2').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+			$('#t3s3').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+
+			function updateCell(cell,needed,has,combatPoints) {
+				var remaining = needed-has;
+				var possible = combatPoints*members;
+				var percent = Math.round(100*remaining/possible);
+				if(percent<=0) percent = 1;
+				if(percent>100) {
+					$(cell).html("No").addClass("red");
+				} else {
+					$(cell).html(percent+"%").removeClass("red");
+					if(percent<40) $(cell).addClass("likely");
+					if(percent>80) $(cell).addClass("unlikely");
+				}
+			}
+
+			if(t1) { //fleet
+				if(t1[2]<GPship) { //guaranteed 3*
+					$('#t1s1').html("Yes").addClass("green");
+					$('#t1s2').html("Yes").addClass("green");
+					$('#t1s3').html("Yes").addClass("green");
+				} else if(t1[1]<GPship) { //guaranteed 2*
+					$('#t1s1').html("Yes").addClass("green");
+					$('#t1s2').html("Yes").addClass("green");
+
+					updateCell('#t1s3',t1[2],GPship,combat[phase][0]);
+					
+				} else if(t1[0]<GPship) { //guaranteed 1*
+					$('#t1s1').html("Yes").addClass("green");
+
+					updateCell('#t1s3',t1[2],GPship,combat[phase][0]);
+					updateCell('#t1s2',t1[1],GPship,combat[phase][0]);
+
+				} else { //guaranteed 0*
+					$('#t1s3').html("No").addClass("red");
+
+					updateCell('#t1s2',t1[1],GPship,combat[phase][0]);
+					updateCell('#t1s1',t1[0],GPship,combat[phase][0]);
+				}
+			} else {
+				$('#t1s1').html("n/a");
+				$('#t1s2').html("n/a");
+				$('#t1s3').html("n/a");
+			}
+
+			if(t2 && !t3) { //phase 1 only
+				$('#t3s1').html("n/a");
+				$('#t3s2').html("n/a");
+				$('#t3s3').html("n/a");
+
+				if(t2[2]<GPtroop) { //guaranteed 3*
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t2s2').html("Yes").addClass("green");
+					$('#t2s3').html("Yes").addClass("green");
+				} else if(t2[1]<GPtroop) { //guaranteed 2*
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t2s2').html("Yes").addClass("green");
+
+					updateCell('#t2s3',t2[2],GPtroop,combat[phase][1]);
+
+				} else if(t2[0]<GPtroop) { //guaranteed 1*
+					$('#t2s1').html("Yes").addClass("green");
+
+					updateCell('#t2s3',t2[2],GPtroop,combat[phase][1]);
+					updateCell('#t2s2',t2[1],GPtroop,combat[phase][1]);
+
+				} else { //guaranteed 1*
+					$('#t2s3').html("No");
+
+					updateCell('#t2s2',t2[1],GPtroop,combat[phase][1]);
+					updateCell('#t2s1',t2[0],GPtroop,combat[phase][1]);
+				}
+			} else if(t2 && t3) { //phases 2-3
+				var c = (combat[phase][1]+combat[phase][2])*50;
+				var p = (platoon[phase][1]+platoon[phase][2]);
+
+				var s = percent(GPtroop,c+p,t2[2]+t3[2]);
+				console.log("3,3",s);
+				s = percent(GPtroop,c+p,t2[1]+t3[2]);
+				console.log("2,3",s);
+				s = percent(GPtroop,c+p,t2[1]+t3[1]);
+				console.log("2,2",s);
+				s = percent(GPtroop,c+p,t2[0]+t3[1]);
+				console.log("1,2",s);
+				s = percent(GPtroop,c+p,t2[0]+t3[0]);
+				console.log("1,1",s);
+				s = percent(GPtroop,c+p,t3[0]);
+				console.log("0,1",s);
+
+				if(t2[2]+t3[2]<GPtroop) { //guaranteed 3,3
+					$('#t2s3').html("Yes").addClass("green");
+					$('#t3s3').html("Yes").addClass("green");
+					$('#t2s2').html("Yes").addClass("green");
+					$('#t3s2').html("Yes").addClass("green");
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t3s1').html("Yes").addClass("green");
+				} else if(t2[2]+t3[1]<GPtroop) { //guaranteed 3,2
+					$('#t2s3').html("Yes").addClass("green");
+					$('#t3s3').html("No").addClass("red");
+					$('#t2s2').html("Yes").addClass("green");
+					$('#t3s2').html("Yes").addClass("green");
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t3s1').html("Yes").addClass("green");
+
+					updateCell('#t3s3',(t2[2]+t3[2]),GPtroop,combat[phase][2]);
+
+				} else if(t2[1]+t3[2]<GPtroop) { //guaranteed 2,3
+					$('#t2s3').html("No").addClass("red");
+					$('#t3s3').html("Yes").addClass("green");
+					$('#t2s2').html("Yes").addClass("green");
+					$('#t3s2').html("Yes").addClass("green");
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t3s1').html("Yes").addClass("green");
+
+					
+
+					updateCell('#t2s3',(t2[2]+t3[1]),GPtroop,combat[phase][1]);
+
+				} else if(t2[1]+t3[1]<GPtroop) { //guaranteed 2,2
+					$('#t2s3').html("No").addClass("red");
+					$('#t3s3').html("No").addClass("red");
+					$('#t2s2').html("Yes").addClass("green");
+					$('#t3s2').html("Yes").addClass("green");
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t3s1').html("Yes").addClass("green");
+
+					updateCell('#t3s3',(t2[1]+t3[2]),GPtroop,combat[phase][1]+combat[phase][2]);
+					//TODO: two notches up
+					//TODO: three notches up
+
+				} else if(t2[1]+t3[0]<GPtroop) { //guaranteed 2,1
+					$('#t2s3').html("No").addClass("red");
+					$('#t3s3').html("No").addClass("red");
+					$('#t2s2').html("Yes").addClass("green");
+					$('#t3s2').html("No").addClass("red");
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t3s1').html("Yes").addClass("green");
+
+					updateCell('#t3s2',(t2[1]+t3[1]),GPtroop,combat[phase][1]+combat[phase][2]);
+					//TODO: two notches up
+					//TODO: three notches up
+
+				} else if(t2[0]+t3[1]<GPtroop) { //guaranteed 1,2
+					$('#t2s3').html("No").addClass("red");
+					$('#t3s3').html("No").addClass("red");
+					$('#t2s2').html("No").addClass("red");
+					$('#t3s2').html("Yes").addClass("green");
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t3s1').html("Yes").addClass("green");
+
+					updateCell('#t2s2',(t2[1]+t3[0]),GPtroop,combat[phase][1]+combat[phase][2]);
+					//TODO: two notches up
+					//TODO: three notches up
+
+				} else if(t2[0]+t3[0]<GPtroop) { //guaranteed 1,1
+					$('#t2s3').html("No").addClass("red");
+					$('#t3s3').html("No").addClass("red");
+					$('#t2s2').html("No").addClass("red");
+					$('#t3s2').html("No").addClass("red");
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t3s1').html("Yes").addClass("green");
+
+					updateCell('#t3s2',(t2[0]+t3[1]),GPtroop,combat[phase][1]+combat[phase][2]);
+					//TODO: two notches up
+					//TODO: three notches up
+
+				} else if(t2[0]<GPtroop) { //guaranteed 1,0
+					$('#t2s3').html("No").addClass("red");
+					$('#t3s3').html("No").addClass("red");
+					$('#t2s2').html("No").addClass("red");
+					$('#t3s2').html("No").addClass("red");
+					$('#t2s1').html("Yes").addClass("green");
+					$('#t3s1').html("No").addClass("red");
+
+					updateCell('#t3s1',(t2[0]+t3[0]),GPtroop,combat[phase][1]+combat[phase][2]);
+					//TODO: two notches up
+					//TODO: three notches up
+
+				} else if(t3[0]<GPtroop) { //guaranteed 0,1
+					$('#t2s3').html("No").addClass("red");
+					$('#t3s3').html("No").addClass("red");
+					$('#t2s2').html("No").addClass("red");
+					$('#t3s2').html("No").addClass("red");
+					$('#t2s1').html("No").addClass("red");
+					$('#t3s1').html("Yes").addClass("green");
+
+					updateCell('#t2s1',t2[0],GPtroop,combat[phase][1]+combat[phase][2]);
+					//TODO: two notches up
+					//TODO: three notches up
+
+				} else{ //guaranteed 0,0
+					$('#t2s3').html("No").addClass("red");
+					$('#t3s3').html("No").addClass("red");
+					$('#t2s2').html("No").addClass("red");
+					$('#t3s2').html("No").addClass("red");
+					$('#t2s1').html("No").addClass("red");
+					$('#t3s1').html("No").addClass("red");
+
+					updateCell('#t3s1',t3[0],GPtroop,combat[phase][1]+combat[phase][2]);
+					//TODO: two notches up
+					//TODO: three notches up
+
+					
+				}
+			}
+			
+		}
+
+		cacheForm("members");
+		cacheForm("toons");
+		cacheForm("ships");
+
+		$("#members").on("change", update);
+		$("#toons").on("change", update);
+		$("#ships").on("change", update);
+		$('#phase').on("change", update);
+
+		$("#toons").on("keyup", update);
+		$("#ships").on("keyup", update);
+
+		update();
+	});
+	</script>
+	</head>
+	<body>
+		<div id="top">
+      	<a href="http://www.swgoh.life/index.html" id="logoClick"></a>
+			<div id="ad">
+			<!-- Swgoh.life -->
+			<ins class="adsbygoogle swgoh_ad"
+			 style="display:block"
+			 data-ad-client="ca-pub-0176506581219642"
+			 data-ad-slot="9855290481"
+			 data-ad-format="horizontal"></ins>
+			<script>
+			//https://support.google.com/adsense/answer/6307124
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			</div>
+	</div>
+	<div id="middleSolo">
+		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Territory Battle Planner</h1>
+
+			<p>Enter your guild's data and this tool will tell you how well you can expect to do in Territory Battles.</p>
+
+			<div class="half">
+				<form action="<?=$self?>" method="post">
+					<b>How many members in your guild:</b><br />
+					<input type="text" id="members" name="members" /><br /><br />
+
+					<b>What is your Guild's total GP for characters only:</b><br />
+					You can find this on <a href="https://www.swgoh.gg">swgoh.gg</a> by going to your guild page, sorting by Galactic Power and then adding all the numbers in the "GP (Characters)" column. You can copy and paste into a spreadsheet to make the math faster.<br />
+					<input type="text" id="toons" name="toons" /><br /><br />
+
+					<b>What is your Guild's total GP for ships only:</b><br />
+					You can find this on <a href="https://www.swgoh.gg">swgoh.gg</a> by going to your guild page, sorting by Galactic Power and then adding all the numbers in the "GP (Ships)" column. You can copy and paste into a spreadsheet to make the math faster.<br />
+					<input type="text" id="ships" name="ships" /><br /><br />
+
+				</form>
+			</div>
+			<div class="half">
+				<b>Which Phase do you want to see?</b><br />
+				<select id="phase" name="phase">
+					<option value="1">Phase 1</option>
+					<option value="2">Phase 2</option>
+					<option value="3">Phase 3</option>
+					<option value="4">Phase 4</option>
+					<option value="5">Phase 5</option>
+					<option value="6">Phase 6</option>
+				</select>
+				<br /><br />
+
+				<b>Your Likely Results:</b><br />
+				<table>
+					<tr>
+						<th>Territory</th>
+						<th><i class="fa fa-star"></i></th>
+						<th><i class="fa fa-star"></i><i class="fa fa-star"></i></th>
+						<th><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></th>
+					</tr>				
+					<tr>
+						<td>Fleet</td>
+						<td id="t1s1"></td>
+						<td id="t1s2"></td>
+						<td id="t1s3"></td>
+					</tr>
+					<tr>
+						<td>Troop Territory (Upper)</td>
+						<td id="t2s1"></td>
+						<td id="t2s2"></td>
+						<td id="t2s3"></td>
+					</tr>
+					<tr>
+						<td>Troop Territory (Lower)</td>
+						<td id="t3s1"></td>
+						<td id="t3s2"></td>
+						<td id="t3s3"></td>
+					</tr>
+				</table>
+				The percentage indicates how many of the combat missions your guild needs to complete.
+				
+
+				<br /><br />
+				This assumes that all of your members deploy all of their troops without overdeploying them to any territory. It also currently ignores bonus TP from platoons, so you may perform a bit better than this. We will update soon to include this information.
+			</div>
+		
+	<br /><br /><hr /><ins class="adsbygoogle"
+			 style="display:block; text-align:center;"
+			 data-ad-format="fluid"
+			 data-ad-layout="in-article"
+			 data-ad-client="ca-pub-0176506581219642"
+			 data-ad-slot="6732943283"></ins>
+	<script>
+			 (adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+		
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-92624-14', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+	</div>
+	<div id="foot">
+		<p>SWGOH.LIFE is not affiliated with EA, EA Capital Games, Disney or Lucasfilm LTD.</p>
+	</div>
+</body>
+</html>
