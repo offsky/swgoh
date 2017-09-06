@@ -108,6 +108,10 @@
 			var GPtroop = parseInt($('#toons').val().replace(/,/g, ""));
 			var GPship = parseInt($('#ships').val().replace(/,/g, ""));
 			var phase = parseInt($('#phase').val());
+			if(!members) members = 1;
+			if(!GPtroop) GPtroop = 1;
+			if(!GPship) GPship = 1;
+			if(!phase) phase = 1;
 
 			window.location.hash = members+','+GPtroop+','+GPship;
 
@@ -262,10 +266,9 @@
 		//set from URL
 		if(window.location.hash && window.location.hash.length) {
 			var parts = window.location.hash.replace("#","").split(",");
-			console.log(parts);
-			if(parts[0]) $('#members').val(parts[0]);
-			if(parts[1]) $('#toons').val(parts[1]);
-			if(parts[2]) $('#ships').val(parts[2]);
+			if(parts[0] && parseInt(parts[0]) && !isNaN(parseInt(parts[0]))) $('#members').val(parts[0]);
+			if(parts[1] && parseInt(parts[1]) && !isNaN(parseInt(parts[1]))) $('#toons').val(parts[1]);
+			if(parts[2] && parseInt(parts[2]) && !isNaN(parseInt(parts[2]))) $('#ships').val(parts[2]);
 		}
 
 		$("#members").on("change", update);
@@ -304,15 +307,15 @@
 			<div class="half">
 				<form action="<?=$self?>" method="post">
 					<b>How many members in your guild:</b><br />
-					<input type="text" id="members" name="members" /><br /><br />
+					<input type="text" id="members" name="members" value="50" /><br /><br />
 
 					<b>What is your Guild's total GP for characters only:</b><br />
 					You can find this on <a href="https://www.swgoh.gg">swgoh.gg</a> by going to your guild page, sorting by Galactic Power and then adding all the numbers in the "GP (Characters)" column. You can copy and paste into a spreadsheet to make the math faster.<br />
-					<input type="text" id="toons" name="toons" /><br /><br />
+					<input type="text" id="toons" name="toons" value="1" /><br /><br />
 
 					<b>What is your Guild's total GP for ships only:</b><br />
 					You can find this on <a href="https://www.swgoh.gg">swgoh.gg</a> by going to your guild page, sorting by Galactic Power and then adding all the numbers in the "GP (Ships)" column. You can copy and paste into a spreadsheet to make the math faster.<br />
-					<input type="text" id="ships" name="ships" /><br /><br />
+					<input type="text" id="ships" name="ships" value="1" /><br /><br />
 
 				</form>
 			</div>
