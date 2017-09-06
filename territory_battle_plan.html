@@ -99,7 +99,7 @@
 			var leftover = target-GP;
 			var percent = Math.round(leftover*100/CMPL);
 			if(percent<0) percent=0;
-			
+
 			return percent;
 		}
 
@@ -107,10 +107,11 @@
 			var members = parseInt($('#members').val());
 			var GPtroop = parseInt($('#toons').val().replace(/,/g, ""));
 			var GPship = parseInt($('#ships').val().replace(/,/g, ""));
-
 			var phase = parseInt($('#phase').val());
 
-			console.log(members,GPtroop,GPship);
+			window.location.hash = members+','+GPtroop+','+GPship;
+
+			// console.log(members,GPtroop,GPship);
 
 			var t1 = null;
 			var t2 = null;
@@ -119,15 +120,15 @@
 			if(stars[phase][1].length) t2 = stars[phase][1];
 			if(stars[phase][2].length) t3 = stars[phase][2];
 
-			$('#t1s1').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
-			$('#t1s2').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
-			$('#t1s3').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
-			$('#t2s1').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
-			$('#t2s2').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
-			$('#t2s3').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
-			$('#t3s1').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
-			$('#t3s2').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
-			$('#t3s3').removeClass("green").removeClass("red").removeClass("likely").removeClass("unlikely");
+			$('#t1s1').removeClass();
+			$('#t1s2').removeClass();
+			$('#t1s3').removeClass();
+			$('#t2s1').removeClass();
+			$('#t2s2').removeClass();
+			$('#t2s3').removeClass();
+			$('#t3s1').removeClass();
+			$('#t3s2').removeClass();
+			$('#t3s3').removeClass();
 
 			function updateCell(cell,needed,has,combatPoints) {
 				var remaining = needed-has;
@@ -200,137 +201,56 @@
 					updateCell('#t2s1',t2[0],GPtroop,combat[phase][1]);
 				}
 			} else if(t2 && t3) { //phases 2-3
+
+				function updateCell2(cell,percent) {
+					$(cell).removeClass();
+					if(percent==0) $(cell).html("Yes").addClass("green");
+					else if(percent>100) $(cell).html("No").addClass("red");
+					else {
+						$(cell).html(percent+"%");
+						if(percent<50) $(cell).addClass("likely");
+						if(percent>90) $(cell).addClass("unlikely");
+					}
+				}
+
 				var c = (combat[phase][1]+combat[phase][2])*50;
 				var p = (platoon[phase][1]+platoon[phase][2]);
 
-				var s = percent(GPtroop,c+p,t2[2]+t3[2]);
-				console.log("3,3",s);
-				s = percent(GPtroop,c+p,t2[1]+t3[2]);
-				console.log("2,3",s);
-				s = percent(GPtroop,c+p,t2[1]+t3[1]);
-				console.log("2,2",s);
-				s = percent(GPtroop,c+p,t2[0]+t3[1]);
-				console.log("1,2",s);
-				s = percent(GPtroop,c+p,t2[0]+t3[0]);
-				console.log("1,1",s);
-				s = percent(GPtroop,c+p,t3[0]);
-				console.log("0,1",s);
+				var s33 = percent(GPtroop,c+p,t2[2]+t3[2]);//3,3
+				// console.log("3,3",s33);
+				updateCell2('#t2s3',s33);
+				updateCell2('#t3s3',s33);
 
-				if(t2[2]+t3[2]<GPtroop) { //guaranteed 3,3
-					$('#t2s3').html("Yes").addClass("green");
-					$('#t3s3').html("Yes").addClass("green");
-					$('#t2s2').html("Yes").addClass("green");
-					$('#t3s2').html("Yes").addClass("green");
-					$('#t2s1').html("Yes").addClass("green");
-					$('#t3s1').html("Yes").addClass("green");
-				} else if(t2[2]+t3[1]<GPtroop) { //guaranteed 3,2
-					$('#t2s3').html("Yes").addClass("green");
-					$('#t3s3').html("No").addClass("red");
-					$('#t2s2').html("Yes").addClass("green");
-					$('#t3s2').html("Yes").addClass("green");
-					$('#t2s1').html("Yes").addClass("green");
-					$('#t3s1').html("Yes").addClass("green");
-
-					updateCell('#t3s3',(t2[2]+t3[2]),GPtroop,combat[phase][2]);
-
-				} else if(t2[1]+t3[2]<GPtroop) { //guaranteed 2,3
-					$('#t2s3').html("No").addClass("red");
-					$('#t3s3').html("Yes").addClass("green");
-					$('#t2s2').html("Yes").addClass("green");
-					$('#t3s2').html("Yes").addClass("green");
-					$('#t2s1').html("Yes").addClass("green");
-					$('#t3s1').html("Yes").addClass("green");
-
-					
-
-					updateCell('#t2s3',(t2[2]+t3[1]),GPtroop,combat[phase][1]);
-
-				} else if(t2[1]+t3[1]<GPtroop) { //guaranteed 2,2
-					$('#t2s3').html("No").addClass("red");
-					$('#t3s3').html("No").addClass("red");
-					$('#t2s2').html("Yes").addClass("green");
-					$('#t3s2').html("Yes").addClass("green");
-					$('#t2s1').html("Yes").addClass("green");
-					$('#t3s1').html("Yes").addClass("green");
-
-					updateCell('#t3s3',(t2[1]+t3[2]),GPtroop,combat[phase][1]+combat[phase][2]);
-					//TODO: two notches up
-					//TODO: three notches up
-
-				} else if(t2[1]+t3[0]<GPtroop) { //guaranteed 2,1
-					$('#t2s3').html("No").addClass("red");
-					$('#t3s3').html("No").addClass("red");
-					$('#t2s2').html("Yes").addClass("green");
-					$('#t3s2').html("No").addClass("red");
-					$('#t2s1').html("Yes").addClass("green");
-					$('#t3s1').html("Yes").addClass("green");
-
-					updateCell('#t3s2',(t2[1]+t3[1]),GPtroop,combat[phase][1]+combat[phase][2]);
-					//TODO: two notches up
-					//TODO: three notches up
-
-				} else if(t2[0]+t3[1]<GPtroop) { //guaranteed 1,2
-					$('#t2s3').html("No").addClass("red");
-					$('#t3s3').html("No").addClass("red");
-					$('#t2s2').html("No").addClass("red");
-					$('#t3s2').html("Yes").addClass("green");
-					$('#t2s1').html("Yes").addClass("green");
-					$('#t3s1').html("Yes").addClass("green");
-
-					updateCell('#t2s2',(t2[1]+t3[0]),GPtroop,combat[phase][1]+combat[phase][2]);
-					//TODO: two notches up
-					//TODO: three notches up
-
-				} else if(t2[0]+t3[0]<GPtroop) { //guaranteed 1,1
-					$('#t2s3').html("No").addClass("red");
-					$('#t3s3').html("No").addClass("red");
-					$('#t2s2').html("No").addClass("red");
-					$('#t3s2').html("No").addClass("red");
-					$('#t2s1').html("Yes").addClass("green");
-					$('#t3s1').html("Yes").addClass("green");
-
-					updateCell('#t3s2',(t2[0]+t3[1]),GPtroop,combat[phase][1]+combat[phase][2]);
-					//TODO: two notches up
-					//TODO: three notches up
-
-				} else if(t2[0]<GPtroop) { //guaranteed 1,0
-					$('#t2s3').html("No").addClass("red");
-					$('#t3s3').html("No").addClass("red");
-					$('#t2s2').html("No").addClass("red");
-					$('#t3s2').html("No").addClass("red");
-					$('#t2s1').html("Yes").addClass("green");
-					$('#t3s1').html("No").addClass("red");
-
-					updateCell('#t3s1',(t2[0]+t3[0]),GPtroop,combat[phase][1]+combat[phase][2]);
-					//TODO: two notches up
-					//TODO: three notches up
-
-				} else if(t3[0]<GPtroop) { //guaranteed 0,1
-					$('#t2s3').html("No").addClass("red");
-					$('#t3s3').html("No").addClass("red");
-					$('#t2s2').html("No").addClass("red");
-					$('#t3s2').html("No").addClass("red");
-					$('#t2s1').html("No").addClass("red");
-					$('#t3s1').html("Yes").addClass("green");
-
-					updateCell('#t2s1',t2[0],GPtroop,combat[phase][1]+combat[phase][2]);
-					//TODO: two notches up
-					//TODO: three notches up
-
-				} else{ //guaranteed 0,0
-					$('#t2s3').html("No").addClass("red");
-					$('#t3s3').html("No").addClass("red");
-					$('#t2s2').html("No").addClass("red");
-					$('#t3s2').html("No").addClass("red");
-					$('#t2s1').html("No").addClass("red");
-					$('#t3s1').html("No").addClass("red");
-
-					updateCell('#t3s1',t3[0],GPtroop,combat[phase][1]+combat[phase][2]);
-					//TODO: two notches up
-					//TODO: three notches up
-
-					
+				if(s33>100) { //only if 3,3 is impossible do I want to consider 2,3
+					var s23 = percent(GPtroop,c+p,t2[1]+t3[2]); //2,3
+					// console.log("2,3",s23);
+					updateCell2('#t2s3',101);
+					updateCell2('#t3s3',s23);
 				}
+
+				var s22 = percent(GPtroop,c+p,t2[1]+t3[1]); //2,2
+				// console.log("2,2",s22);
+				updateCell2('#t2s2',s22);
+				updateCell2('#t3s2',s22);
+
+				if(s22>100) {
+					var s12 = percent(GPtroop,c+p,t2[0]+t3[1]); //1,2
+					// console.log("1,2",s12);
+					updateCell2('#t2s2',101);
+					updateCell2('#t3s2',s12);
+				}
+
+				var s11 = percent(GPtroop,c+p,t2[0]+t3[0]); //1,1
+				// console.log("1,1",s11);
+				updateCell2('#t2s1',s11);
+				updateCell2('#t3s1',s11);
+
+				if(s01>100) {
+					var s01 = percent(GPtroop,c+p,t3[0]); //0,1
+					// console.log("0,1",s01);
+					updateCell2('#t2s1',101);
+					updateCell2('#t3s1',s01);
+				}			
 			}
 			
 		}
@@ -338,6 +258,15 @@
 		cacheForm("members");
 		cacheForm("toons");
 		cacheForm("ships");
+
+		//set from URL
+		if(window.location.hash && window.location.hash.length) {
+			var parts = window.location.hash.replace("#","").split(",");
+			console.log(parts);
+			if(parts[0]) $('#members').val(parts[0]);
+			if(parts[1]) $('#toons').val(parts[1]);
+			if(parts[2]) $('#ships').val(parts[2]);
+		}
 
 		$("#members").on("change", update);
 		$("#toons").on("change", update);
@@ -426,11 +355,7 @@
 						<td id="t3s3"></td>
 					</tr>
 				</table>
-				The percentage indicates how many of the combat missions your guild needs to complete.
-				
-
-				<br /><br />
-				This assumes that all of your members deploy all of their troops without overdeploying them to any territory. It also currently ignores bonus TP from platoons, so you may perform a bit better than this. We will update soon to include this information.
+				The percentage indicates how successful your guild needs to be in Combat Missions and filling Platoons. This assumes that all of your members deploy all of their troops intelligently. 
 			</div>
 		
 	<br /><br /><hr /><ins class="adsbygoogle"
