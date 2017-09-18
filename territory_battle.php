@@ -160,12 +160,12 @@ if(!empty($gg)) {
 			?>
 			
 			<br /><br /><h2>Phoenix</h2>
-			<p>You will need a 6<i class="fa fa-star"></i> Phoenix squad to complete a Phase 5 Combat mission.</p>
+			<p>You will need a 6<i class="fa fa-star"></i> Phoenix squad to complete a Phase 5 Combat mission. Gear Level 8/9 is probably necessary.</p>
 			<? 
 				$red = 0;
 				$rs = $db->query("SELECT * from toons WHERE phoenix=1 AND user='".$db->str($gg)."'");
 				while($row = $db->getNext($rs,1)) {
-					if(printOneToon2($row,6)) $red++;
+					if(printOneToon2($row,6,9)) $red++;
 				}			
 			?>
 
@@ -175,7 +175,7 @@ if(!empty($gg)) {
 				$red = 0;
 				$rs = $db->query("SELECT * from toons WHERE rogue=1 AND user='".$db->str($gg)."'");
 				while($row = $db->getNext($rs,1)) {
-					if(printOneToon2($row,7)) $red++;
+					if(printOneToon2($row,7,9)) $red++;
 				}			
 			?>
 
