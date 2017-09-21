@@ -18,12 +18,17 @@ $gg = empty($_POST['gg']) ? "" : trim($_POST['gg']);
 if(!empty($gg)) {
 	$rs = $db->query("SELECT * FROM player WHERE username='".$db->str($gg)."'");
 	if($row = $db->getNext($rs,1)) {
-		if($row['last']<time()-(86400*3)) {
+		if($row['last']<time()-(86400*1)) {
 			$db->query("UPDATE player SET last = ".time()." WHERE username='".$db->str($gg)."'");
 			$data = getUserFromGG($gg);
 			foreach($data as $toonKey=>$toon) {	
 				$flags = getToonFlags($toon['title']);
 				if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
+			}
+			$data = getUserShipsFromGG($gg);
+			foreach($data as $toonKey=>$toon) {	
+				$flags = getToonFlags($toon['title']);
+				if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,ship) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",0,".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",1)");
 			}
 		}
 	} else {
@@ -33,7 +38,14 @@ if(!empty($gg)) {
 			$flags = getToonFlags($toon['title']);
 			if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
 		}
+		$data = getUserShipsFromGG($gg);
+		foreach($data as $toonKey=>$toon) {	
+			$flags = getToonFlags($toon['title']);
+			if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,ship) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",0,".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",1)");
+		}
 	}
+
+	
 }
 
 ?><!DOCTYPE html>
@@ -95,14 +107,11 @@ if(!empty($gg)) {
 		if(window.localStorage) storage = window.localStorage;
 		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
 
-	
-
 		var gg = fetch("gg");
 		if(gg) $('#gg').val(gg);
 		$('#gg').on("change",function(e) {
 			store("gg",$('#gg').val());
 		});
-
 
 		function store(key,val) {
 			storage.setItem(key,val);
@@ -130,6 +139,7 @@ if(!empty($gg)) {
 			</div>
 	</div>
 	<div id="middleSolo">
+
 		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Territory Battle Readiness</h1>
 
 		<? if(empty($gg)) { ?>
@@ -151,16 +161,16 @@ if(!empty($gg)) {
 				$red = 0;
 				$rs = $db->query("SELECT * from toons WHERE (toon='Hoth Rebel Soldier') AND user='".$db->str($gg)."' order by toon desc");
 				while($row = $db->getNext($rs,1)) {
-					if(printOneToon2($row,5)) $red++;
+					if(printOneToon2($row,5,8)) $red++;
 				}
 				$rs = $db->query("SELECT * from toons WHERE (toon='Hoth Rebel Scout') AND user='".$db->str($gg)."' order by toon desc");
 				while($row = $db->getNext($rs,1)) {
-					if(printOneToon2($row,6)) $red++;
+					if(printOneToon2($row,6,8)) $red++;
 				}			
 			?>
 			
 			<br /><br /><h2>Phoenix</h2>
-			<p>You will need a 6<i class="fa fa-star"></i> Phoenix squad to complete a Phase 5 Combat mission. Gear Level 8/9 is probably necessary.</p>
+			<p>You will need a 6<i class="fa fa-star"></i> Phoenix squad to complete a Phase 5 Combat mission.</p>
 			<? 
 				$red = 0;
 				$rs = $db->query("SELECT * from toons WHERE phoenix=1 AND user='".$db->str($gg)."'");
@@ -185,7 +195,7 @@ if(!empty($gg)) {
 				$red = 0;
 				$rs = $db->query("SELECT * from toons WHERE (toon='Captain Han Solo' OR toon='Commander Luke Skywalker' OR toon='Rebel Officer Leia Organa') AND user='".$db->str($gg)."'");
 				while($row = $db->getNext($rs,1)) {
-					if(printOneToon2($row,7)) $red++;
+					if(printOneToon2($row,7,8)) $red++;
 				}			
 			?>
 
@@ -195,16 +205,28 @@ if(!empty($gg)) {
 				$red = 0;
 				$rs = $db->query("SELECT * from toons WHERE rebel=1 AND phoenix=0 AND rogue=0 AND toon!='Hoth Rebel Soldier' AND toon!='Hoth Rebel Scout' AND toon!='Captain Han Solo' AND toon!='Commander Luke Skywalker' AND toon!='Rebel Officer Leia Organa' AND user='".$db->str($gg)."'");
 				while($row = $db->getNext($rs,1)) {
-					if(printOneToon2($row,7)) $red++;
+					if(printOneToon2($row,7,8)) $red++;
 				}			
 			?>
 
 			<br /><br /><h2>Ships</h2>
-			<p>You will need a fleet of 7<i class="fa fa-star"></i> light side ships. We cant display your readiness for that yet, so you'll have to check manually.</p>
-		
+			<p>You will need six 7<i class="fa fa-star"></i> light side ships and one 6<i class="fa fa-star"></i> capital ship.</p>
+			<? 
+				$rs = $db->query("SELECT * from toons WHERE ship=1 AND (toon='Home One' OR toon='Endurance') AND user='".$db->str($gg)."'");
+				while($row = $db->getNext($rs,1)) {
+					printOneShip2($row,6);
+				}			
+			?>
+			<br />
+			<? 
+				$rs = $db->query("SELECT * from toons WHERE ship=1 AND toon!='Home One' AND toon!='Endurance' AND user='".$db->str($gg)."'");
+				while($row = $db->getNext($rs,1)) {
+					printOneShip2($row,7);
+				}			
+			?>
 
 			<br /><br /><br /><h2>Notes</h2>
-			<p>Gear level 7 and Character Level 70 were chosen as the minimum requirement to be useful and will appear red above if your character is under this. Naturally, the higher the better.</p>
+			<p>Gear level 8,9 and Character Level 70 were chosen as the minimum requirement to be useful, depending on the character and will appear red above if your character is under this. Naturally, the higher the better.</p>
 				
 		<? } ?>
 
