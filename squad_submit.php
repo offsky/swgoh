@@ -128,7 +128,7 @@ if(!empty($_POST['fileid']) && !empty($_POST['raid'])) {
 </head>
 <body>
 	<div id="top">
-		<a href="index.html" id="logoClick"></a>
+		<a href="http://www.swgoh.life/index.html" id="logoClick"></a>
 		<div id="ad">
 		<!-- Swgoh.life -->
 		<ins class="adsbygoogle swgoh_ad"
@@ -143,7 +143,7 @@ if(!empty($_POST['fileid']) && !empty($_POST['raid'])) {
 		</div>
 	</div>
 <div id="middleSolo">
-	<h1><a href="index.html">More Tools</a> &gt; Squad High Scores</h1>
+	<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Squad High Scores</h1>
 
 	<p>Please share your raid high score screenshots from the SWGOH Raids Here so that everyone can learn how to do better, and for bragging rights!</p>
 
@@ -178,7 +178,8 @@ if(!empty($_POST['fileid']) && !empty($_POST['raid'])) {
 		Your SWGOH.GG ID: https://swgoh.gg/u/<input type="text" name="gg" />/ (optional)<br />
 
 		Score: <input type="text" name="score" /><br />
-
+		<br />
+		Please use short names ("Palp" instead of "Emperor Palpatine") when possible.<br />
 		Leader: <input type="text" name="team1" /> <input type="checkbox" name="zeta1" value="1" />Has Zeta?<br />
 		Toon 1: <input type="text" name="team2" /> <input type="checkbox" name="zeta2" value="1" />Has Zeta?<br />
 		Toon 2: <input type="text" name="team3" /> <input type="checkbox" name="zeta3" value="1" />Has Zeta?<br />
