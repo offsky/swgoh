@@ -145,11 +145,11 @@ if(!empty($_POST['fileid']) && !empty($_POST['raid'])) {
 <div id="middleSolo">
 	<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Squad High Scores</h1>
 
-	<p>Please share your raid high score screenshots from the SWGOH Raids Here so that everyone can learn how to do better, and for bragging rights!</p>
+	<p>Please share your raid <a href="squads.php">high score screenshots</a> from the SWGOH Raids Here so that everyone can learn how to do better, and for bragging rights!</p>
 
 	<? if(empty($uploaded)) { ?>
 	<h2>Step 1: Upload a screenshot of your Raid damage.</h2>
-
+	If you can downsize and crop the image beforehand, that would be nice.
 	<div id="uploadForm" class="box">			
 		<img src="haat/p4_offsky.png" id="photo" />
 		<div class="box__input">
