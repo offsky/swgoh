@@ -39,6 +39,7 @@ function translateName($short) {
 		position: absolute;
 		z-index: 1000;
 		max-width: 90%;
+		max-height: 90%;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
@@ -166,7 +167,7 @@ function translateName($short) {
 					if($raid=="aath") echo " Phase ".$phase;
 					echo " High Scores</h2><br />";
 					echo "<table><tr><th>Score</th><th>Player</th><th>Squad</th><th>View</th></tr>";
-				} else if($phase !== $row['phase']) {
+				} else if($phase !== $row['phase'] && $raid=="aath") {
 					$phase = $row['phase'];
 					echo "</table>";
 					echo "<h2><a href='squads.php'>Raids</a> &gt; ".translateName($raid);
