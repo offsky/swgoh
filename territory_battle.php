@@ -142,7 +142,14 @@ if(!empty($gg)) {
 
 		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Territory Battle Readiness</h1>
 
-		<? if(empty($gg)) { ?>
+		<? if(true) { ?>
+			<p>This tool will inspect your account and give advice on what you need to work on for Territory Battles. It needs to fetch your roster information from <a href="https://www.swgoh.gg">swgoh.gg</a> to do this. If you don't have an account there, please make one. To prevent overwhelming swgoh.gg it only fetches account information once a day.</p>
+			
+			<br />
+			<b>Sorry! SWGOH.GG is currently blocking this tool from gathering your information. We are working with them to get it working again.</b>
+			<br /><br /><br />
+
+		<? } else if(empty($gg)) { ?>
 			<p>This tool will inspect your account and give advice on what you need to work on for Territory Battles. It needs to fetch your roster information from <a href="https://www.swgoh.gg">swgoh.gg</a> to do this. If you don't have an account there, please make one. To prevent overwhelming swgoh.gg it only fetches account information once a day.</p>
 			<form action="<?=$self?>" method="post">
 				<b>Your SWGOH.GG Name:</b><br />
