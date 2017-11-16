@@ -14,38 +14,40 @@ $self = explode("/",$_SERVER['PHP_SELF']);
 $self = array_pop($self);
 
 $gg = empty($_POST['gg']) ? "" : trim($_POST['gg']);
+$manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
+$manual2 = empty($_POST['manual2']) ? "" : trim($_POST['manual2']);
 
 if(!empty($gg)) {
-	$rs = $db->query("SELECT * FROM player WHERE username='".$db->str($gg)."'");
+	$rs = $db->query("SELECT * FROM player WHERE username='ss' and username='".$db->str($gg)."'");
 	if($row = $db->getNext($rs,1)) {
-		if($row['last']<time()-(86400*1)) {
+		if($row['last']<time()-(86400*1) && !empty($manual)  && !empty($manual2)) {
 			$db->query("UPDATE player SET last = ".time()." WHERE username='".$db->str($gg)."'");
-			$data = getUserFromGG($gg);
+			$data = getUserFromGG($gg,$manual);
 			foreach($data as $toonKey=>$toon) {	
 				$flags = getToonFlags($toon['title']);
 				if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
 			}
-			$data = getUserShipsFromGG($gg);
+			$data = getUserShipsFromGG($gg,$manual2);
 			foreach($data as $toonKey=>$toon) {	
 				$flags = getToonFlags($toon['title']);
 				if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,ship) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",0,".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",1)");
 			}
 		}
-	} else {
+	} else if(!empty($manual)  && !empty($manual2)) {
 		$db->query("INSERT INTO player(username,last) VALUES('".$db->str($gg)."',".time().")");
-		$data = getUserFromGG($gg);
+		$data = getUserFromGG($gg,$manual);
+
 		foreach($data as $toonKey=>$toon) {	
 			$flags = getToonFlags($toon['title']);
 			if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
 		}
-		$data = getUserShipsFromGG($gg);
+		$data = getUserShipsFromGG($gg,$manual2);
 		foreach($data as $toonKey=>$toon) {	
 			$flags = getToonFlags($toon['title']);
 			if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,ship) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",0,".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",1)");
 		}
 	}
 
-	
 }
 
 ?><!DOCTYPE html>
@@ -90,6 +92,10 @@ if(!empty($gg)) {
 			.tooncell i.last {
 				margin-right: 0px;
 			}
+			textarea {
+				width: 80%;
+				height: 100px;
+			}
 
 			@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
 			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
@@ -108,10 +114,21 @@ if(!empty($gg)) {
 		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
 
 		var gg = fetch("gg");
-		if(gg) $('#gg').val(gg);
+		if(gg) {
+			$('#gg').val(gg);
+			showStep2(gg);
+		}
 		$('#gg').on("change",function(e) {
-			store("gg",$('#gg').val());
+			var gg = $('#gg').val();
+			store("gg",gg);
+			showStep2(gg);
 		});
+
+		function showStep2(gg) {
+			$('#step2url').attr("href","https://swgoh.gg/u/"+gg+"/collection/")
+			$('#step2url2').attr("href","https://swgoh.gg/u/"+gg+"/ships/")
+			$('#step2').show();
+		}
 
 		function store(key,val) {
 			storage.setItem(key,val);
@@ -142,14 +159,46 @@ if(!empty($gg)) {
 
 		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Territory Battle Readiness</h1>
 
-		<? if(true) { ?>
-			<p>This tool will inspect your account and give advice on what you need to work on for Territory Battles. It needs to fetch your roster information from <a href="https://www.swgoh.gg">swgoh.gg</a> to do this. If you don't have an account there, please make one. To prevent overwhelming swgoh.gg it only fetches account information once a day.</p>
-			
-			<br />
-			<b>Sorry! SWGOH.GG is currently blocking this tool from gathering your information. We are working with them to get it working again.</b>
-			<br /><br /><br />
+		<? if(empty($gg)) { ?>
+			<p>This tool will inspect your account and give advice on what you need to work on for Territory Battles. It needs to fetch your roster information from <a href="https://www.swgoh.gg">swgoh.gg</a> to do this. If you don't have an account there, please make one. </p>
+		
+			<form action="<?=$self?>" method="post">
+			<b>What is your SWGOH.GG Name:</b><br />
+			https://swgoh.gg/u/<input type="text" id="gg" name="gg" />/ <input type="button" value="ok" /><br /><br />
 
-		<? } else if(empty($gg)) { ?>
+			<div id="step2" style="display:none">
+				<b>SWGOH.GG does not allow automatic fetching of your account information, so we'll have to do it manually <i class="fa fa-smile-o"></i>.</b>
+				<br />
+				<br />
+				Step 1:<br />
+				<a href="" id="step2url" target="_blank">Click here to open your toon collection page on swgoh.gg</a>
+				<br /><br />
+				Step 2:<br />
+				In your web browser, find the "View Page Source" menu option and select it. You'll see a bunch of HTML code in a new window.  Copy and Paste that entire page of text into the following text box.
+				<br /><br />				
+				Step 3:<br />
+				Copy and paste the HTML from your SWGOH.GG toon collection page here:<br />
+				<textarea name="manual"></textarea>
+				<br />
+
+				Step 4:<br />
+				<a href="" id="step2url2" target="_blank">Click here to open your ship collection page on swgoh.gg</a>
+				<br /><br />
+				Step 5:<br />
+				In your web browser, find the "View Page Source" menu option and select it. You'll see a bunch of HTML code in a new window.  Copy and Paste that entire page of text into the following text box.
+				<br /><br />				
+				Step 6:<br />
+				Copy and paste the HTML from your SWGOH.GG ship collection page here:<br />
+				<textarea name="manual2"></textarea>
+				<br />
+
+
+				<input type="submit" value="Inspect My Account" class="btn" />
+			</div>
+
+			</form>
+
+		<? } else if(empty($gg) && false) { ?>
 			<p>This tool will inspect your account and give advice on what you need to work on for Territory Battles. It needs to fetch your roster information from <a href="https://www.swgoh.gg">swgoh.gg</a> to do this. If you don't have an account there, please make one. To prevent overwhelming swgoh.gg it only fetches account information once a day.</p>
 			<form action="<?=$self?>" method="post">
 				<b>Your SWGOH.GG Name:</b><br />

@@ -21,8 +21,8 @@ $gname = empty($_POST['gname']) ? "" : trim($_POST['gname']);
 $gg = empty($_POST['gg']) ? "" : trim($_POST['gg']);
 $gpass = empty($_POST['gpass']) ? "" : strtolower(trim($_POST['gpass']));
 $glevel = empty($_POST['glevel']) ? 85 : makeInteger(trim($_POST['glevel']));
-$gtoons = empty($_POST['gtoons']) ? 10 : makeInteger(trim($_POST['gtoons']));
-$ggear = empty($_POST['ggear']) ? 10 : makeInteger(trim($_POST['ggear']));
+$gtoons = !isset($_POST['gtoons']) ? 10 : makeInteger(trim($_POST['gtoons']));
+$ggear = !isset($_POST['ggear']) ? 10 : makeInteger(trim($_POST['ggear']));
 $ggp = empty($_POST['ggp']) ? 1000000 : makeInteger(trim($_POST['ggp']));
 $gtb = empty($_POST['gtb']) ? 0 : makeInteger(trim($_POST['gtb']));
 $ghaat = empty($_POST['ghaat']) ? 0 : makeInteger(trim($_POST['ghaat']));
@@ -44,8 +44,8 @@ if(!empty($gpass)) {
 }
 
 $level = empty($_GET['level']) ? 85 : makeInteger(trim($_GET['level']));
-$toons = empty($_GET['toons']) ? 10 : makeInteger(trim($_GET['toons']));
-$gear = empty($_GET['gear']) ? 10 : makeInteger(trim($_GET['gear']));
+$toons = !isset($_GET['toons']) ? 10 : makeInteger(trim($_GET['toons']));
+$gear = !isset($_GET['gear']) ? 10 : makeInteger(trim($_GET['gear']));
 $gp = empty($_GET['gp']) ? 100000 : makeInteger(trim($_GET['gp']));
 
 
@@ -88,10 +88,43 @@ $gp = empty($_GET['gp']) ? 100000 : makeInteger(trim($_GET['gp']));
   		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   		<script type="text/javascript">
 		$(document).ready(function() {
-			// console.log($('#gmt'));
-			// if($('#gmt').length) {
-			// 	$('#gmt').value(2);
-			// }
+			var storage = null;
+			if(window.localStorage) storage = window.localStorage;
+			else if(window.globalStorage) storage = window.globalStorage[location.hostname];
+
+			var level = fetch("level");
+			if(level) $('#level').val(level);
+			$('#level').on("change",function(e) {
+				store("level",$('#level').val());
+			});
+
+			var toons = fetch("toons");
+			if(toons) $('#toons').val(toons);
+			$('#toons').on("change",function(e) {
+				store("toons",$('#toons').val());
+			});
+
+			var gear = fetch("gear");
+			if(gear) $('#gear').val(gear);
+			$('#gear').on("change",function(e) {
+				store("gear",$('#gear').val());
+			});
+			
+			var gp = parseInt(fetch("gp"));
+			if(gp) $('#gp').val(gp.toLocaleString());
+			$('#gp').on("change",function(e) {
+				gp = parseInt($('#gp').val().replace(/\,/g,''));
+
+				$('#gp').val(gp.toLocaleString());
+				store("gp",gp);
+			});
+
+			function store(key,val) {
+				storage.setItem(key,val);
+			}
+			function fetch(key) {
+				return storage.getItem(key);
+			}
 			
 		});
 		</script>
@@ -127,8 +160,8 @@ $gp = empty($_GET['gp']) ? 100000 : makeInteger(trim($_GET['gp']));
 			<? } else if(!empty($_GET['p']) && $_GET['p']==1) { ?>
 				<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; <a href="recruit.php">Guild Recruiting Tools</a> &gt; Add Guild</h1>
 
-				<p>Your are a guild looking for new members.</p>
-
+				<p>Your are a guild looking for new members.  To update your listing, enter the same information for the URL and Passcode fields that you did the first time.</p>
+				<br />
 				<form action="<?=$self?>" method="post">
 					<div class="half">
 					<b>Your Guild Name:</b> (required)<br />
@@ -176,7 +209,7 @@ $gp = empty($_GET['gp']) ? 100000 : makeInteger(trim($_GET['gp']));
 
 
 					<b>Passcode:</b>  (required)<br />
-					This is not intended to be strong security. You can share it with your guild leaders. It will be required to edit your listing. Do not forget it because we have not built a way to recover it yet.<br />
+					This is not intended to be strong security. You can share it with your guild leaders. It will be required to edit your listing. Do not forget it because we have not built a way to recover it yet. To edit your listing in the future, enter the same passcode and the same URL and all the other information will be updated.<br />
 					<input type="text" id="gpass" name="gpass" value="<?=$gpass?>" /><br /><br />
 
 					<br />
@@ -199,7 +232,7 @@ $gp = empty($_GET['gp']) ? 100000 : makeInteger(trim($_GET['gp']));
 					<b>Number of 7<i class="fa fa-star"></i> Toons You Have:</b><br />
 					<input type="text" id="toons" name="toons" value="<?=$toons?>" /><br /><br />
 
-					<b>Number of Gear 11 Toons You Have:</b><br />
+					<b>Number of Gear 11+ Toons You Have:</b><br />
 					<input type="text" id="gear" name="gear" value="<?=$gear?>" /><br /><br />
 
 					<b>Your Galactic Power:</b><br />
@@ -213,22 +246,43 @@ $gp = empty($_GET['gp']) ? 100000 : makeInteger(trim($_GET['gp']));
 			<? } else if(!empty($_GET['p']) && $_GET['p']==3) { ?>
 				<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; <a href="recruit.php">Guild Recruiting Tools</a> &gt; <a href="recruit.php?p=2">Find Guild</a> &gt; Search Results</h1>
 
+				<p>Searching for guilds with:
+				<?
+				$sql = "";
+				if(!empty($level)) {
+					$min = intval($level*.7);
+					if($level==85) $min = 84;
+					$sql .= " AND lvl<=".$level." AND lvl>=".$min;
+					echo " A level requirement between ".$min." and ".$level.".";
+				}
+				if(isset($toons)) {
+					$min = intval($toons*.5);
+					$sql .= " AND stars<=".$toons." AND stars>=".$min;
+					echo " A 7* requirement between ".$min." and ".$toons.".";
+				}
+				if(isset($gear)) {
+					$min = intval($gear*.4);
+					$sql .= " AND gear<=".$gear." AND gear>=".$min;
+					echo " A g11+ requirement between ".$min." and ".$gear.".";
+				}
+				if(!empty($gp)) {
+					$min = intval($gp*.7);
+					$sql .= " AND gp<=".$gp." AND gp>=".$min;
+					echo " A GP requirement between ".number_format($min)." and ".number_format($gp).".";
+				}
+				?>
+				</p>
+
 				<table>
 					<tr>
 						<th></th>
 						<th>Guild Name</th>
 						<th>Level Requirement</th>
 						<th>Min 7<i class="fa fa-star"></i></th>
-						<th>Min Gear 11</th>
+						<th>Min Gear 11+</th>
 						<th>Min Galactic Power</th>
 					</tr>
 				<?
-				$sql = "";
-				if(!empty($level)) $sql .= " AND lvl<=".$level;
-				if(!empty($toons)) $sql .= " AND stars<=".$toons;
-				if(!empty($gear)) $sql .= " AND gear<=".$gear;
-				if(!empty($gp)) $sql .= " AND gp<=".$gp;
-
 				$rs = $db->query("SELECT * FROM recruit_guild WHERE active=1".$sql." order by lastupdate desc");
 				$num=0;
 				while($row = $db->getNext($rs,1)) {
@@ -266,7 +320,7 @@ $gp = empty($_GET['gp']) ? 100000 : makeInteger(trim($_GET['gp']));
 						<tr>
 							<th>Min Player Level</th>
 							<th>Min 7<i class="fa fa-star"></i></th>
-							<th>Min Gear 11</th>
+							<th>Min Gear 11+</th>
 							<th>Min Galactic Power</th>
 						</tr>
 						<tr>
