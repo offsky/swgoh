@@ -118,6 +118,7 @@
 			var refreshes = 0;
 			var shipments = 0;
 			var crystals = 0;
+			var special_total = 0;
 			$('#dont').hide();
 			$('#do').hide();
 			if(perDay<=2.9) { //free crystals
@@ -164,12 +165,29 @@
 				shipments = 4;
 				crystals = 1980;
 				$('#do').show();
+			} else if(perDay<=33.3) { //6 refreshes + 4 shipments
+				refreshes = 6;
+				shipments = 4;
+				crystals = 2380;
+				$('#do').show();
+			} else if(perDay<=35.7) { //7 refreshes + 4 shipments
+				refreshes = 7;
+				shipments = 4;
+				crystals = 2780;
+				$('#do').show();
+			} else {
+				refreshes = "7+";
+				shipments = 4;
+				crystals = "2780+";
+				special_total = 2780*days;
+				$('#do').show();
 			}
 
 			$("#refreshes").html(refreshes);
 			$("#shipments").html(shipments);
 			$("#crystals").html(crystals);
-			$("#totalcrystals").html(crystals*days)
+			$("#totalcrystals").html(crystals*days);
+			if(refreshes=="7+") $("#totalcrystals").html(special_total+"+");
 		}
 
 		function update1(who) {
