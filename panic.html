@@ -204,7 +204,9 @@
 
 		
 			var remain7 = 0;
-			if(stars==6) {
+			if(stars==7) {
+				remain7 = 0;
+			} else if(stars==6) {
 				$('#'+who+'_max').html("100");
 				remain7 = 100-shards;
 			} else if(stars==5) {
