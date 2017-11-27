@@ -24,7 +24,7 @@ $time = empty($_POST['time']) ? "" : makeInteger(trim($_POST['time']));
 
 $recorded = false;
 if(!empty($gp) && !empty($stars)) {
-	$rs = $db->query("INSERT INTO swgoh_tb_scores(gp,stars,stamp,dark) VALUES(".intval($gp).",".intval($stars).",".intval($time).",0)");
+	$rs = $db->query("INSERT INTO swgoh_tb_scores(gp,stars,stamp,dark) VALUES(".intval($gp).",".intval($stars).",".intval($time).",1)");
 	$recorded = true;
 	header("Location: http://shard.swgoh.life/territory_battle_scores.php?recorded=1");
 }
@@ -146,121 +146,121 @@ if(!empty($_GET['recorded'])) $recorded = true;
 			<table>
 				<tr><th>Guild GP</th><th>Average Stars <i class="fa fa-star"></i></th><th>Range</th><th>Data Points</th></tr>
 				<?
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>10000 AND gp<=5000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>10000 AND gp<=5000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>0 - 5,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>0 - 5,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>5000000 AND gp<=10000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>5000000 AND gp<=10000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>5,000,000 - 10,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>5,000,000 - 10,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>10000000 AND gp<=20000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>10000000 AND gp<=20000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>10,000,000 - 20,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>10,000,000 - 20,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>20000000 AND gp<=30000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>20000000 AND gp<=30000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>20,000,000 - 30,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>20,000,000 - 30,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>30000000 AND gp<=40000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>30000000 AND gp<=40000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>30,000,000 - 40,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>30,000,000 - 40,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>40000000 AND gp<=50000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>40000000 AND gp<=50000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>40,000,000 - 50,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>40,000,000 - 50,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>50000000 AND gp<=60000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>50000000 AND gp<=60000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>50,000,000 - 60,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>50,000,000 - 60,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>60000000 AND gp<=65000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>60000000 AND gp<=65000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>60,000,000 - 65,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>60,000,000 - 65,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>65000000 AND gp<=70000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>65000000 AND gp<=70000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>65,000,000 - 70,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>65,000,000 - 70,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>70000000 AND gp<=75000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>70000000 AND gp<=75000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>70,000,000 - 75,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>70,000,000 - 75,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>75000000 AND gp<=80000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>75000000 AND gp<=80000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>75,000,000 - 80,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>75,000,000 - 80,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>80000000 AND gp<=85000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>80000000 AND gp<=85000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>80,000,000 - 85,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>80,000,000 - 85,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>85000000 AND gp<=90000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>85000000 AND gp<=90000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>85,000,000 - 90,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>85,000,000 - 90,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>90000000 AND gp<=95000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>90000000 AND gp<=95000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>90,000,000 - 95,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>90,000,000 - 95,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>95000000 AND gp<=100000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>95000000 AND gp<=100000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>95,000,000 - 100,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>95,000,000 - 100,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>100000000 AND gp<=110000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>100000000 AND gp<=110000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>100,000,000 - 110,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>100,000,000 - 110,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>110000000 AND gp<=120000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>110000000 AND gp<=120000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>110,000,000 - 120,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>110,000,000 - 120,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>120000000 AND gp<=130000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>120000000 AND gp<=130000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>120,000,000 - 130,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>120,000,000 - 130,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>130000000 AND gp<=140000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>130000000 AND gp<=140000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>130,000,000 - 140,000,000</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>130,000,000 - 140,000,000</td><td colspan='2'>Not Enough data</td>";
 						echo "<td>".$row[1]."</td></tr>";
 					}
-					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=0 AND gp>140000000");
+					$rs = $db->query("SELECT avg(stars),count(stars),min(stars),max(stars) FROM swgoh_tb_scores WHERE dark=1 AND gp>140000000");
 					while($row = $db->getNext($rs)) {
 						if($row[1]>2) echo "<tr><td>140,000,000+</td><td>".round($row[0])."</td><td>".$row[2]."-".$row[3]."</td>";
 						else echo "<tr><td>140,000,000+</td><td colspan='2'>Not Enough data</td>";

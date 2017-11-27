@@ -13,24 +13,24 @@ if(strpos($_SERVER['SERVER_NAME'], "docker")===false) {
 $self = explode("/",$_SERVER['PHP_SELF']);
 $self = array_pop($self);
 
-$gg = empty($_POST['gg']) ? "" : trim($_POST['gg']);
+$gg = empty($_REQUEST['gg']) ? "" : trim($_REQUEST['gg']);
 $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 $manual2 = empty($_POST['manual2']) ? "" : trim($_POST['manual2']);
 
 if(!empty($gg)) {
 	$rs = $db->query("SELECT * FROM player WHERE username='ss' and username='".$db->str($gg)."'");
 	if($row = $db->getNext($rs,1)) {
-		if($row['last']<time()-(86400*1) && !empty($manual)  && !empty($manual2)) {
+		if($row['last']<time()-(86400*0) && !empty($manual)  && !empty($manual2)) {
 			$db->query("UPDATE player SET last = ".time()." WHERE username='".$db->str($gg)."'");
 			$data = getUserFromGG($gg,$manual);
 			foreach($data as $toonKey=>$toon) {	
 				$flags = getToonFlags($toon['title']);
-				if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
+				$db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel,empire,bounty,trooper) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].",".$flags['empire'].",".$flags['bounty'].",".$flags['trooper'].")");
 			}
 			$data = getUserShipsFromGG($gg,$manual2);
 			foreach($data as $toonKey=>$toon) {	
 				$flags = getToonFlags($toon['title']);
-				if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,ship) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",0,".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",1)");
+				$db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,ship) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",0,".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",1)");
 			}
 		}
 	} else if(!empty($manual)  && !empty($manual2)) {
@@ -39,12 +39,12 @@ if(!empty($gg)) {
 
 		foreach($data as $toonKey=>$toon) {	
 			$flags = getToonFlags($toon['title']);
-			if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].")");
+			$db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel,empire,bounty,trooper) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].",".$flags['empire'].",".$flags['bounty'].",".$flags['trooper'].")");
 		}
 		$data = getUserShipsFromGG($gg,$manual2);
 		foreach($data as $toonKey=>$toon) {	
 			$flags = getToonFlags($toon['title']);
-			if($flags['light']) $db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,ship) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",0,".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",1)");
+			$db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,ship) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",0,".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",1)");
 		}
 	}
 
@@ -97,6 +97,75 @@ if(!empty($gg)) {
 				height: 100px;
 			}
 
+a.seg {
+	font-weight: normal;
+	font-size: 14px;
+	letter-spacing: .4px;
+	padding: 7px 12px;
+	background-color: #fff;
+	color: rgba(189, 139, 40, 1);
+	display: inline-block;
+	border: 2px solid rgba(189, 139, 40, 1);
+	border-radius: 3px;
+	position: relative;	
+	text-decoration: none;
+	cursor: pointer;
+	white-space: nowrap;
+	margin: 0;
+}
+
+a.seg:hover  {
+	text-decoration:none;
+	background-color: rgba(189, 139, 40, 1);
+	color: #fff;
+	transition: all ease-in-out .15s;
+}
+
+.seg:focus,
+.seg:active {
+	outline: none;
+	box-shadow: 0 0 10px rgba(189, 139, 40, .7);
+}
+
+.link_grp {
+	display: flex;
+	margin: 30px 0px;
+}
+
+.link_grp .seg:first-child {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+.link_grp .seg + .seg {
+	border-left: 1px;
+}
+.link_grp .seg {
+	border-radius: 0;
+	padding-right: 15px;
+	padding-left: 15px;
+	white-space: normal;
+	text-align: center;
+}
+.link_grp .seg:last-child {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+.link_grp .seg:hover {
+	background-color: rgba(189, 139, 40, .7);
+	color: #fff;
+}
+.link_grp .seg.active {
+	background-color: rgba(189, 139, 40, 1);
+	color: #fff;
+}
+
+.link_grp .seg:focus {
+	outline: none;
+	box-shadow: 0 0 10px rgba(189, 139, 40, .7);
+}
+
+
 			@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
 			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
 			@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
@@ -136,6 +205,7 @@ if(!empty($gg)) {
 		function fetch(key) {
 			return storage.getItem(key);
 		}
+
 	});
 	</script>
 	</head>
@@ -206,12 +276,18 @@ if(!empty($gg)) {
 
 				<input type="submit" value="Inspect My Account" class="btn" />
 			</form>
-		<? } else { ?>
+		<? } else if(empty($_GET['dark'])) { ?>
 
 			SWGOH Account: <?=$gg?> (<a href="territory_battle.php">pick another</a>)
 
+			<br />
 
-			<br /><br /><h2>Hoth Rebel Brothers</h2>
+			<div class="link_grp">
+				<a href="territory_battle.php?gg=<?=$gg?>" class="seg active">Light Side</a>
+				<a href="territory_battle.php?gg=<?=$gg?>&dark=1" class="seg">Dark Side</a>
+			</div>
+
+			<h2>Hoth Rebel Brothers</h2>
 			<p>You will need a 5<i class="fa fa-star"></i> Hoth Rebel Soldier and a 6<i class="fa fa-star"></i> Hoth Rebel Scout for a variety of missions. </p>
 			<? 
 				$red = 0;
@@ -256,7 +332,7 @@ if(!empty($gg)) {
 			?>
 
 			<br /><br /><h2>Rebels</h2>
-			<p>You will need three entire squads of Light Side characters including one Rebel Squad at 7<i class="fa fa-star"></i>, but the more rebels the better because they get a buff (Protection up if you use a special and no enemies where defeated). Dont feel like you have to use all rebels. If you have a great Resistance team, use it. Here are the rebels not already mentioned above.</p>
+			<p>You will need four entire squads of Light Side characters including one Rebel Squad at 7<i class="fa fa-star"></i>, but the more rebels the better because they get a buff (Protection up if you use a special and no enemies where defeated). Dont feel like you have to use all rebels. If you have a great Resistance team, use it. Here are the rebels not already mentioned above.</p>
 			<? 
 				$red = 0;
 				$rs = $db->query("SELECT * from toons WHERE rebel=1 AND phoenix=0 AND rogue=0 AND toon!='Hoth Rebel Soldier' AND toon!='Hoth Rebel Scout' AND toon!='Captain Han Solo' AND toon!='Commander Luke Skywalker' AND toon!='Rebel Officer Leia Organa' AND user='".$db->str($gg)."'");
@@ -275,7 +351,83 @@ if(!empty($gg)) {
 			?>
 			<br />
 			<? 
-				$rs = $db->query("SELECT * from toons WHERE ship=1 AND toon!='Home One' AND toon!='Endurance' AND user='".$db->str($gg)."'");
+				$rs = $db->query("SELECT * from toons WHERE ship=1 AND light=1 AND toon!='Home One' AND toon!='Endurance' AND user='".$db->str($gg)."'");
+				while($row = $db->getNext($rs,1)) {
+					printOneShip2($row,7);
+				}			
+			?>
+
+			<br /><br /><br /><h2>Notes</h2>
+			<p>Gear level 8,9 and Character Level 70 were chosen as the minimum requirement to be useful, depending on the character and will appear red above if your character is under this. Naturally, the higher the better.</p>
+				
+		<? } else { ?>
+
+			SWGOH Account: <?=$gg?> (<a href="territory_battle.php">pick another</a>)
+
+			<br />
+			<div class="link_grp">
+				<a href="territory_battle.php?gg=<?=$gg?>" class="seg">Light Side</a>
+				<a href="territory_battle.php?gg=<?=$gg?>&dark=1" class="seg active">Dark Side</a>
+			</div>
+			
+			<h2>Special Characters</h2>
+			<p>You will need a 7<i class="fa fa-star"></i> Colonel Starck, General Veers and Imperial Probe Droid for the Special Mission in phase 6 and other missions. You will also need a 5<i class="fa fa-star"></i> Snowtrooper and a 4<i class="fa fa-star"></i> Darth Vader for various missions.</p>
+			<? 
+				$red = 0;
+				$rs = $db->query("SELECT * from toons WHERE (toon='Colonel Starck' OR toon='General Veers' OR toon='Imperial Probe Droid' OR toon='Snowtrooper' OR toon='Darth Vader') AND user='".$db->str($gg)."'");
+				while($row = $db->getNext($rs,1)) {
+					if($row['toon']=="Snowtrooper") {
+						if(printOneToon2($row,5,8)) $red++;
+					} else if($row['toon']=="Darth Vader") {
+						if(printOneToon2($row,4,8)) $red++;
+					} else {
+						if(printOneToon2($row,7,8)) $red++;
+					}
+				}			
+			?>
+
+
+			<br /><br /><h2>Bounty Hunters</h2>
+			<p>You will need a 6<i class="fa fa-star"></i> Bounty Hunter squad to complete a Phase 5 Special Mission and other missions.</p>
+			<? 
+				$red = 0;
+				$rs = $db->query("SELECT * from toons WHERE bounty=1 AND user='".$db->str($gg)."'");
+				while($row = $db->getNext($rs,1)) {
+					if(printOneToon2($row,6,9)) $red++;
+				}			
+			?>
+
+			<br /><br /><h2>Imperial Trooper</h2>
+			<p>You will need a 5<i class="fa fa-star"></i> Imperial Trooper squad to complete a Phase 3 Special Mission with General Veers and Colonel Starck.</p>
+			<? 
+				$red = 0;
+				$rs = $db->query("SELECT * from toons WHERE trooper=1 AND toon!='Colonel Starck' AND toon!='General Veers' AND user='".$db->str($gg)."'");
+				while($row = $db->getNext($rs,1)) {
+					if(printOneToon2($row,5,9)) $red++;
+				}			
+			?>
+
+			<br /><br /><h2>Empire</h2>
+			<p>You will need four entire squads of Dark Side characters at 7<i class="fa fa-star"></i> including 2 full Empire squads for Phase 6. The more Empire the better because they get a buff (+Crit Chance, +Health, +Healthsteal), but don't feel like you have to use all Empire. Here are the Empire toons not already listed above.</p>
+			<? 
+				$red = 0;
+				$rs = $db->query("SELECT * from toons WHERE empire=1 AND trooper=0 AND toon!='Imperial Probe Droid' AND toon!='Darth Vader' AND user='".$db->str($gg)."'");
+				while($row = $db->getNext($rs,1)) {
+					if(printOneToon2($row,7,9)) $red++;
+				}			
+			?>
+
+			<br /><br /><h2>Ships</h2>
+			<p>You will need six 7<i class="fa fa-star"></i> dark side ships and one 7<i class="fa fa-star"></i> capital ship.</p>
+			<? 
+				$rs = $db->query("SELECT * from toons WHERE ship=1 AND (toon='Executrix' OR toon='Chimaera') AND user='".$db->str($gg)."'");
+				while($row = $db->getNext($rs,1)) {
+					printOneShip2($row,7);
+				}			
+			?>
+			<br />
+			<? 
+				$rs = $db->query("SELECT * from toons WHERE ship=1 AND light=0 AND toon!='Executrix' AND toon!='Chimaera' AND user='".$db->str($gg)."'");
 				while($row = $db->getNext($rs,1)) {
 					printOneShip2($row,7);
 				}			
