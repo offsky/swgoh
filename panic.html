@@ -92,6 +92,22 @@
 			return storage.getItem(key);
 		}
 
+		function timer() {
+			var days = parseInt($("#days").val());
+			var secs = days*86400*1000;
+
+			var secsToday = ((new Date().getTime()))%86400;
+			var thisMorning = new Date().setSeconds(-secsToday);
+
+			var future = thisMorning+secs;
+			var now = ((new Date().getTime()));
+			var tz = new Date().getTimezoneOffset()*60*1000;
+
+			var left = (future-now+tz)/(60*1000);
+			
+			$('#timeleft').html(left.toFixed(2)+" minutes left!");
+		}
+
 		function update() {
 			var c =  parseInt(update1('chew'));
 			var h =  parseInt(update1('han'));
@@ -201,7 +217,6 @@
 			} else {
 				$("#"+who+"_sh").show();
 			}
-
 		
 			var remain7 = 0;
 			if(stars==7) {
@@ -255,6 +270,8 @@
 		$('#days').on("change", update);
 
 		$('#button').on("click", panic);
+
+		setInterval(timer,100);
 
 		update();
 	});
@@ -322,7 +339,7 @@
 				<br />
 				<b class="dontpanic" id="dont">DON'T PANIC</b>
 				<b class="panic" id="do">OK, PANIC</b>
-
+				<b id="timeleft"></b>
 			</div>
 		</div>
 	
