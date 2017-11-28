@@ -77,6 +77,8 @@
 		if(window.localStorage) storage = window.localStorage;
 		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
 
+		var left = 0;
+
 		function cacheForm(name) {
 			var val = fetch(name);
 			if(val) $('#'+name).val(val);
@@ -92,20 +94,18 @@
 			return storage.getItem(key);
 		}
 
-		function timer() {
+		function getLeft() {
 			var days = parseInt($("#days").val())+6;
-			var secs = days*86400*1000;
 
-			var secsToday = ((new Date().getTime()))%86400;
-			var thisMorning = new Date().setSeconds(-secsToday);
+			left = new Date().setHours(24*days);
+			update();
+		}
 
-			var future = thisMorning+secs;
-			var now = ((new Date().getTime()));
-			var tz = new Date().getTimezoneOffset()*60*1000;
+		function timer() {
+			var now = new Date().getTime();
+			var display = (left - now)/(1000*60);
 
-			var left = (future-now+tz)/(60*1000);
-			
-			$('#timeleft').html(left.toFixed(2)+" minutes left!");
+			$('#timeleft').html(display.toFixed(3)+" minutes left!");
 		}
 
 		function update() {
@@ -151,16 +151,39 @@
 				refreshes = 3;
 				crystals = 300;
 				$('#dont').show();
+			} else if(perDay<=13.5) { //4 refreshes
+				refreshes = 4;
+				crystals = 500;
+				$('#dont').show();
 			} else if(perDay<=15.1) { //3 refreshes + 1 shipment
 				refreshes = 3;
 				shipments = 1;
 				crystals = 620;
 				$('#do').show();
+			} else if(perDay<=15.9) { //5 refreshes
+				refreshes = 4;
+				crystals = 700;
+				$('#dont').show();
+			} else if(perDay<=17.5) { //4 refreshes + 1 shipment
+				refreshes = 4;
+				shipments = 1
+				crystals = 820;
+				$('#dont').show();
 			} else if(perDay<=19.1) { //3 refreshes + 2 shipments
 				refreshes = 3;
 				shipments = 2;
 				crystals = 940;
 				$('#do').show();
+			} else if(perDay<=19.9) { //5 refreshes + 1 shipment
+				refreshes = 5;
+				shipments = 1
+				crystals = 1020;
+				$('#dont').show();
+			} else if(perDay<=21.5) { //4 refreshes + 2 shipment
+				refreshes = 4;
+				shipments = 2
+				crystals = 1140;
+				$('#dont').show();
 			} else if(perDay<=23.1) { //3 refreshes + 3 shipments
 				refreshes = 3;
 				shipments = 3;
@@ -267,12 +290,13 @@
 		$("#chew_shards").on("change", update);
 		$("#han_stars").on("change", update);
 		$('#han_shards').on("change", update);
-		$('#days').on("change", update);
+		$('#days').on("change", getLeft);
 
 		$('#button').on("click", panic);
 
-		setInterval(timer,100);
+		setInterval(timer,130);
 
+		getLeft();
 		update();
 	});
 	</script>
