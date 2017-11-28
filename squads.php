@@ -20,6 +20,7 @@ function translateName($short) {
 <html>
 <head>
 	<title>SWGOH Tools - Squad High Scores</title>
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="upload.css" media="screen" />
 	<style>
@@ -59,9 +60,7 @@ function translateName($short) {
 		background-color: #fff;
 		opacity: 0.8;
 	}
-	.square {
-		height: 270px;
-	}
+
 	@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
 	@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
 	@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
@@ -115,31 +114,31 @@ function translateName($short) {
 	<?
 		if(empty($_GET['raid'])) {
 			?>
-			<div class="square">
+			<div class="square short">
 				<a href="squads.php?raid=rancor"><img src="http://www.swgoh.life/images/rancor.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=rancor">The Pit / Rancor</a></b><br />
 				<p>Find out which squads work well against the Rancor.</p>
 			</div>
 
-			<div class="square">
+			<div class="square short">
 				<a href="squads.php?raid=haat1"><img src="http://www.swgoh.life/images/aat1.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=haat1">Tank Takedown Phase 1</a></b><br />
 				<p>Find out which squads work well against General Grievous in Phase 1.</p>
 			</div>
 
-			<div class="square">
+			<div class="square short">
 				<a href="squads.php?raid=haat2"><img src="http://www.swgoh.life/images/aat2.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=haat2">Tank Takedown Phase 2</a></b><br />
 				<p>Find out which squads work well against the Tank in Phase 2.</p>
 			</div>
 
-			<div class="square">
+			<div class="square short">
 				<a href="squads.php?raid=haat3"><img src="http://www.swgoh.life/images/aat3.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=haat3">Tank Takedown Phase 3</a></b><br />
 				<p>Find out which squads work well against the Droids in Phase 3.</p>
 			</div>
 
-			<div class="square">
+			<div class="square short">
 				<a href="squads.php?raid=haat4"><img src="http://www.swgoh.life/images/aat4.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=haat4">Tank Takedown Phase 4</a></b><br />
 				<p>Find out which squads work well against the Tank in Phase 4.</p>

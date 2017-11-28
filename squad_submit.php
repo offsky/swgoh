@@ -41,6 +41,7 @@ if(!empty($_POST['fileid']) && !empty($_POST['raid'])) {
 <html class="js">
 <head>
 	<title>SWGOH Tools - Squad High Scores</title>
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="upload.css" media="screen" />
 	<style>

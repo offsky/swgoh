@@ -307,6 +307,9 @@ td.center {
 	margin: 0px 20px 20px 0px;
 	text-align: center;
 }
+.square.short {
+	height: 270px;
+}
 .square img {
 	border-radius: 5px;
 	margin-bottom:10px;
@@ -394,6 +397,9 @@ input[type=text],textarea { font-size: 14px; padding:4px;margin:3px;}
 		width: 100px;
 		height:100px;
 	}
+	.square.short {
+		height: 250px;
+	}
 }
 
 @media (max-width: 620px) {
@@ -403,6 +409,16 @@ input[type=text],textarea { font-size: 14px; padding:4px;margin:3px;}
 		padding: 3%;
 		margin: 0px 2% 2% 0px;
 	}
+	.square.short {
+		height: 230px;
+	}
+}
+
+@media (max-width: 800px) {
+	.half {
+		width:100%;
+		min-width:100%;
+	}
 }
 
 @media (max-width: 430px) {
@@ -411,5 +427,8 @@ input[type=text],textarea { font-size: 14px; padding:4px;margin:3px;}
 		height:auto;
 		padding: 4%;
 		margin: 0px 8% 10px 0px;
+	}
+	.square.short {
+		height:auto;
 	}
 }

@@ -53,6 +53,7 @@ $gp = empty($_GET['gp']) ? 100000 : makeInteger(trim($_GET['gp']));
 <html>
 	<head>
 		<title>SWGOH Tools - Guild Recruiting Tools</title>
+  		<meta name="viewport" content="width=device-width, initial-scale=1">
 	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 		<meta charset="utf-8" />
 		<style>

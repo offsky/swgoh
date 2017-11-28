@@ -54,6 +54,7 @@ if(!empty($gg)) {
 <html>
 	<head>
 		<title>SWGOH Tools - Territory Battle Readiness</title>
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 		<meta charset="utf-8" />
 		<style>

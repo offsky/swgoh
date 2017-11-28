@@ -47,6 +47,7 @@ if(!empty($me) && !empty($ally)) {
 <html>
 	<head>
 		<title>SWGOH Tools - Find your SWGOH Fleet Arena Shard</title>
+  		<meta name="viewport" content="width=device-width, initial-scale=1">
 	  	<link rel="stylesheet" type="text/css" href="style.css?2" media="screen" />
 		<meta charset="utf-8" />
 		<style>
