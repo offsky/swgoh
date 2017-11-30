@@ -359,7 +359,7 @@ function photo_TouchStartImage(event) {
 		else if(container.hasClass("rotateRight")) { var tmp = startX; startX=startY;startY=-tmp; }
 		else if(container.hasClass("rotateLeft")) { var tmp = startX; startX=-startY;startY=tmp; }
 
-		$('#canvasCrop').on('touchend', photo_TouchEndImage);
+		$('#overlay').on('touchend', photo_TouchEndImage);
 	}
 }
 
