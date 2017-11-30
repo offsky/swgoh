@@ -415,8 +415,8 @@ function photo_TouchEndImage(event) {
 }
 
 function photo_moveImage(mouseX,mouseY,strtX,strtY) {
-	var difX = mouseX-strtX;
-	var difY = mouseY-strtY;
+	var difX = parseInt(mouseX-strtX);
+	var difY = parseInt(mouseY-strtY);
 
 	var canvas = $('#canvasCrop');
 	var size = photo_getCSSxy(canvas,"background-size");
@@ -435,8 +435,8 @@ function photo_moveImage(mouseX,mouseY,strtX,strtY) {
 	if(x<-(size[0]-width)) x = -(size[0]-width);
 	if(y<-(size[1]-height)) y = -(size[1]-height);
 
-	// console.log(x,y,difX,difY,size);
-	$('#canvasCrop').css("background-position",x+"px "+y+"px");	
+	//console.log(x,y,difX,difY,size);
+	$('#canvasCrop').css("background-position",parseInt(x)+"px "+parseInt(y)+"px");	
 }
 
 //prevents the image from getting smaller than the constraints
