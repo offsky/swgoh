@@ -430,10 +430,10 @@ function photo_moveImage(mouseX,mouseY,strtX,strtY) {
 	y += Number(difY);
 
 	//prevent croping past boundry of image
-	if(x>0) x = 0;
-	if(y>0) y = 0;
-	if(x<-(size[0]-width)) x = -(size[0]-width);
-	if(y<-(size[1]-height)) y = -(size[1]-height);
+	if(x>30) x = 30; //this is hard coded to the inner dimensions of the transparent area. Set to 0 if no overlay
+	if(y>30) y = 30;
+	if(x<-(size[0]-width)-30) x = -(size[0]-width)-30;
+	if(y<-(size[1]-height)-30) y = -(size[1]-height)-30;
 
 	//console.log(x,y,difX,difY,size);
 	$('#canvasCrop').css("background-position",parseInt(x)+"px "+parseInt(y)+"px");	
