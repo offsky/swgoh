@@ -246,7 +246,7 @@ p#cropLabel {
 
 		<p>Create your own SWGOH Avatar! Upload the photo you want. Zoom, rotate and crop your photo until it is just right!</p>
 
-		<div id="sb_upload">
+		<div class="half">
 			<p id="error" class="small dim" style="display:none;"><b>Oops!</b> The file you uploaded was either too big or was not an image. Please choose a file with the extension .gif, .png or .jpg.</p>
 
 			<div id="canvasContainer">
@@ -286,16 +286,26 @@ p#cropLabel {
 			<img src="images/sampleBlank.png" id="sample" style="display:none;" />
 			<canvas width="660" height="660" id="canvasOut" style="display:none;"></canvas>
 			<!-- Invisible But necessary elements -->
+
+			<p id="webcamerror">There was a "<span id="errordetails"></span>" error connecting to your webcam. Sorry!  Please make sure that you have a webcam and that you give permission for our website to access it.</p>
+			<video id="video" width="300" height="300" autoplay></video>
+			<br />
+			<a class="btn" id="js_takePhoto">Snap Photo</a>
+
 		</div>
 
+		<div class="half">
+			<h3>Examples</h3>
+			<img src="images/avatars/c3po.png" width="150" height="150" />
+			<img src="images/avatars/spock.png" width="150" height="150" />
+			<img src="images/avatars/jarjar.png" width="150" height="150" />
+			<img src="images/avatars/anakin.png" width="150" height="150" />
+			<img src="images/avatars/carbonite.png" width="150" height="150" />
+			<img src="images/avatars/cat.png" width="150" height="150" />
+			<img src="images/avatars/doc.png" width="150" height="150" />
+			<img src="images/avatars/bender.png" width="150" height="150" />
 
-		<p id="webcamerror">There was a "<span id="errordetails"></span>" error connecting to your webcam. Sorry!  Please make sure that you have a webcam and that you give permission for our website to access it.</p>
-
-		<video id="video" width="300" height="300" autoplay></video>
-		<br />
-		<a class="btn" id="js_takePhoto">Snap Photo</a>
-
-
+		</div>
 	
 		<br /><br /><hr /><ins class="adsbygoogle"
 		 style="display:block; text-align:center;"
