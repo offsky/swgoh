@@ -387,6 +387,13 @@ input[type=text],textarea { font-size: 14px; padding:4px;margin:3px;}
 	vertical-align: top;
 }
 
+.space_top {
+	margin-top:10px;
+}
+.space_top2 {
+	margin-top:20px;
+}
+
 @media (max-width: 800px) {
 	.square {
 		width:150px;
