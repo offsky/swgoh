@@ -1,5 +1,4 @@
 var uploadedImg = null;
-var cardData = null;
 var startX = null;
 var startY = null;
 var gStream = null;
@@ -20,8 +19,9 @@ $(document).ready(function() {
 	$('#magdown').on('click',photo_magdown);
 	$('#rotate').on('click',photo_rotate);
 
-	$('#js_startWebcam').on("click",connectWebCam)
-	$('#js_takePhoto').on("click",takePhoto)
+	$('#js_startWebcam').on("click",connectWebCam);
+	$('#js_takePhoto').on("click",takePhoto);
+	$('#js_download').on("click",downloadAvatar);
 	//detectWebcam();
 
 	uploadedImg = $('#sample')[0];
@@ -162,7 +162,6 @@ function photo_processImage(data) {
 
 //puts the image into the hidden canvas and returns the pixels. starting at x/y in source image
 function putImgIntoCanvas(img,x,y,scale) {
-	if(!cardData) return;
 
 	var width = Math.floor($('#canvasCrop').width()/scale); //The width and height of the image region to copy into the canvas
 	var height = Math.floor($('#canvasCrop').height()/scale);
@@ -200,14 +199,14 @@ function putImgIntoCanvas(img,x,y,scale) {
 	// console.log("putImgIntoCanvas",x,y,width,height,'=>',imgX,imgY);
 	// console.log("Image",img,img.width,img.height);
 
-	var canvas = $('.canvasOutFront')[0];
+	var canvas = $('#canvasOut')[0];
 	var ct = canvas.getContext('2d');
 
 	//The width and height of the destination canvas without scaling
-	var dimx = cardData.img_w; 
-	var dimy = cardData.img_h;
-	var startX = cardData.img_x;
-	var startY = cardData.img_y;
+	var dimx = 660; 
+	var dimy = 660;
+	var startX = 0;
+	var startY = 0;
 
 	ct.save();
 
@@ -218,14 +217,10 @@ function putImgIntoCanvas(img,x,y,scale) {
 		ct.rotate(Math.PI);
 	} else if($('#canvasContainer').hasClass("rotateRight")) {
 		ct.rotate(Math.PI*.5);
-		dimx = cardData.img_h;
-		dimy = cardData.img_w;
 		offsetX = dimx/2;
 		offsetY = dimy/2;
 	} else if($('#canvasContainer').hasClass("rotateLeft")) {
 		ct.rotate(-Math.PI*.5);
-		dimx = cardData.img_h;
-		dimy = cardData.img_w;
 		offsetX = dimx/2;
 		offsetY = dimy/2;
 	}
@@ -233,6 +228,18 @@ function putImgIntoCanvas(img,x,y,scale) {
 	ct.drawImage(img,imgX,imgY,width,height,-offsetX,-offsetY,dimx,dimy); //scales it down to 32x32
 	
 	ct.restore();
+}
+
+function putOverlayIntoCanvas() {
+	var img = $('#overlay')[0];
+
+	var width = 660; //The width and height of the image region to copy into the canvas
+	var height = 660;
+
+	var canvas = $('#canvasOut')[0];
+	var ct = canvas.getContext('2d');
+
+	ct.drawImage(img,0,0,width,height,0,0,width,height); 
 }
 
 function changeImgDimensions() {
@@ -318,9 +325,8 @@ function finishCrop() {
 
 	if(isNaN(scale)) return; 
 	
-	//drawCard();
-	
 	putImgIntoCanvas(uploadedImg,-pos[0],-pos[1],scale);
+	putOverlayIntoCanvas();
 }
 
 
@@ -495,28 +501,12 @@ function photo_rotate(event) {
 
 	if(container.hasClass("rotateUp")) {
 		container.removeClass("rotateUp").addClass("rotateLeft");
-		if(cardData) {
-			canvas.width(parseInt(cardData.img_h));
-			canvas.height(parseInt(cardData.img_w));
-		}
 	} else if(container.hasClass("rotateRight")) {
 		container.removeClass("rotateRight").addClass("rotateUp");
-		if(cardData) {
-			canvas.width(parseInt(cardData.img_w));
-			canvas.height(parseInt(cardData.img_h));
-		}
 	} else if(container.hasClass("rotateLeft")) {
 		container.removeClass("rotateLeft");
-		if(cardData) {
-			canvas.width(parseInt(cardData.img_w));
-			canvas.height(parseInt(cardData.img_h));
-		}
 	} else {
 		container.addClass("rotateRight");
-		if(cardData) {
-			canvas.width(parseInt(cardData.img_h));
-			canvas.height(parseInt(cardData.img_w));
-		}
 	}
 	finishCrop();
 }
@@ -535,6 +525,13 @@ function photo_getCSSxy(canvas,prop) {
 	return nums;
 }
 
+
+function downloadAvatar() {
+	var canvas = $('#canvasOut')[0];
+	var url = canvas.toDataURL("image/png");
+	$('#js_download')[0].href = url;
+	$('#js_download')[0].download = "swgoh_avatar.png";
+}
 
 //=============================================
 //FROM https://github.com/stomita/ios-imagefile-megapixel/blob/master/src/megapix-image.js
