@@ -11,13 +11,14 @@ $(document).ready(function() {
 	//	input.addEventListener( 'focus', function(){ input.classList.add( 'has-focus' ); });
 	//	input.addEventListener( 'blur', function(){ input.classList.remove( 'has-focus' ); });
 
-	$('#overlay').on('mousedown',photo_MouseDownImage);
-	$('#overlay').on('touchstart',photo_TouchStartImage);
-	$('#overlay').on('touchmove',photo_TouchMoveImage);
+	$('.overlay').on('mousedown',photo_MouseDownImage);
+	$('.overlay').on('touchstart',photo_TouchStartImage);
+	$('.overlay').on('touchmove',photo_TouchMoveImage);
 
 	$('#magup').on('click',photo_magup);
 	$('#magdown').on('click',photo_magdown);
 	$('#rotate').on('click',photo_rotate);
+	$('#stars').on('click',switchStars);
 
 	$('#js_startWebcam').on("click",connectWebCam);
 	$('#js_takePhoto').on("click",takePhoto);
@@ -203,8 +204,8 @@ function putImgIntoCanvas(img,x,y,scale) {
 	var ct = canvas.getContext('2d');
 
 	//The width and height of the destination canvas without scaling
-	var dimx = 660; 
-	var dimy = 660;
+	var dimx = 500; 
+	var dimy = 500;
 	var startX = 0;
 	var startY = 0;
 
@@ -231,10 +232,11 @@ function putImgIntoCanvas(img,x,y,scale) {
 }
 
 function putOverlayIntoCanvas() {
-	var img = $('#overlay')[0];
+	var img = $('#overlay2')[0];
+	if($("#stars").is(':checked')) img = $('#overlay1')[0];
 
-	var width = 660; //The width and height of the image region to copy into the canvas
-	var height = 660;
+	var width = 500; //The width and height of the image region to copy into the canvas
+	var height = 500;
 
 	var canvas = $('#canvasOut')[0];
 	var ct = canvas.getContext('2d');
@@ -336,12 +338,18 @@ function photo_MouseDownImage(event) {
 	event.preventDefault();
 	// console.log("Mouse Image",event);
 
-	$('#overlay').on('mousemove', photo_MouseMoveImage);
-	$('#overlay').on('mouseup', photo_MouseUpImage);
-	$('#overlay').on('mouseout', photo_MouseOutImage);
+	$('.overlay').on('mousemove', photo_MouseMoveImage);
+	$('.overlay').on('mouseup', photo_MouseUpImage);
+	$('.overlay').on('mouseout', photo_MouseOutImage);
 
 	startX = event.offsetX;
 	startY = event.offsetY;
+
+	var container = $('#canvasContainer');
+	if(container.hasClass("rotateUp")) { startX=-startX;startY=-startY; }
+	else if(container.hasClass("rotateRight")) { var tmp = startX; startX=startY;startY=-tmp; }
+	else if(container.hasClass("rotateLeft")) { var tmp = startX; startX=-startY;startY=tmp; }
+
 	// console.log(startX,startY);
 }
 
@@ -359,7 +367,7 @@ function photo_TouchStartImage(event) {
 		else if(container.hasClass("rotateRight")) { var tmp = startX; startX=startY;startY=-tmp; }
 		else if(container.hasClass("rotateLeft")) { var tmp = startX; startX=-startY;startY=tmp; }
 
-		$('#overlay').on('touchend', photo_TouchEndImage);
+		$('.overlay').on('touchend', photo_TouchEndImage);
 	}
 }
 
@@ -367,10 +375,15 @@ function photo_MouseMoveImage(event) {
 	var mouseX = event.offsetX;
 	var mouseY = event.offsetY;
 
+	var container = $('#canvasContainer');
+	if(container.hasClass("rotateUp")) { mouseX=-mouseX;mouseY=-mouseY; }
+	else if(container.hasClass("rotateRight")) { var tmp = mouseX; mouseX=mouseY;mouseY=-tmp; }
+	else if(container.hasClass("rotateLeft")) { var tmp = mouseX; mouseX=-mouseY;mouseY=tmp; }
+	
 	photo_moveImage(mouseX,mouseY,startX,startY);
 
-	startX = event.offsetX;
-	startY = event.offsetY;
+	startX = mouseX;
+	startY = mouseY;
 }
 
 function photo_TouchMoveImage(event) {
@@ -396,21 +409,21 @@ function photo_TouchMoveImage(event) {
 }
 
 function photo_MouseUpImage(event) {
-	$('#overlay').off('mousemove');
-	$('#overlay').off('mouseup');
-	$('#overlay').off('mouseout');
+	$('.overlay').off('mousemove');
+	$('.overlay').off('mouseup');
+	$('.overlay').off('mouseout');
 	finishCrop();
 }
 
 function photo_MouseOutImage(event) {
-	$('#overlay').off('mousemove');
-	$('#overlay').off('mouseup');
-	$('#overlay').off('mouseout');
+	$('.overlay').off('mousemove');
+	$('.overlay').off('mouseup');
+	$('.overlay').off('mouseout');
 	finishCrop();
 }
 
 function photo_TouchEndImage(event) {
-	$('#overlay').off('touchend');
+	$('.overlay').off('touchend');
 	finishCrop();
 }
 
@@ -430,10 +443,12 @@ function photo_moveImage(mouseX,mouseY,strtX,strtY) {
 	y += Number(difY);
 
 	//prevent croping past boundry of image
-	if(x>30) x = 30; //this is hard coded to the inner dimensions of the transparent area. Set to 0 if no overlay
-	if(y>30) y = 30;
-	if(x<-(size[0]-width)-30) x = -(size[0]-width)-30;
-	if(y<-(size[1]-height)-30) y = -(size[1]-height)-30;
+	var buffer = 0;
+	if($("#stars").is(':checked')) buffer = 35;
+	if(x>buffer) x = buffer; //this is hard coded to the inner dimensions of the transparent area. Set to 0 if no overlay
+	if(y>buffer) y = buffer;
+	if(x<-(size[0]-width)-buffer) x = -(size[0]-width)-buffer;
+	if(y<-(size[1]-height)-buffer) y = -(size[1]-height)-buffer;
 
 	//console.log(x,y,difX,difY,size);
 	$('#canvasCrop').css("background-position",parseInt(x)+"px "+parseInt(y)+"px");	
@@ -511,6 +526,16 @@ function photo_rotate(event) {
 	finishCrop();
 }
 
+function switchStars() {
+	if($("#stars").is(':checked')) {
+		$("#overlay2").hide();
+		$("#overlay1").show();
+	} else {
+		$("#overlay1").hide();
+		$("#overlay2").show();
+	}
+	finishCrop();
+}
 
 
 //pass in the name of a property with an px value or x/y pixel value 

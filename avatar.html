@@ -34,7 +34,7 @@
 	z-index: 1;
 }
 
-#overlay {
+.overlay {
 	width: 300px;
 	height: 300px;
 	position: absolute;
@@ -42,6 +42,10 @@
 	margin-left: 3px;
 	z-index: 2;
 	cursor: move;
+}
+
+#overlay2 {
+	display: none;
 }
 
 #controls {
@@ -250,7 +254,8 @@ p#cropLabel {
 			<p id="error" class="small dim" style="display:none;"><b>Oops!</b> The file you uploaded was either too big or was not an image. Please choose a file with the extension .gif, .png or .jpg.</p>
 
 			<div id="canvasContainer">
-				<img src="images/avatar.png" id="overlay" />
+				<img src="images/avatar.png" id="overlay1" class="overlay" />
+				<img src="images/avatar2.png" id="overlay2" class="overlay" />
 				<div id="canvasCrop"></div>
 			</div>
 			<p id="cropLabel" style="display:none">Drag image to crop</p>
@@ -271,6 +276,7 @@ p#cropLabel {
 			</div>
 
 			<div id="downloadbuttons">
+				<input type="checkbox" id="stars" value="1" checked="checked" />Show Stars<br /><br /><br />
 				<a class="btn" id="js_download">Download SWGOH Avatar</a>
 			</div>
 			<div id="uploadbuttons">
@@ -284,7 +290,7 @@ p#cropLabel {
 
 			<!-- Invisible But necessary elements -->
 			<img src="images/sampleBlank.png" id="sample" style="display:none;" />
-			<canvas width="660" height="660" id="canvasOut" style="display:none;"></canvas>
+			<canvas width="500" height="500" id="canvasOut" style="display:none;"></canvas>
 			<!-- Invisible But necessary elements -->
 
 			<p id="webcamerror">There was a "<span id="errordetails"></span>" error connecting to your webcam. Sorry!  Please make sure that you have a webcam and that you give permission for our website to access it.</p>
