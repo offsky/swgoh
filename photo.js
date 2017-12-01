@@ -111,7 +111,7 @@ function takePhoto() {
 	$('#cropLabel').show();
 	$('#controls').show();
 	$('#downloadbuttons').show();
-	$('#file-prompt').text("Upload Another Photo");
+	$('#file-prompt').text("Select Another Photo");
 }
 
 //When a new file is selected, this does the upload using FileReader
@@ -128,7 +128,7 @@ function photo_newFile(e) {
 		$('#cropLabel').show();
 		$('#controls').show();
 		$('#downloadbuttons').show();
-		$('#file-prompt').text("Upload Another Photo");
+		$('#file-prompt').text("Select Another Photo");
 
 		var reader = new FileReader();
 		
