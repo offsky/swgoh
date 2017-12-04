@@ -26,7 +26,7 @@ $recorded = false;
 if(!empty($gp) && !empty($stars)) {
 	$rs = $db->query("INSERT INTO swgoh_tb_scores(gp,stars,stamp,dark) VALUES(".intval($gp).",".intval($stars).",".intval($time).",1)");
 	$recorded = true;
-	header("Location: http://shard.swgoh.life/territory_battle_scores.php?recorded=1");
+	header("Location: http://shard.swgoh.life/territory_battle_scores_dark.php?recorded=1");
 }
 
 if(!empty($_GET['recorded'])) $recorded = true;
