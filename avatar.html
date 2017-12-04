@@ -20,6 +20,10 @@
 			height:60px;
 			}
 
+.hint {
+	color: #999;
+	font-size: 0.8em;
+}
 
 #canvasContainer {
 	width:310px;
@@ -278,6 +282,7 @@ p#cropLabel {
 			<div id="downloadbuttons">
 				<input type="checkbox" id="stars" value="1" checked="checked" />Show Stars<br /><br /><br />
 				<a class="btn" id="js_download">Download SWGOH Avatar</a>
+				<span class="hint"><br /><br />Downloads don't seem to work from inside the Reddit app, so switch to your web browser if it isn't working.</span>
 			</div>
 			<div id="uploadbuttons">
 				<div id="chooseafile">
@@ -287,8 +292,9 @@ p#cropLabel {
 
 				<a class="btn" style="display:none" id="js_startWebcam"><img src="images/camera.svg" />Webcam</a>
 
-				<br /><br />
+				<span class="hint"><br /><br />
 				Nothing is uploaded to our servers. All the magic happens in your web browser.
+				</span>
 			</div>
 
 			<!-- Invisible But necessary elements -->
