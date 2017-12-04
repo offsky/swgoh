@@ -1,3 +1,4 @@
+
 <html>
 <head>
 	<title>SWGOH Tools - Shard/Gear Farming Calculator</title>
@@ -48,10 +49,12 @@
 		$('#current_shards').on("keyup",updateStars);
 		$('#current_gear').on("change",updateGear);
 		$('#current_gear').on("keyup",updateGear);
-		$('#hard_refresh').on("change",updateGear);
-		$('#hard_refresh').on("keyup",updateGear);		
+		$('#easy_refresh').on("change",updateGear);
+		$('#easy_refresh').on("keyup",updateGear);		
 		$('#cantina_refresh').on("change",updateStars);
 		$('#cantina_refresh').on("keyup",updateStars);
+		$('#hard_refresh').on("change",updateStars);
+		$('#hard_refresh').on("keyup",updateStars);
 		$('#sort').on("change",sortList);
 
 		$('#gs1').on("change",updateGear);
@@ -449,7 +452,11 @@
 				perday+=Math.ceil((120*(1+refreshes)+45)/(cantina*4)); //assumes 25% drop rate (thats the 4)
 			}
 
-			if(hard) perday+=hard;
+			if(hard) {
+				var refreshes = parseInt($('#hard_refresh').val());
+				if(isNaN(refreshes)) refreshes = 0;
+				perday+=hard+refreshes;
+			}	
 			
 			$('#shard_summary').html("~"+perday+" shards per day possible<br />");
 			if(shards5) $('#shard_summary').append("~"+Math.ceil(shards5/perday)+" days of farming to 5&#9733;<br />");
@@ -542,7 +549,7 @@
 				if(loc[0].indexOf("AGI")>=0) minDaysAGI = Math.max(minDaysAGI,Math.ceil(coll[key].num/10));//average 10 per day from challenges
 				if(loc[0].indexOf("TAC")>=0) minDaysTAC = Math.max(minDaysTAC,Math.ceil(coll[key].num/10));//average 10 per day from challenges
 			});
-			var refreshes = parseInt($('#hard_refresh').val());
+			var refreshes = parseInt($('#easy_refresh').val());
 			if(isNaN(refreshes)) refreshes = 0;
 			var crystals = 420+(120*refreshes);
 			var days = Math.ceil(total/crystals);
@@ -653,8 +660,9 @@
 					<input type="checkbox" id="gs6" value="6" /><br />
 				</div>
 				<br />
-				Hard Battle Refreshes: <input type="text" size="3" id="hard_refresh" value="2" /> / day<br />
-				Cantina Refreshes:  <input type="text" size="3" id="cantina_refresh" value="2" /> / day<br />
+				Easy Battle Refreshes: <input type="text" size="3" id="easy_refresh" value="2" /> / day<br />
+				Hard Battle Refreshes: <input type="text" size="3" id="hard_refresh" value="0" /> / day<br />
+				Cantina Refreshes (shards):  <input type="text" size="3" id="cantina_refresh" value="2" /> / day<br />
 
 				<!-- <button id="fav">Add to Favorites</button> -->
 			</div>
