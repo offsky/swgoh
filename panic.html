@@ -286,16 +286,22 @@
 		cacheForm("chew_shards");
 		cacheForm("han_stars");
 		cacheForm("han_shards");
-		cacheForm("days");
+		//cacheForm("days");
 
 		$("#chew_stars").on("change", update);
 		$("#chew_shards").on("change", update);
 		$("#han_stars").on("change", update);
 		$('#han_shards').on("change", update);
-		$('#days').on("change", getLeft);
-
+		//$('#days').on("change", getLeft);
+		
+		var now = new Date().getTime();
+		var days = 1513299681000-now;
+		days = Math.ceil(days/(86400000));
+		$('#days').val(days);
+		
 		$('#button').on("click", panic);
 
+		
 		setInterval(timer,130);
 
 		getLeft();
@@ -337,7 +343,7 @@
 				<br />
 
 				<h3>How many days until the event starts?</h3>
-				<input type="text" id="days" name="days" value="10" size="3" /> (take your best guess) <br /><br />
+				<input type="text" id="days" name="days" value="" size="3" disabled="true" /> (Starts Dec 15th) <br /><br />
 
 				<input type="submit" id="button" value="Should I Panic?" class="btn" />
 				<br /><br />
