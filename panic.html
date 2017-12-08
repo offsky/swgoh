@@ -163,14 +163,14 @@
 				crystals = 620;
 				$('#do').show();
 			} else if(perDay<=15.9) { //5 refreshes
-				refreshes = 4;
+				refreshes = 5;
 				crystals = 700;
-				$('#dont').show();
+				$('#do').show();
 			} else if(perDay<=17.5) { //4 refreshes + 1 shipment
 				refreshes = 4;
-				shipments = 1
+				shipments = 1;
 				crystals = 820;
-				$('#dont').show();
+				$('#do').show();
 			} else if(perDay<=19.1) { //3 refreshes + 2 shipments
 				refreshes = 3;
 				shipments = 2;
@@ -178,23 +178,38 @@
 				$('#do').show();
 			} else if(perDay<=19.9) { //5 refreshes + 1 shipment
 				refreshes = 5;
-				shipments = 1
+				shipments = 1;
 				crystals = 1020;
-				$('#dont').show();
+				$('#do').show();
 			} else if(perDay<=21.5) { //4 refreshes + 2 shipment
 				refreshes = 4;
-				shipments = 2
+				shipments = 2;
 				crystals = 1140;
-				$('#dont').show();
+				$('#do').show();
 			} else if(perDay<=23.1) { //3 refreshes + 3 shipments
 				refreshes = 3;
 				shipments = 3;
 				crystals = 1260;
 				$('#do').show();
+			} else if(perDay<=23.9) { //5 refreshes + 2 shipments
+				refreshes = 5;
+				shipments = 2;
+				crystals = 1340;
+				$('#do').show();
+			} else if(perDay<=25.5) { //4 refreshes + 3 shipments
+				refreshes = 4;
+				shipments = 3;
+				crystals = 1460;
+				$('#do').show();
 			} else if(perDay<=27.1) { //3 refreshes + 4 shipments
 				refreshes = 3;
 				shipments = 4;
 				crystals = 1580;
+				$('#do').show();
+			} else if(perDay<=27.9) { //5 refreshes + 3 shipments
+				refreshes = 5;
+				shipments = 3;
+				crystals = 1660;
 				$('#do').show();
 			} else if(perDay<=29.5) { //4 refreshes + 4 shipments
 				refreshes = 4;
@@ -286,16 +301,22 @@
 		cacheForm("chew_shards");
 		cacheForm("han_stars");
 		cacheForm("han_shards");
-		cacheForm("days");
+		//cacheForm("days");
 
 		$("#chew_stars").on("change", update);
 		$("#chew_shards").on("change", update);
 		$("#han_stars").on("change", update);
 		$('#han_shards').on("change", update);
-		$('#days').on("change", getLeft);
-
+		//$('#days').on("change", getLeft);
+		
+		var now = new Date().getTime();
+		var days = 1513299681000-now;
+		days = Math.ceil(days/(86400000));
+		$('#days').val(days);
+		
 		$('#button').on("click", panic);
 
+		
 		setInterval(timer,130);
 
 		getLeft();
@@ -337,7 +358,7 @@
 				<br />
 
 				<h3>How many days until the event starts?</h3>
-				<input type="text" id="days" name="days" value="10" size="3" /> (take your best guess) <br /><br />
+				<input type="text" id="days" name="days" value="" size="3" disabled="true" /> (Starts Dec 15th) <br /><br />
 
 				<input type="submit" id="button" value="Should I Panic?" class="btn" />
 				<br /><br />
