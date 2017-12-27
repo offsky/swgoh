@@ -63,6 +63,9 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 		margin-right: 0px;
 	}
 
+	#restoremsg {
+		display: none;
+	}
 	table.styled {
 		border-collapse: collapse;
 	}
@@ -89,6 +92,9 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 	}
 	table.styled a:hover {
 		text-decoration: underline;
+	}
+	table .fa {
+		margin-left: 2px;
 	}
 
   @media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
@@ -118,14 +124,25 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 		// console.log(JSON.stringify(fixed));
 
 		//get data
-		var gg = fetch("gg");
+		var gg = fetch("ggg");
 		if(gg) {
 			$('#gg').val(gg);
 			showStep2(gg);
 		}
+
+		$('#restoremsg').show();
+		setTimeout(function() {
+			var data = fetch("data");
+			if(data && $('#manual').val().length<100) {
+				$('#manual').val(data);
+			}
+			$('#restoremsg').hide();
+		},100);
+		
+
 		function updateGG(e) {
 			var gg = $('#gg').val();
-			store("gg",gg);
+			store("ggg",gg);
 			showStep2(gg);
 		}
 		function showStep2(gg) {
@@ -155,6 +172,8 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 				badData();
 				return;
 			}
+
+			store("data",data);
 
 			fillSelects();
 			$('#step2').hide();
@@ -193,6 +212,62 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 				t4.append(option);
 				t5.append(option);
 			});
+
+			$('#toon1 option[value="HERASYNDULLAS3"]').attr("selected", "selected");
+			$('#toon2 option[value="CHOPPERS3"]').attr("selected", "selected");
+			$('#toon3 option[value="KANANJARRUSS3"]').attr("selected", "selected");
+			$('#toon4 option[value="ZEBS3"]').attr("selected", "selected");
+			$('#toon5 option[value="SABINEWRENS3"]').attr("selected", "selected");
+		}
+
+		function shortcut(e) {
+			var ss = $(e.target).data('ss');
+
+			$('#toon1 option').attr("selected", false);
+			$('#toon2 option').attr("selected", false);
+			$('#toon3 option').attr("selected", false);
+			$('#toon4 option').attr("selected", false);
+			$('#toon5 option').attr("selected", false);
+			$("option:selected").removeAttr("selected");
+
+			if(ss=="phoenix") {
+				$('#toon1 option[value="HERASYNDULLAS3"]').attr("selected", "selected");
+				$('#toon2 option[value="CHOPPERS3"]').attr("selected", "selected");
+				$('#toon3 option[value="KANANJARRUSS3"]').attr("selected", "selected");
+				$('#toon4 option[value="ZEBS3"]').attr("selected", "selected");
+				$('#toon5 option[value="SABINEWRENS3"]').attr("selected", "selected");
+			} else if(ss=="nightsister") {
+				$('#toon1 option[value="MOTHERTALZIN"]').attr("selected", "selected");
+				$('#toon2 option[value="ASAJVENTRESS"]').attr("selected", "selected");
+				$('#toon3 option[value="DAKA"]').attr("selected", "selected");
+				$('#toon4 option[value="NIGHTSISTERACOLYTE"]').attr("selected", "selected");
+				$('#toon5 option[value="NIGHTSISTERZOMBIE"]').attr("selected", "selected");
+			} else if(ss=="cls") {
+				$('#toon1 option[value="COMMANDERLUKESKYWALKER"]').attr("selected", "selected");
+				$('#toon2 option[value="R2D2_LEGENDARY"]').attr("selected", "selected");
+				$('#toon3 option[value="HANSOLO"]').attr("selected", "selected");
+				$('#toon4 option[value="BAZEMALBUS"]').attr("selected", "selected");
+				$('#toon5 option[value="CHIRRUTIMWE"]').attr("selected", "selected");
+			} else if(ss=="maul") {
+				$('#toon1 option[value="MAUL"]').attr("selected", "selected");
+				$('#toon2 option[value="SAVAGEOPRESS"]').attr("selected", "selected");
+				$('#toon3 option[value="SITHTROOPER"]').attr("selected", "selected");
+				$('#toon4 option[value="SITHASSASSIN"]').attr("selected", "selected");
+				$('#toon5 option[value="EMPERORPALPATINE"]').attr("selected", "selected");
+			} else if(ss=="rey") {
+				$('#toon1 option[value="REYJEDITRAINING"]').attr("selected", "selected");
+				$('#toon2 option[value="BB8"]').attr("selected", "selected");
+				$('#toon3 option[value="R2D2_LEGENDARY"]').attr("selected", "selected");
+				$('#toon4 option[value="GENERALKENOBI"]').attr("selected", "selected");
+				$('#toon5 option[value="OLDBENKENOBI"]').attr("selected", "selected");
+			} else if(ss=="gk") {
+				$('#toon1 option[value="GENERALKENOBI"]').attr("selected", "selected");
+				$('#toon2 option[value="BARRISSOFFEE"]').attr("selected", "selected");
+				$('#toon3 option[value=""]').attr("selected", "selected");
+				$('#toon4 option[value=""]').attr("selected", "selected");
+				$('#toon5 option[value=""]').attr("selected", "selected");
+			}
+			runReport();
 		}
 
 		$('#go').on("click",showStep3);
@@ -202,6 +277,8 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 		$('#toon3').on("change",runReport);
 		$('#toon4').on("change",runReport);
 		$('#toon5').on("change",runReport);
+
+		$('.js_ss').on("click",shortcut);
 
 		function runReport() {
 			var t1 = $('#toon1').val();
@@ -228,14 +305,12 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 		function rankSquads(squad) {
 			var guild = [];
 
-			var num=0;
-			squad.forEach(function(toon) {
-				num++;
+			squad.forEach(function(toon,index) {
 				toon.forEach(function(player) {
 					if(guild[player.player]==undefined) guild[player.player] = {url:player.url,power:0,toon:[]};
 					
 					if(player.power>=6000) {
-						guild[player.player].toon[num] = [player.rarity,player.gear_level,player.level,player.power];
+						guild[player.player].toon[index+1] = [player.rarity,player.gear_level,player.level,player.power];
 						guild[player.player].power += player.power;
 					}
 				});
@@ -249,10 +324,10 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 			var rows = [];
 			for(var player in guild) {
 				var squad = guild[player];
-				if(squad.toon[1]!==undefined && squad.toon[2]!==undefined && squad.toon[3]!==undefined && squad.toon[4]!==undefined && squad.toon[5]!==undefined) {
+				//if(squad.toon[1]!==undefined && squad.toon[2]!==undefined && squad.toon[3]!==undefined && squad.toon[4]!==undefined && squad.toon[5]!==undefined) {
 					var row = "<td><a href='https://swgoh.gg/u/"+squad.url.split("/")[2]+"/collection' target='_blank'>"+player+"</a></td><td>"+printToon(squad.toon[1])+"</td><td>"+printToon(squad.toon[2])+"</td><td>"+printToon(squad.toon[3])+"</td><td>"+printToon(squad.toon[4])+"</td><td>"+printToon(squad.toon[5])+"</td><td>"+numberWithCommas(squad.power)+"</td></tr>";
 					rows.push({power:squad.power,html:row});
-				}
+				//}
 			}
 
 			rows.sort(function(a,b) {
@@ -271,7 +346,7 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 
 		function printToon(toon) {
 			if(toon==undefined) return "";
-			return toon[0]+"<i class='fa fa-fw fa-star'></i> "+toon[1]+"<i class='fa fa-fw fa-cog'></i> "+toon[2]+"<i class='fa fa-fw fa-angle-double-up'></i> "+numberWithCommas(toon[3])+"<i class='fa fa-fw fa-bolt last'></i>";
+			return toon[0]+"<i class='fa fa-star'></i> "+toon[1]+"<i class='fa fa-cog'></i> "+toon[2]+"<i class='fa fa-angle-double-up'></i> "+numberWithCommas(toon[3])+"<i class='fa fa-bolt last'></i>";
 		}
 
 		//helpers
@@ -311,18 +386,20 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 
 		<p>This tool will inspect your guild's roster and allow you to build different squads for Territory War. It needs to fetch the information from <a href="https://www.swgoh.gg">swgoh.gg</a> to do this. If your guild doesn't have everyone registered there, you'll need to fix that first.</p>
 	
-		<b>What is your SWGOH.GG Guild Number and Name:</b><br />
+		<b>What is your SWGOH.GG Guild Number and Name? You can find this in the URL when looking at your guild's page.</b><br />
 		https://swgoh.gg/g/<input type="text" id="gg" name="gg" placeholder="1234/name" />/ <input type="button" id="ok" value="ok" /><br /><br />
 
 		<div id="step2" style="display:none">
 			<b>SWGOH.GG does not allow automatic fetching of your account information, so we'll have to do it manually <i class="fa fa-smile-o"></i>.</b>
 			<br /><br />
 			Step 1:<br />
-			<a href="" id="step2url" target="_blank">Click here to open your guilds collection page on swgoh.gg</a>
+			<a href="" id="step2url" target="_blank">Click here to open your guild's collection data page on swgoh.gg</a>
 			<br /><br />		
 			Step 2:<br />
-			Copy and paste everything you see on that page into this box:<br />
+			Copy and paste everything you see on that page into this box. Please note that this is a lot of data to paste. Your browser may stall for a few seconds.<br />
 			<textarea name="manual" id="manual" cols="50" rows="5"></textarea>
+			<div id="restoremsg">Attempting to restore data from last time. This takes a few seconds...</div>
+
 			<br />
 			<div id="badData" style="display:none">
 				<b>Sorry, but the box above was left blank, or had bad data inside of it. Please try again.</b><br /><br />
@@ -330,16 +407,17 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 			<input type="submit" value="Lets Go!" id="go" class="btn" />
 		</div>
 
+		<a name="top"></a>
 		<div id="step3" style="display:none">
 			<table class="styled">
 				<thead>
 				<tr>
 					<td colspan="2">Player</td>
-					<td><select id="toon1"></select></td>
-					<td><select id="toon2"></select></td>
-					<td><select id="toon3"></select></td>
-					<td><select id="toon4"></select></td>
-					<td><select id="toon5"></select></td>
+					<td><select id="toon1"><option value="">ANY TOON</option></select></td>
+					<td><select id="toon2"><option value="">ANY TOON</option></select></td>
+					<td><select id="toon3"><option value="">ANY TOON</option></select></td>
+					<td><select id="toon4"><option value="">ANY TOON</option></select></td>
+					<td><select id="toon5"><option value="">ANY TOON</option></select></td>
 					<td>Squad Power</td>
 				</tr>
 				</thead>
@@ -347,7 +425,13 @@ $manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
 
 				</tbody>
 			</table>
-			<p>Toons with a power of less than 6000 cannot be used in Territory Wars, so they are omitted. Any guild member who is missing one of these toons has been omitted.</p>
+			<p>Toons with a power of less than 6000 cannot be used in Territory Wars, so they are omitted.</p>
+			Shortcuts: <a href="#top" class="js_ss" data-ss="phoenix">Phoenix</a>,&nbsp;
+						  <a href="#top" class="js_ss" data-ss="nightsister">NightSisters</a>,&nbsp;
+						  <a href="#top" class="js_ss" data-ss="cls">Commander Luke + R2 + Chaze</a>,&nbsp;
+						  <a href="#top" class="js_ss" data-ss="maul">Maul + Sith</a>,&nbsp;
+						  <a href="#top" class="js_ss" data-ss="rey">Jedi Rey</a>,&nbsp;
+						  <a href="#top" class="js_ss" data-ss="gk">GK + Barris</a>
 		</div>
 
 	<br /><br /><hr /><ins class="adsbygoogle"
