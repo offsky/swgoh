@@ -1,23 +1,4 @@
-<?
-if(strpos($_SERVER['SERVER_NAME'], "docker")===false) {
-	require_once("../vars.php");
-	require_once("../libs.php");
-	$db = new mymysqli("swgoh");
-	error_reporting(0);
-} else {
-	require_once("../../vars.php");
-	require_once("../libs.php");
-	$db = new mymysqli("toodledo");
-	error_reporting(E_ALL);
-}
-$self = explode("/",$_SERVER['PHP_SELF']);
-$self = array_pop($self);
-
-$gg = empty($_REQUEST['gg']) ? "" : trim($_REQUEST['gg']);
-$manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
-
-
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>SWGOH Tools - Territory War Squad Builder</title>
