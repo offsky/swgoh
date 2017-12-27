@@ -194,59 +194,59 @@
 				t5.append(option);
 			});
 
-			$('#toon1 option[value="HERASYNDULLAS3"]').attr("selected", "selected");
-			$('#toon2 option[value="CHOPPERS3"]').attr("selected", "selected");
-			$('#toon3 option[value="KANANJARRUSS3"]').attr("selected", "selected");
-			$('#toon4 option[value="ZEBS3"]').attr("selected", "selected");
-			$('#toon5 option[value="SABINEWRENS3"]').attr("selected", "selected");
+			$('#toon1 option[value="HERASYNDULLAS3"]').prop("selected", "selected");
+			$('#toon2 option[value="CHOPPERS3"]').prop("selected", "selected");
+			$('#toon3 option[value="KANANJARRUSS3"]').prop("selected", "selected");
+			$('#toon4 option[value="ZEBS3"]').prop("selected", "selected");
+			$('#toon5 option[value="SABINEWRENS3"]').prop("selected", "selected");
 		}
 
 		function shortcut(e) {
 			var ss = $(e.target).data('ss');
 
-			$('#toon1 option').attr("selected", false);
-			$('#toon2 option').attr("selected", false);
-			$('#toon3 option').attr("selected", false);
-			$('#toon4 option').attr("selected", false);
-			$('#toon5 option').attr("selected", false);
-			$("option:selected").removeAttr("selected");
+			$('#toon1 option').prop("selected", false);
+			$('#toon2 option').prop("selected", false);
+			$('#toon3 option').prop("selected", false);
+			$('#toon4 option').prop("selected", false);
+			$('#toon5 option').prop("selected", false);
+			$("option:selected").removeProp("selected");
 
 			if(ss=="phoenix") {
-				$('#toon1 option[value="HERASYNDULLAS3"]').attr("selected", "selected");
-				$('#toon2 option[value="CHOPPERS3"]').attr("selected", "selected");
-				$('#toon3 option[value="KANANJARRUSS3"]').attr("selected", "selected");
-				$('#toon4 option[value="ZEBS3"]').attr("selected", "selected");
-				$('#toon5 option[value="SABINEWRENS3"]').attr("selected", "selected");
+				$('#toon1 option[value="HERASYNDULLAS3"]').prop("selected", "selected");
+				$('#toon2 option[value="CHOPPERS3"]').prop("selected", "selected");
+				$('#toon3 option[value="KANANJARRUSS3"]').prop("selected", "selected");
+				$('#toon4 option[value="ZEBS3"]').prop("selected", "selected");
+				$('#toon5 option[value="SABINEWRENS3"]').prop("selected", "selected");
 			} else if(ss=="nightsister") {
-				$('#toon1 option[value="MOTHERTALZIN"]').attr("selected", "selected");
-				$('#toon2 option[value="ASAJVENTRESS"]').attr("selected", "selected");
-				$('#toon3 option[value="DAKA"]').attr("selected", "selected");
-				$('#toon4 option[value="NIGHTSISTERACOLYTE"]').attr("selected", "selected");
-				$('#toon5 option[value="NIGHTSISTERZOMBIE"]').attr("selected", "selected");
+				$('#toon1 option[value="MOTHERTALZIN"]').prop("selected", "selected");
+				$('#toon2 option[value="ASAJVENTRESS"]').prop("selected", "selected");
+				$('#toon3 option[value="DAKA"]').prop("selected", "selected");
+				$('#toon4 option[value="NIGHTSISTERACOLYTE"]').prop("selected", "selected");
+				$('#toon5 option[value="NIGHTSISTERZOMBIE"]').prop("selected", "selected");
 			} else if(ss=="cls") {
-				$('#toon1 option[value="COMMANDERLUKESKYWALKER"]').attr("selected", "selected");
-				$('#toon2 option[value="R2D2_LEGENDARY"]').attr("selected", "selected");
-				$('#toon3 option[value="HANSOLO"]').attr("selected", "selected");
-				$('#toon4 option[value="BAZEMALBUS"]').attr("selected", "selected");
-				$('#toon5 option[value="CHIRRUTIMWE"]').attr("selected", "selected");
+				$('#toon1 option[value="COMMANDERLUKESKYWALKER"]').prop("selected", "selected");
+				$('#toon2 option[value="R2D2_LEGENDARY"]').prop("selected", "selected");
+				$('#toon3 option[value="HANSOLO"]').prop("selected", "selected");
+				$('#toon4 option[value="BAZEMALBUS"]').prop("selected", "selected");
+				$('#toon5 option[value="CHIRRUTIMWE"]').prop("selected", "selected");
 			} else if(ss=="maul") {
-				$('#toon1 option[value="MAUL"]').attr("selected", "selected");
-				$('#toon2 option[value="SAVAGEOPRESS"]').attr("selected", "selected");
-				$('#toon3 option[value="SITHTROOPER"]').attr("selected", "selected");
-				$('#toon4 option[value="SITHASSASSIN"]').attr("selected", "selected");
-				$('#toon5 option[value="EMPERORPALPATINE"]').attr("selected", "selected");
+				$('#toon1 option[value="MAUL"]').prop("selected", "selected");
+				$('#toon2 option[value="SAVAGEOPRESS"]').prop("selected", "selected");
+				$('#toon3 option[value="SITHTROOPER"]').prop("selected", "selected");
+				$('#toon4 option[value="SITHASSASSIN"]').prop("selected", "selected");
+				$('#toon5 option[value="EMPERORPALPATINE"]').prop("selected", "selected");
 			} else if(ss=="rey") {
-				$('#toon1 option[value="REYJEDITRAINING"]').attr("selected", "selected");
-				$('#toon2 option[value="BB8"]').attr("selected", "selected");
-				$('#toon3 option[value="R2D2_LEGENDARY"]').attr("selected", "selected");
-				$('#toon4 option[value="GENERALKENOBI"]').attr("selected", "selected");
-				$('#toon5 option[value="OLDBENKENOBI"]').attr("selected", "selected");
+				$('#toon1 option[value="REYJEDITRAINING"]').prop("selected", "selected");
+				$('#toon2 option[value="BB8"]').prop("selected", "selected");
+				$('#toon3 option[value="R2D2_LEGENDARY"]').prop("selected", "selected");
+				$('#toon4 option[value="GENERALKENOBI"]').prop("selected", "selected");
+				$('#toon5 option[value="OLDBENKENOBI"]').prop("selected", "selected");
 			} else if(ss=="gk") {
-				$('#toon1 option[value="GENERALKENOBI"]').attr("selected", "selected");
-				$('#toon2 option[value="BARRISSOFFEE"]').attr("selected", "selected");
-				$('#toon3 option[value=""]').attr("selected", "selected");
-				$('#toon4 option[value=""]').attr("selected", "selected");
-				$('#toon5 option[value=""]').attr("selected", "selected");
+				$('#toon1 option[value="GENERALKENOBI"]').prop("selected", "selected");
+				$('#toon2 option[value="BARRISSOFFEE"]').prop("selected", "selected");
+				$('#toon3 option[value=""]').prop("selected", "selected");
+				$('#toon4 option[value=""]').prop("selected", "selected");
+				$('#toon5 option[value=""]').prop("selected", "selected");
 			}
 			runReport();
 		}
@@ -377,7 +377,7 @@
 			<a href="" id="step2url" target="_blank">Click here to open your guild's collection data page on swgoh.gg</a>
 			<br /><br />		
 			Step 2:<br />
-			Copy and paste everything you see on that page into this box. Please note that this is a lot of data to paste. Your browser may stall for a few seconds.<br />
+			Copy and paste everything you see on that page into this box. Please note that this is a lot of data to paste. Your browser may stall for a few seconds. If you are using Firefox, it may try to make the data pretty. Click the "raw data" tab and copy and paste that.<br />
 			<textarea name="manual" id="manual" cols="50" rows="5"></textarea>
 			<div id="restoremsg">Attempting to restore data from last time. This takes a few seconds...</div>
 
