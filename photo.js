@@ -18,7 +18,10 @@ $(document).ready(function() {
 	$('#magup').on('click',photo_magup);
 	$('#magdown').on('click',photo_magdown);
 	$('#rotate').on('click',photo_rotate);
-	$('#stars').on('click',switchStars);
+	$('#stars').on('click',switchOverlays);
+	$('#gear').on('change',switchOverlays);
+	$('#level').on('change',switchOverlays);
+	$('#rarity').on('change',switchOverlays);
 
 	$('#js_startWebcam').on("click",connectWebCam);
 	$('#js_takePhoto').on("click",takePhoto);
@@ -232,16 +235,30 @@ function putImgIntoCanvas(img,x,y,scale) {
 }
 
 function putOverlayIntoCanvas() {
-	var img = $('#overlay2')[0];
-	if($("#stars").is(':checked')) img = $('#overlay1')[0];
+	var gear = $('#gear').val();
+	var level = $('#level').val();
+	var rarity = $('#rarity').val();
 
+	var img = null;
+	var img2 = null;
+	var img3 = null;
+	if($("#stars").is(':checked')) {
+		img = $("#overlay_"+gear+"s")[0];
+		img2 = $("#overlay_l"+level+"s")[0];
+		img3 = $("#overlay_s"+rarity)[0];
+	} else {
+		img = $("#overlay_"+gear)[0];
+		img2 = $("#overlay_l"+level)[0];
+	}
 	var width = 500; //The width and height of the image region to copy into the canvas
 	var height = 500;
 
 	var canvas = $('#canvasOut')[0];
 	var ct = canvas.getContext('2d');
 
-	ct.drawImage(img,0,0,width,height,0,0,width,height); 
+	if(img) ct.drawImage(img,0,0,width,height,0,0,width,height); 
+	if(img2) ct.drawImage(img2,0,0,width,height,0,0,width,height); 
+	if(img3) ct.drawImage(img3,0,0,width,height,0,0,width,height); 
 }
 
 function changeImgDimensions() {
@@ -526,13 +543,20 @@ function photo_rotate(event) {
 	finishCrop();
 }
 
-function switchStars() {
+function switchOverlays() {
+	$(".overlay").hide();
+
+	var gear = $('#gear').val();
+	var level = $('#level').val();
+	var rarity = $('#rarity').val();
+
 	if($("#stars").is(':checked')) {
-		$("#overlay2").hide();
-		$("#overlay1").show();
+		$("#overlay_"+gear+"s").show();
+		$("#overlay_l"+level+"s").show();
+		$("#overlay_s"+rarity).show();
 	} else {
-		$("#overlay1").hide();
-		$("#overlay2").show();
+		$("#overlay_"+gear).show();
+		$("#overlay_l"+level).show();
 	}
 	finishCrop();
 }

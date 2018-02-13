@@ -46,10 +46,11 @@
 	margin-left: 3px;
 	z-index: 2;
 	cursor: move;
+	display: none;
 }
 
-#overlay2 {
-	display: none;
+#overlay_12s, #overlay_l85s, #overlay_s7 {
+	display: block;
 }
 
 #controls {
@@ -171,6 +172,10 @@ p#cropLabel {
   position: relative;
 }
 
+select {
+	margin-top:5px;
+}
+
 .zoom_btn,
 .rotate_btn {
   line-height: 39px;
@@ -224,6 +229,29 @@ p#cropLabel {
 	display: none;
 }
 
+@media (max-width: 1072px) {
+	.ninthAvatar {
+		display: none;
+	}
+}
+@media (max-width: 666px) {
+	.ninthAvatar {
+		display: inline-block;
+	}
+}
+@media (max-width: 510px) {
+	.ninthAvatar {
+		display: none;
+	}
+}
+@media (max-width: 354px) {
+	.half.textcenter {
+		text-align: center;
+	}
+	.ninthAvatar {
+		display: inline-block;
+	}
+}
 			@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
 			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
 			@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
@@ -258,8 +286,62 @@ p#cropLabel {
 			<p id="error" class="small dim" style="display:none;"><b>Oops!</b> The file you uploaded was either too big or was not an image. Please choose a file with the extension .gif, .png or .jpg.</p>
 
 			<div id="canvasContainer">
-				<img src="images/avatar.png" id="overlay1" class="overlay" />
-				<img src="images/avatar2.png" id="overlay2" class="overlay" />
+
+				<img src="images/avatar_1s.png" id="overlay_1s" class="overlay" />
+				<img src="images/avatar_2s.png" id="overlay_2s" class="overlay" />
+				<img src="images/avatar_3s.png" id="overlay_3s" class="overlay" />
+				<img src="images/avatar_4s.png" id="overlay_4s" class="overlay" />
+				<img src="images/avatar_5s.png" id="overlay_5s" class="overlay" />
+				<img src="images/avatar_6s.png" id="overlay_6s" class="overlay" />
+				<img src="images/avatar_7s.png" id="overlay_7s" class="overlay" />
+				<img src="images/avatar_8s.png" id="overlay_8s" class="overlay" />
+				<img src="images/avatar_9s.png" id="overlay_9s" class="overlay" />
+				<img src="images/avatar_10s.png" id="overlay_10s" class="overlay" />
+				<img src="images/avatar_11s.png" id="overlay_11s" class="overlay" />
+				<img src="images/avatar_12s.png" id="overlay_12s" class="overlay" />
+
+				<img src="images/avatar_l1s.png" id="overlay_l1s" class="overlay" />
+				<img src="images/avatar_l10s.png" id="overlay_l10s" class="overlay" />
+				<img src="images/avatar_l55s.png" id="overlay_l55s" class="overlay" />
+				<img src="images/avatar_l60s.png" id="overlay_l60s" class="overlay" />
+				<img src="images/avatar_l69s.png" id="overlay_l69s" class="overlay" />
+				<img src="images/avatar_l70s.png" id="overlay_l70s" class="overlay" />
+				<img src="images/avatar_l80s.png" id="overlay_l80s" class="overlay" />
+				<img src="images/avatar_l84s.png" id="overlay_l84s" class="overlay" />
+				<img src="images/avatar_l85s.png" id="overlay_l85s" class="overlay" />
+
+				<img src="images/avatar_s0.png" id="overlay_s0" class="overlay" />
+				<img src="images/avatar_s1.png" id="overlay_s1" class="overlay" />
+				<img src="images/avatar_s2.png" id="overlay_s2" class="overlay" />
+				<img src="images/avatar_s3.png" id="overlay_s3" class="overlay" />
+				<img src="images/avatar_s4.png" id="overlay_s4" class="overlay" />
+				<img src="images/avatar_s5.png" id="overlay_s5" class="overlay" />
+				<img src="images/avatar_s6.png" id="overlay_s6" class="overlay" />
+				<img src="images/avatar_s7.png" id="overlay_s7" class="overlay" />
+
+				<img src="images/avatar_1.png" id="overlay_1" class="overlay" />
+				<img src="images/avatar_2.png" id="overlay_2" class="overlay" />
+				<img src="images/avatar_3.png" id="overlay_3" class="overlay" />
+				<img src="images/avatar_4.png" id="overlay_4" class="overlay" />
+				<img src="images/avatar_5.png" id="overlay_5" class="overlay" />
+				<img src="images/avatar_6.png" id="overlay_6" class="overlay" />
+				<img src="images/avatar_7.png" id="overlay_7" class="overlay" />
+				<img src="images/avatar_8.png" id="overlay_8" class="overlay" />
+				<img src="images/avatar_9.png" id="overlay_9" class="overlay" />
+				<img src="images/avatar_10.png" id="overlay_10" class="overlay" />
+				<img src="images/avatar_11.png" id="overlay_11" class="overlay" />
+				<img src="images/avatar_12.png" id="overlay_12" class="overlay" />
+
+				<img src="images/avatar_l1.png" id="overlay_l1" class="overlay" />
+				<img src="images/avatar_l10.png" id="overlay_l10" class="overlay" />
+				<img src="images/avatar_l55.png" id="overlay_l55" class="overlay" />
+				<img src="images/avatar_l60.png" id="overlay_l60" class="overlay" />
+				<img src="images/avatar_l69.png" id="overlay_l69" class="overlay" />
+				<img src="images/avatar_l70.png" id="overlay_l70" class="overlay" />
+				<img src="images/avatar_l80.png" id="overlay_l80" class="overlay" />
+				<img src="images/avatar_l84.png" id="overlay_l84" class="overlay" />
+				<img src="images/avatar_l85.png" id="overlay_l85" class="overlay" />
+
 				<div id="canvasCrop"></div>
 			</div>
 			<p id="cropLabel" style="display:none">Drag image to crop</p>
@@ -280,7 +362,42 @@ p#cropLabel {
 			</div>
 
 			<div id="downloadbuttons">
-				<input type="checkbox" id="stars" value="1" checked="checked" />Show Stars<br /><br /><br />
+				<select id="rarity">
+					<option value="7" selected="selected">7*</option>
+					<option value="6">6*</option>
+					<option value="5">5*</option>
+					<option value="4">4*</option>
+					<option value="3">3*</option>
+					<option value="2">2*</option>
+					<option value="1">1*</option>
+					<option value="0">0*</option>
+				</select> <input type="checkbox" id="stars" value="1" checked="checked" />Show Stars<br />
+				<select id="gear">
+					<option value="12" selected="selected">Gear 12</option>
+					<option value="11">Gear 11</option>
+					<option value="10">Gear 10</option>
+					<option value="9">Gear 9</option>
+					<option value="8">Gear 8</option>
+					<option value="7">Gear 7</option>
+					<option value="6">Gear 6</option>
+					<option value="5">Gear 5</option>
+					<option value="4">Gear 4</option>
+					<option value="3">Gear 3</option>
+					<option value="2">Gear 2</option>
+					<option value="1">Gear 1</option>
+				</select><br />
+				<select id="level">
+					<option value="85" selected="selected">Level 85</option>
+					<option value="84">Level 84</option>
+					<option value="80">Level 80</option>
+					<option value="70">Level 70</option>
+					<option value="69">Level 69</option>
+					<option value="60">Level 60</option>
+					<option value="55">Level 55</option>
+					<option value="10">Level 10</option>
+					<option value="1">Level 1</option>
+				</select><br />
+				<br /><br />
 				<a class="btn" id="js_download">Download SWGOH Avatar</a>
 				<span class="hint"><br /><br />Downloads don't seem to work from inside the Reddit app, so switch to your web browser if it isn't working.</span>
 			</div>
@@ -309,16 +426,17 @@ p#cropLabel {
 
 		</div>
 
-		<div class="half">
+		<div class="half textcenter">
 			<h3>Examples</h3>
 			<img src="images/avatars/c3po.png" width="150" height="150" />
-			<img src="images/avatars/spock.png" width="150" height="150" />
+			<img src="images/avatars/porg.png" width="150" height="150" />
 			<img src="images/avatars/jarjar.png" width="150" height="150" />
-			<img src="images/avatars/anakin.png" width="150" height="150" />
-			<img src="images/avatars/carbonite.png" width="150" height="150" />
-			<img src="images/avatars/cat.png" width="150" height="150" />
 			<img src="images/avatars/doc.png" width="150" height="150" />
+			<img src="images/avatars/carbonite.png" width="150" height="150" />
+			<img src="images/avatars/anakin.png" width="150" height="150" />
 			<img src="images/avatars/bender.png" width="150" height="150" />
+			<img src="images/avatars/spock.png" width="150" height="150" />
+			<img src="images/avatars/cat.png" width="150" height="150" class="ninthAvatar" />
 
 		</div>
 	
