@@ -16,6 +16,9 @@ function translateName($short) {
 	else if($short=="aath") return "Tank Takedown (HAAT) HEROIC";
 }
 
+if(!empty($_GET['delete_by_jake'])) {
+	$db->query("DELETE FROM swgoh_screenshot WHERE id='".$db->str($_GET['delete_by_jake'])."'");
+}
 ?>
 <html>
 <head>
@@ -143,7 +146,59 @@ function translateName($short) {
 				<b><a href="squads.php?raid=haat4">Tank Takedown Phase 4</a></b><br />
 				<p>Find out which squads work well against the Tank in Phase 4.</p>
 			</div>
+			
+			<br />
+			
+			<div class="square short">
+				<a href="squads.php?raid=nasl1"><img src="http://www.swgoh.life/images/nasl1.png" width="205" height="150" /></a><br />
+				<b><a href="squads.php?raid=nasl1">Sith Triumvirate (Tier 6) Phase 1</a></b><br />
+				<p>Find out which squads work well against Darth Nihilus in Phase 1.</p>
+			</div>
+			
+			<div class="square short">
+				<a href="squads.php?raid=nasl2"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<b><a href="squads.php?raid=nasl2">Sith Triumvirate (Tier 6) Phase 2</a></b><br />
+				<p>Find out which squads work well against Darth Sion in Phase 2.</p>
+			</div>
+			
+			<div class="square short">
+				<a href="squads.php?raid=nasl3"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<b><a href="squads.php?raid=nasl3">Sith Triumvirate (Tier 6) Phase 3</a></b><br />
+				<p>Find out which squads work well against Darth Traya in Phase 3.</p>
+			</div>
+			
+			<div class="square short">
+				<a href="squads.php?raid=nasl4"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<b><a href="squads.php?raid=nasl4">Sith Triumvirate (Tier 6) Phase 4</a></b><br />
+				<p>Find out which squads work well against the Triumvirate in Phase 4.</p>
+			</div>
 
+			<br />
+			
+			<div class="square short">
+				<a href="squads.php?raid=hasl1"><img src="http://www.swgoh.life/images/http://www.swgoh.life/images/nasl1.png" width="205" height="150" /></a><br />
+				<b><a href="squads.php?raid=hasl1">Sith Triumvirate (Heroic) Phase 1</a></b><br />
+				<p>Find out which squads work well against Darth Nihilus in Phase 1.</p>
+			</div>
+			
+			<div class="square short">
+				<a href="squads.php?raid=hasl2"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<b><a href="squads.php?raid=hasl2">Sith Triumvirate (Heroic) Phase 2</a></b><br />
+				<p>Find out which squads work well against Darth Sion in Phase 2.</p>
+			</div>
+			
+			<div class="square short">
+				<a href="squads.php?raid=hasl3"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<b><a href="squads.php?raid=hasl3">Sith Triumvirate (Heroic) Phase 3</a></b><br />
+				<p>Find out which squads work well against Darth Traya in Phase 3.</p>
+			</div>
+			
+			<div class="square short">
+				<a href="squads.php?raid=hasl4"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<b><a href="squads.php?raid=hasl4">Sith Triumvirate (Heroic) Phase 4</a></b><br />
+				<p>Find out which squads work well against the Triumvirate in Phase 4.</p>
+			</div>
+			
 			<?
 		} else {
 			$sql = "";
@@ -152,6 +207,14 @@ function translateName($short) {
 			else if($_GET['raid']=="haat2") $sql = "AND raid='aath' AND phase=2";
 			else if($_GET['raid']=="haat3") $sql = "AND raid='aath' AND phase=3";
 			else if($_GET['raid']=="haat4") $sql = "AND raid='aath' AND phase=4";
+			else if($_GET['raid']=="nasl1") $sql = "AND raid='nasl' AND phase=1";
+			else if($_GET['raid']=="nasl2") $sql = "AND raid='nasl' AND phase=2";
+			else if($_GET['raid']=="nasl3") $sql = "AND raid='nasl' AND phase=3";
+			else if($_GET['raid']=="nasl4") $sql = "AND raid='nasl' AND phase=4";
+			else if($_GET['raid']=="hasl1") $sql = "AND raid='hasl' AND phase=1";
+			else if($_GET['raid']=="hasl2") $sql = "AND raid='hasl' AND phase=2";
+			else if($_GET['raid']=="hasl3") $sql = "AND raid='hasl' AND phase=3";
+			else if($_GET['raid']=="hasl4") $sql = "AND raid='hasl' AND phase=4";
 
 			$raid = "";
 			$phase = 0;
@@ -177,7 +240,7 @@ function translateName($short) {
 				echo "<tr><td>".number_format($row['score'])."</td>";
 				if(empty($row['gg'])) echo "<td>".$row['name']."</td>";
 				else echo "<td><a href='https://swgoh.gg/u/".$row['gg']."/' target='_blank'>".$row['name']."</a></td>";
-
+		
 				echo "<td>";
 					if($row['zeta1']) echo "z";
 					echo $row['toon1'];
@@ -199,6 +262,7 @@ function translateName($short) {
 					echo $row['toon5'];
 				
 				echo "</td>";
+				if(!empty($_GET['showID'])) echo "<td>".$row['id']."</td>";
 				
 				echo "<td><a href='#' class='viewImage' data-src='https://lambdaexperiment.s3.amazonaws.com/".$row['id']."'>View Image</a></td></tr>";
 			}
