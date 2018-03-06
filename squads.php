@@ -123,6 +123,8 @@ if(!empty($_GET['delete_by_jake'])) {
 				<p>Find out which squads work well against the Rancor.</p>
 			</div>
 
+			<br />
+			
 			<div class="square short">
 				<a href="squads.php?raid=haat1"><img src="http://www.swgoh.life/images/aat1.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=haat1">Tank Takedown Phase 1</a></b><br />
@@ -156,19 +158,19 @@ if(!empty($_GET['delete_by_jake'])) {
 			</div>
 			
 			<div class="square short">
-				<a href="squads.php?raid=nasl2"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<a href="squads.php?raid=nasl2"><img src="http://www.swgoh.life/images/nasl2.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=nasl2">Sith Triumvirate (Tier 6) Phase 2</a></b><br />
 				<p>Find out which squads work well against Darth Sion in Phase 2.</p>
 			</div>
 			
 			<div class="square short">
-				<a href="squads.php?raid=nasl3"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<a href="squads.php?raid=nasl3"><img src="http://www.swgoh.life/images/nasl3.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=nasl3">Sith Triumvirate (Tier 6) Phase 3</a></b><br />
 				<p>Find out which squads work well against Darth Traya in Phase 3.</p>
 			</div>
 			
 			<div class="square short">
-				<a href="squads.php?raid=nasl4"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<a href="squads.php?raid=nasl4"><img src="http://www.swgoh.life/images/nasl4.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=nasl4">Sith Triumvirate (Tier 6) Phase 4</a></b><br />
 				<p>Find out which squads work well against the Triumvirate in Phase 4.</p>
 			</div>
@@ -176,25 +178,25 @@ if(!empty($_GET['delete_by_jake'])) {
 			<br />
 			
 			<div class="square short">
-				<a href="squads.php?raid=hasl1"><img src="http://www.swgoh.life/images/http://www.swgoh.life/images/nasl1.png" width="205" height="150" /></a><br />
+				<a href="squads.php?raid=hasl1"><img src="http://www.swgoh.life/images/nasl1.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=hasl1">Sith Triumvirate (Heroic) Phase 1</a></b><br />
 				<p>Find out which squads work well against Darth Nihilus in Phase 1.</p>
 			</div>
 			
 			<div class="square short">
-				<a href="squads.php?raid=hasl2"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<a href="squads.php?raid=hasl2"><img src="http://www.swgoh.life/images/nasl2.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=hasl2">Sith Triumvirate (Heroic) Phase 2</a></b><br />
 				<p>Find out which squads work well against Darth Sion in Phase 2.</p>
 			</div>
 			
 			<div class="square short">
-				<a href="squads.php?raid=hasl3"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<a href="squads.php?raid=hasl3"><img src="http://www.swgoh.life/images/nasl3.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=hasl3">Sith Triumvirate (Heroic) Phase 3</a></b><br />
 				<p>Find out which squads work well against Darth Traya in Phase 3.</p>
 			</div>
 			
 			<div class="square short">
-				<a href="squads.php?raid=hasl4"><img src="http://www.swgoh.life/images/nasl.png" width="205" height="150" /></a><br />
+				<a href="squads.php?raid=hasl4"><img src="http://www.swgoh.life/images/nasl4.png" width="205" height="150" /></a><br />
 				<b><a href="squads.php?raid=hasl4">Sith Triumvirate (Heroic) Phase 4</a></b><br />
 				<p>Find out which squads work well against the Triumvirate in Phase 4.</p>
 			</div>
