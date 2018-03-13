@@ -312,7 +312,7 @@
 		var now = new Date().getTime();
 		var days = 1513299681000-now;
 		days = Math.ceil(days/(86400000));
-		$('#days').val(days);
+		//$('#days').val(days);
 		
 		$('#button').on("click", panic);
 
@@ -358,7 +358,7 @@
 				<br />
 
 				<h3>How many days until the event starts?</h3>
-				<input type="text" id="days" name="days" value="" size="3" disabled="true" /> (Starts Dec 15th) <br /><br />
+				<input type="text" id="days" name="days" value="" size="3" /><br /><br />
 
 				<input type="submit" id="button" value="Should I Panic?" class="btn" />
 				<br /><br />
