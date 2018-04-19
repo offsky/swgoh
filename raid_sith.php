@@ -349,7 +349,7 @@ a.seg:hover  {
 				// else echo "<br />You are missing one more more of these toons.";
 			?>
 
-			<p>Imperial Troopers can do 1-2%. Zeta Required: Veers leadership</p>
+			<p>Imperial Troopers can do 1-2%. Zeta Required: Veers unique</p>
 			<? 
 				$red = 0;
 				$rs = $db->query("SELECT * from toons WHERE (toon='General Veers') AND user='".$db->str($gg)."' order by toon desc");
@@ -574,7 +574,7 @@ a.seg:hover  {
 				} else if($row2) {
 					if(printOneToon2($row2,7,10)) $red++;
 				} else {
-					printEmptyToon("First Order Executioner");
+					printEmptyToon("First Order SF TIE Pilot");
 					$red++;
 				}
 
