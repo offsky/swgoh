@@ -76,7 +76,7 @@ while($row = $db->getNext($rs,1)) {
 			@media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
   		</style>
   		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  		<script src="jquery.js"></script>
 		<script>
 		$(document).ready(function() {
 

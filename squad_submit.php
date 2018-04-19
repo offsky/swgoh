@@ -76,7 +76,7 @@ if(!empty($_POST['fileid']) && !empty($_POST['raid'])) {
   	<script src="https://use.fontawesome.com/c278e2b3ff.js"></script>
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.77.0.min.js"></script>
-  	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  	<script src="jquery.js"></script>
   	<script src="upload.js"></script>
   	<script type="text/javascript">
   		var bucketName = 'lambdaexperiment';

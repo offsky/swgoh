@@ -71,7 +71,7 @@ if(!empty($_GET['delete_by_jake'])) {
 
 	</style>
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  	<script src="jquery.js"></script>
    <script type="text/javascript">
    	$(function(){
   			$('.viewImage').on("click",function(e) {
