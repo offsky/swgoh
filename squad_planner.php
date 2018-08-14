@@ -1,4 +1,29 @@
-<!DOCTYPE html>
+<?
+if(strpos($_SERVER['SERVER_NAME'], "docker")===false) {
+	require_once("../vars.php");
+	require_once("../libs.php");
+	require_once("../api_swgoh_help.php");
+	$db = new mymysqli("swgoh");
+	error_reporting(0);
+} else {
+	require_once("../../vars.php");
+	require_once("../libs.php");
+	require_once("../api_swgoh_help.php");
+	$db = new mymysqli("toodledo");
+	error_reporting(E_ALL);
+}
+
+$self = explode("/",$_SERVER['PHP_SELF']);
+$self = array_pop($self);
+
+$ally = empty($_REQUEST['ally']) ? "" : trim($_REQUEST['ally']);
+$ally = intval(preg_replace("/[^0-9]/","",$ally));
+
+if(!empty($ally)) {
+	$data = fetchGuildFromSWGOHHelp($ally);
+}
+
+?><!DOCTYPE html>
 <html>
 	<head>
 		<title>SWGOH Tools - Territory War Squad Builder</title>
@@ -90,13 +115,13 @@
   	<script src="jquery.js"></script>
 	<script>
 	$(document).ready(function() {
-		var parsed = null;
 		var storage = null;
 		if(window.localStorage) storage = window.localStorage;
 		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
 
+		var toonData = JSON.parse('<?=json_encode($data)?>');
 
-		var id2Name = {"AAYLASECURA":"Aayla Secura","ADMIRALACKBAR":"Admiral Ackbar","AHSOKATANO":"Ahsoka Tano","FULCRUMAHSOKA":"Ahsoka Tano (Fulcrum)","ASAJVENTRESS":"Asajj Ventress","B2SUPERBATTLEDROID":"B2 Super Battle Droid","BARRISSOFFEE":"Barriss Offee","BAZEMALBUS":"Baze Malbus","BB8":"BB-8","BIGGSDARKLIGHTER":"Biggs Darklighter","BISTAN":"Bistan","BOBAFETT":"Boba Fett","BODHIROOK":"Bodhi Rook","CADBANE":"Cad Bane","HOTHHAN":"Captain Han Solo","PHASMA":"Captain Phasma","CASSIANANDOR":"Cassian Andor","CC2224":"CC-2224 \"Cody\"","CHIEFCHIRPA":"Chief Chirpa","CHIEFNEBIT":"Chief Nebit","CHIRRUTIMWE":"Chirrut Îmwe","CHOPPERS3":"Chopper","CLONESERGEANTPHASEI":"Clone Sergeant - Phase I","CLONEWARSCHEWBACCA":"Clone Wars Chewbacca","COLONELSTARCK":"Colonel Starck","COMMANDERLUKESKYWALKER":"Commander Luke Skywalker","CORUSCANTUNDERWORLDPOLICE":"Coruscant Underworld Police","COUNTDOOKU":"Count Dooku","CT210408":"CT-21-0408 \"Echo\"","CT5555":"CT-5555 \"Fives\"","CT7567":"CT-7567 \"Rex\"","MAUL":"Darth Maul","DARTHNIHILUS":"Darth Nihilus","DARTHSIDIOUS":"Darth Sidious","VADER":"Darth Vader","DATHCHA":"Dathcha","DEATHTROOPER":"Death Trooper","DENGAR":"Dengar","DIRECTORKRENNIC":"Director Krennic","EETHKOTH":"Eeth Koth","EMPERORPALPATINE":"Emperor Palpatine","EWOKELDER":"Ewok Elder","EWOKSCOUT":"Ewok Scout","EZRABRIDGERS3":"Ezra Bridger","FINN":"Finn","FIRSTORDEROFFICERMALE":"First Order Officer","FIRSTORDERSPECIALFORCESPILOT":"First Order SF TIE Pilot","FIRSTORDERTROOPER":"First Order Stormtrooper","FIRSTORDERTIEPILOT":"First Order TIE Pilot","GAMORREANGUARD":"Gamorrean Guard","GARSAXON":"Gar Saxon","ZEBS3":"Garazeb \"Zeb\" Orrelios","GRIEVOUS":"General Grievous","GENERALKENOBI":"General Kenobi","VEERS":"General Veers","GEONOSIANSOLDIER":"Geonosian Soldier","GEONOSIANSPY":"Geonosian Spy","GRANDADMIRALTHRAWN":"Grand Admiral Thrawn","GRANDMASTERYODA":"Grand Master Yoda","GRANDMOFFTARKIN":"Grand Moff Tarkin","GREEDO":"Greedo","HANSOLO":"Han Solo","HERASYNDULLAS3":"Hera Syndulla","HERMITYODA":"Hermit Yoda","HK47":"HK-47","HOTHREBELSCOUT":"Hoth Rebel Scout","HOTHREBELSOLDIER":"Hoth Rebel Soldier","MAGNAGUARD":"IG-100 MagnaGuard","IG86SENTINELDROID":"IG-86 Sentinel Droid","IG88":"IG-88","IMAGUNDI":"Ima-Gun Di","IMPERIALPROBEDROID":"Imperial Probe Droid","IMPERIALSUPERCOMMANDO":"Imperial Super Commando","JAWA":"Jawa","JAWAENGINEER":"Jawa Engineer","JAWASCAVENGER":"Jawa Scavenger","JEDIKNIGHTCONSULAR":"Jedi Consular","ANAKINKNIGHT":"Jedi Knight Anakin","JEDIKNIGHTGUARDIAN":"Jedi Knight Guardian","JYNERSO":"Jyn Erso","K2SO":"K-2SO","KANANJARRUSS3":"Kanan Jarrus","KITFISTO":"Kit Fisto","KYLOREN":"Kylo Ren","KYLORENUNMASKED":"Kylo Ren (Unmasked)","ADMINISTRATORLANDO":"Lando Calrissian","LOBOT":"Lobot","LOGRAY":"Logray","LUKESKYWALKER":"Luke Skywalker (Farmboy)","LUMINARAUNDULI":"Luminara Unduli","MACEWINDU":"Mace Windu","MAGMATROOPER":"Magmatrooper","HUMANTHUG":"Mob Enforcer","MOTHERTALZIN":"Mother Talzin","NIGHTSISTERACOLYTE":"Nightsister Acolyte","NIGHTSISTERINITIATE":"Nightsister Initiate","NIGHTSISTERSPIRIT":"Nightsister Spirit","NIGHTSISTERZOMBIE":"Nightsister Zombie","NUTEGUNRAY":"Nute Gunray","OLDBENKENOBI":"Obi-Wan Kenobi (Old Ben)","DAKA":"Old Daka","PAO":"Pao","PAPLOO":"Paploo","PLOKOON":"Plo Koon","POE":"Poe Dameron","POGGLETHELESSER":"Poggle the Lesser","PRINCESSLEIA":"Princess Leia","QUIGONJINN":"Qui-Gon Jinn","R2D2_LEGENDARY":"R2-D2","HOTHLEIA":"Rebel Officer Leia Organa","RESISTANCEPILOT":"Resistance Pilot","RESISTANCETROOPER":"Resistance Trooper","REYJEDITRAINING":"Rey (Jedi Training)","REY":"Rey (Scavenger)","ROYALGUARD":"Royal Guard","SABINEWRENS3":"Sabine Wren","SAVAGEOPRESS":"Savage Opress","SCARIFREBEL":"Scarif Rebel Pathfinder","SHORETROOPER":"Shoretrooper","SITHASSASSIN":"Sith Assassin","SITHTROOPER":"Sith Trooper","SNOWTROOPER":"Snowtrooper","STORMTROOPER":"Stormtrooper","STORMTROOPERHAN":"Stormtrooper Han","SUNFAC":"Sun Fac","TALIA":"Talia","TEEBO":"Teebo","TIEFIGHTERPILOT":"TIE Fighter Pilot","TUSKENRAIDER":"Tusken Raider","TUSKENSHAMAN":"Tusken Shaman","UGNAUGHT":"Ugnaught","URORRURRR":"URoRRuR'R'R","SMUGGLERCHEWBACCA":"Veteran Smuggler Chewbacca","SMUGGLERHAN":"Veteran Smuggler Han Solo","WAMPA":"Wampa","WEDGEANTILLES":"Wedge Antilles","WICKET":"Wicket","ZAMWESELL":"Zam Wesell"};
+		var id2Name = {"AAYLASECURA":"Aayla Secura","ADMIRALACKBAR":"Admiral Ackbar","AHSOKATANO":"Ahsoka Tano","FULCRUMAHSOKA":"Ahsoka Tano (Fulcrum)","AMILYNHOLDO":"Amilyn Holdo","ASAJVENTRESS":"Asajj Ventress","B2SUPERBATTLEDROID":"B2 Super Battle Droid","BARRISSOFFEE":"Barriss Offee","BASTILASHAN":"Bastila Shan","BAZEMALBUS":"Baze Malbus","BB8":"BB-8","BIGGSDARKLIGHTER":"Biggs Darklighter","BISTAN":"Bistan","BOBAFETT":"Boba Fett","BODHIROOK":"Bodhi Rook","BOSSK":"Bossk","CADBANE":"Cad Bane","HOTHHAN":"Captain Han Solo","PHASMA":"Captain Phasma","CASSIANANDOR":"Cassian Andor","CC2224":"CC-2224 \"Cody\"","CHIEFCHIRPA":"Chief Chirpa","CHIEFNEBIT":"Chief Nebit","CHIRRUTIMWE":"Chirrut Îmwe","CHOPPERS3":"Chopper","CLONESERGEANTPHASEI":"Clone Sergeant - Phase I","CLONEWARSCHEWBACCA":"Clone Wars Chewbacca","COLONELSTARCK":"Colonel Starck","COMMANDERLUKESKYWALKER":"Commander Luke Skywalker","CORUSCANTUNDERWORLDPOLICE":"Coruscant Underworld Police","COUNTDOOKU":"Count Dooku","CT210408":"CT-21-0408 \"Echo\"","CT5555":"CT-5555 \"Fives\"","CT7567":"CT-7567 \"Rex\"","MAUL":"Darth Maul","DARTHNIHILUS":"Darth Nihilus","DARTHSIDIOUS":"Darth Sidious","DARTHSION":"Darth Sion","DARTHTRAYA":"Darth Traya","VADER":"Darth Vader","DATHCHA":"Dathcha","DEATHTROOPER":"Death Trooper","DENGAR":"Dengar","DIRECTORKRENNIC":"Director Krennic","EETHKOTH":"Eeth Koth","EMBO":"Embo","EMPERORPALPATINE":"Emperor Palpatine","ENFYSNEST":"Enfys Nest","EWOKELDER":"Ewok Elder","EWOKSCOUT":"Ewok Scout","EZRABRIDGERS3":"Ezra Bridger","FINN":"Finn","FIRSTORDEREXECUTIONER":"First Order Executioner","FIRSTORDEROFFICERMALE":"First Order Officer","FIRSTORDERSPECIALFORCESPILOT":"First Order SF TIE Pilot","FIRSTORDERTROOPER":"First Order Stormtrooper","FIRSTORDERTIEPILOT":"First Order TIE Pilot","GAMORREANGUARD":"Gamorrean Guard","GARSAXON":"Gar Saxon","ZEBS3":"Garazeb \"Zeb\" Orrelios","GRIEVOUS":"General Grievous","GENERALKENOBI":"General Kenobi","VEERS":"General Veers","GEONOSIANSOLDIER":"Geonosian Soldier","GEONOSIANSPY":"Geonosian Spy","GRANDADMIRALTHRAWN":"Grand Admiral Thrawn","GRANDMASTERYODA":"Grand Master Yoda","GRANDMOFFTARKIN":"Grand Moff Tarkin","GREEDO":"Greedo","HANSOLO":"Han Solo","HERASYNDULLAS3":"Hera Syndulla","HERMITYODA":"Hermit Yoda","HK47":"HK-47","HOTHREBELSCOUT":"Hoth Rebel Scout","HOTHREBELSOLDIER":"Hoth Rebel Soldier","MAGNAGUARD":"IG-100 MagnaGuard","IG86SENTINELDROID":"IG-86 Sentinel Droid","IG88":"IG-88","IMAGUNDI":"Ima-Gun Di","IMPERIALPROBEDROID":"Imperial Probe Droid","IMPERIALSUPERCOMMANDO":"Imperial Super Commando","JAWA":"Jawa","JAWAENGINEER":"Jawa Engineer","JAWASCAVENGER":"Jawa Scavenger","JEDIKNIGHTCONSULAR":"Jedi Consular","ANAKINKNIGHT":"Jedi Knight Anakin","JEDIKNIGHTGUARDIAN":"Jedi Knight Guardian","JOLEEBINDO":"Jolee Bindo","JYNERSO":"Jyn Erso","K2SO":"K-2SO","KANANJARRUSS3":"Kanan Jarrus","KITFISTO":"Kit Fisto","KYLOREN":"Kylo Ren","KYLORENUNMASKED":"Kylo Ren (Unmasked)","L3_37":"L3-37","ADMINISTRATORLANDO":"Lando Calrissian","LOBOT":"Lobot","LOGRAY":"Logray","LUKESKYWALKER":"Luke Skywalker (Farmboy)","LUMINARAUNDULI":"Luminara Unduli","MACEWINDU":"Mace Windu","MAGMATROOPER":"Magmatrooper","MISSIONVAO":"Mission Vao","HUMANTHUG":"Mob Enforcer","MOTHERTALZIN":"Mother Talzin","NIGHTSISTERACOLYTE":"Nightsister Acolyte","NIGHTSISTERINITIATE":"Nightsister Initiate","NIGHTSISTERSPIRIT":"Nightsister Spirit","NIGHTSISTERZOMBIE":"Nightsister Zombie","NUTEGUNRAY":"Nute Gunray","OLDBENKENOBI":"Obi-Wan Kenobi (Old Ben)","DAKA":"Old Daka","PAO":"Pao","PAPLOO":"Paploo","PLOKOON":"Plo Koon","POE":"Poe Dameron","POGGLETHELESSER":"Poggle the Lesser","PRINCESSLEIA":"Princess Leia","QIRA":"Qi'ra","QUIGONJINN":"Qui-Gon Jinn","R2D2_LEGENDARY":"R2-D2","RANGETROOPER":"Range Trooper","HOTHLEIA":"Rebel Officer Leia Organa","RESISTANCEPILOT":"Resistance Pilot","RESISTANCETROOPER":"Resistance Trooper","REYJEDITRAINING":"Rey (Jedi Training)","REY":"Rey (Scavenger)","ROSETICO":"Rose Tico","ROYALGUARD":"Royal Guard","SABINEWRENS3":"Sabine Wren","SAVAGEOPRESS":"Savage Opress","SCARIFREBEL":"Scarif Rebel Pathfinder","SHORETROOPER":"Shoretrooper","SITHASSASSIN":"Sith Assassin","SITHMARAUDER":"Sith Marauder","SITHTROOPER":"Sith Trooper","SNOWTROOPER":"Snowtrooper","STORMTROOPER":"Stormtrooper","STORMTROOPERHAN":"Stormtrooper Han","SUNFAC":"Sun Fac","T3_M4":"T3-M4","TALIA":"Talia","TEEBO":"Teebo","TIEFIGHTERPILOT":"TIE Fighter Pilot","TUSKENRAIDER":"Tusken Raider","TUSKENSHAMAN":"Tusken Shaman","UGNAUGHT":"Ugnaught","URORRURRR":"URoRRuR'R'R","YOUNGCHEWBACCA":"Vandor Chewbacca","SMUGGLERCHEWBACCA":"Veteran Smuggler Chewbacca","SMUGGLERHAN":"Veteran Smuggler Han Solo","VISASMARR":"Visas Marr","WAMPA":"Wampa","WEDGEANTILLES":"Wedge Antilles","WICKET":"Wicket","YOUNGHAN":"Young Han Solo","YOUNGLANDO":"Young Lando Calrissian","ZAALBAR":"Zaalbar","ZAMWESELL":"Zam Wesell"};
 		// var names = []; //Take from https://swgoh.gg/api/characters/
 		// var fixed = {};
 		// names.forEach(function(toon) {
@@ -104,67 +129,23 @@
 		// });
 		// console.log(JSON.stringify(fixed));
 
-		//get data
-		var gg = fetch("ggg");
-		if(gg) {
-			$('#gg').val(gg);
-			showStep2(gg);
+		var ally = fetch("ally");
+		if(ally) {
+			$('#ally').val(ally);
 		}
+		$('#ally').on("change",function(e) {
+			var ally = $('#ally').val();
+			store("ally",ally);
+		});
 
-		$('#restoremsg').show();
-		setTimeout(function() {
-			var data = fetch("data");
-			if(data && $('#manual').val().length<100) {
-				$('#manual').val(data);
-			}
-			$('#restoremsg').hide();
-		},100);
-		
-
-		function updateGG(e) {
-			var gg = $('#gg').val();
-			store("ggg",gg);
-			showStep2(gg);
-		}
-		function showStep2(gg) {
-			var parts = gg.split("/");
-			var num = parseInt(parts[0]);
-
-			$('#step2url').attr("href","https://swgoh.gg/api/guilds/"+num+"/units/")
-			$('#step2').show();
-		}
-
-		$('#gg').on("change",updateGG);
-		$('#ok').on("click",updateGG);
 
 		//use data
-		function showStep3() {
-			$('#badData').hide();
-
-			var data = $('#manual').val();
-
-			if(data.length<100) {
-				badData();
-				return;
-			}
-			try {
-				parsed = JSON.parse(data);
-			} catch(e) {
-				badData();
-				return;
-			}
-
-			store("data",data);
-
+		function init() {
 			fillSelects();
-			$('#step2').hide();
-			$('#step3').show();
 			runReport();
 		}
 
-		function badData() {
-			$('#badData').show();
-		}
+		init();
 
 		function fillSelects() {
 			var t1 = $('#toon1');
@@ -175,10 +156,10 @@
 
 			var names = [];
 
-			for(var toon in parsed) {
-				if(parsed[toon][0].combat_type==1) {
+			for(var toon in toonData) {
+				if(toonData[toon][0].type==1) {
 					var niceName = id2Name[toon];
-					if(niceName==undefined || niceName=='') niceName = parsed[toon][0].url.split("/")[5];
+					if(niceName==undefined || niceName=='') niceName = toon;
 					names.push(niceName+"**"+toon);
 				}
 			}
@@ -257,7 +238,6 @@
 			runReport();
 		}
 
-		$('#go').on("click",showStep3);
 
 		$('#toon1').on("change",runReport);
 		$('#toon2').on("change",runReport);
@@ -276,13 +256,13 @@
 
 			var squad = [];
 
-			for(var toon in parsed) {
-				if(parsed[toon][0].combat_type==1) {
-					if(toon==t1) squad[0] = parsed[toon];
-					if(toon==t2) squad[1] = parsed[toon];
-					if(toon==t3) squad[2] = parsed[toon];
-					if(toon==t4) squad[3] = parsed[toon];
-					if(toon==t5) squad[4] = parsed[toon];
+			for(var toon in toonData) {
+				if(toonData[toon][0].type==1) {
+					if(toon==t1) squad[0] = toonData[toon];
+					if(toon==t2) squad[1] = toonData[toon];
+					if(toon==t3) squad[2] = toonData[toon];
+					if(toon==t4) squad[3] = toonData[toon];
+					if(toon==t5) squad[4] = toonData[toon];
 				}
 			}
 
@@ -296,9 +276,9 @@
 				toon.forEach(function(player) {
 					if(guild[player.player]==undefined) guild[player.player] = {url:player.url,power:0,toon:[]};
 					
-					if(player.power>=6000) {
-						guild[player.player].toon[index+1] = [player.rarity,player.gear_level,player.level,player.power];
-						guild[player.player].power += player.power;
+					if(player.gp>=6000) {
+						guild[player.player].toon[index+1] = [player.starLevel,player.gearLevel,player.level,player.gp];
+						guild[player.player].power += player.gp;
 					}
 				});
 			});
@@ -312,7 +292,7 @@
 			for(var player in guild) {
 				var squad = guild[player];
 				//if(squad.toon[1]!==undefined && squad.toon[2]!==undefined && squad.toon[3]!==undefined && squad.toon[4]!==undefined && squad.toon[5]!==undefined) {
-					var row = "<td><a href='https://swgoh.gg/u/"+squad.url.split("/")[2]+"/collection' target='_blank'>"+player+"</a></td><td>"+printToon(squad.toon[1])+"</td><td>"+printToon(squad.toon[2])+"</td><td>"+printToon(squad.toon[3])+"</td><td>"+printToon(squad.toon[4])+"</td><td>"+printToon(squad.toon[5])+"</td><td>"+numberWithCommas(squad.power)+"</td></tr>";
+					var row = "<td>"+player+"</td><td>"+printToon(squad.toon[1])+"</td><td>"+printToon(squad.toon[2])+"</td><td>"+printToon(squad.toon[3])+"</td><td>"+printToon(squad.toon[4])+"</td><td>"+printToon(squad.toon[5])+"</td><td>"+numberWithCommas(squad.power)+"</td></tr>";
 					rows.push({power:squad.power,html:row});
 				//}
 			}
@@ -371,56 +351,46 @@
 
 		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Territory War Squad Builder</h1>
 
-		<p>This tool will inspect your guild's roster and allow you to build different squads for Territory War. It needs to fetch the information from <a href="https://www.swgoh.gg">swgoh.gg</a> to do this. If your guild doesn't have everyone registered there, you'll need to fix that first.</p>
+		<? if(empty($ally)) { ?>
+
+			<p>This tool will inspect your guild's roster and allow you to build different squads for Territory War.To find your ally code, open the game to the main screen and tap on your name in the upper left corner. Then look below your name for a 9 digit number.</p>
+
+			<form action="<?=$self?>" method="get">
+			<b>What is your SWGOH Ally Code:</b><br />
+			<input type="text" id="ally" name="ally" placeholder="123-456-789" /> <input type="submit" value="ok" />
+			</form>
+
+		<? } else { ?>
 	
-		<b>What is your SWGOH.GG Guild Number and Name? You can find this in the URL when looking at your guild's page.</b><br />
-		https://swgoh.gg/g/<input type="text" id="gg" name="gg" placeholder="1234/name" />/ <input type="button" id="ok" value="ok" /><br /><br />
+			<a name="top"></a>
+			<div id="step3">
+				<table class="styled">
+					<thead>
+					<tr>
+						<td colspan="2">Player</td>
+						<td><select id="toon1"><option value="">ANY TOON</option></select></td>
+						<td><select id="toon2"><option value="">ANY TOON</option></select></td>
+						<td><select id="toon3"><option value="">ANY TOON</option></select></td>
+						<td><select id="toon4"><option value="">ANY TOON</option></select></td>
+						<td><select id="toon5"><option value="">ANY TOON</option></select></td>
+						<td>Squad Power</td>
+					</tr>
+					</thead>
+					<tbody id="table">
 
-		<div id="step2" style="display:none">
-			<b>SWGOH.GG does not allow automatic fetching of your account information, so we'll have to do it manually <i class="fa fa-smile-o"></i>.</b>
-			<br /><br />
-			Step 1:<br />
-			<a href="" id="step2url" target="_blank">Click here to open your guild's collection data page on swgoh.gg</a>
-			<br /><br />		
-			Step 2:<br />
-			Copy and paste everything you see on that page into this box. Please note that this is a lot of data to paste. Your browser may stall for a few seconds. If you are using Firefox, it may try to make the data pretty. Click the "raw data" tab and copy and paste that.<br />
-			<textarea name="manual" id="manual" cols="50" rows="5"></textarea>
-			<div id="restoremsg">Attempting to restore data from last time. This takes a few seconds...</div>
-
-			<br />
-			<div id="badData" style="display:none">
-				<b>Sorry, but the box above was left blank, or had bad data inside of it. Please try again.</b><br /><br />
+					</tbody>
+				</table>
+				<p>Toons with a power of less than 6000 cannot be used in Territory Wars, so they are omitted.</p>
+				Shortcuts: <a href="#top" class="js_ss" data-ss="phoenix">Phoenix</a>,&nbsp;
+							  <a href="#top" class="js_ss" data-ss="nightsister">NightSisters</a>,&nbsp;
+							  <a href="#top" class="js_ss" data-ss="cls">Commander Luke + R2 + Chaze</a>,&nbsp;
+							  <a href="#top" class="js_ss" data-ss="maul">Maul + Sith</a>,&nbsp;
+							  <a href="#top" class="js_ss" data-ss="rey">Jedi Rey</a>,&nbsp;
+							  <a href="#top" class="js_ss" data-ss="finn">Finn Resistance</a>,&nbsp;
+							  <a href="#top" class="js_ss" data-ss="gk">GK + Barris</a>
 			</div>
-			<input type="submit" value="Lets Go!" id="go" class="btn" />
-		</div>
 
-		<a name="top"></a>
-		<div id="step3" style="display:none">
-			<table class="styled">
-				<thead>
-				<tr>
-					<td colspan="2">Player</td>
-					<td><select id="toon1"><option value="">ANY TOON</option></select></td>
-					<td><select id="toon2"><option value="">ANY TOON</option></select></td>
-					<td><select id="toon3"><option value="">ANY TOON</option></select></td>
-					<td><select id="toon4"><option value="">ANY TOON</option></select></td>
-					<td><select id="toon5"><option value="">ANY TOON</option></select></td>
-					<td>Squad Power</td>
-				</tr>
-				</thead>
-				<tbody id="table">
-
-				</tbody>
-			</table>
-			<p>Toons with a power of less than 6000 cannot be used in Territory Wars, so they are omitted.</p>
-			Shortcuts: <a href="#top" class="js_ss" data-ss="phoenix">Phoenix</a>,&nbsp;
-						  <a href="#top" class="js_ss" data-ss="nightsister">NightSisters</a>,&nbsp;
-						  <a href="#top" class="js_ss" data-ss="cls">Commander Luke + R2 + Chaze</a>,&nbsp;
-						  <a href="#top" class="js_ss" data-ss="maul">Maul + Sith</a>,&nbsp;
-						  <a href="#top" class="js_ss" data-ss="rey">Jedi Rey</a>,&nbsp;
-						  <a href="#top" class="js_ss" data-ss="finn">Finn Resistance</a>,&nbsp;
-						  <a href="#top" class="js_ss" data-ss="gk">GK + Barris</a>
-		</div>
+		<? } ?>
 
 	<br /><br /><hr /><ins class="adsbygoogle"
 			 style="display:block; text-align:center;"
