@@ -2,11 +2,13 @@
 if(strpos($_SERVER['SERVER_NAME'], "docker")===false) {
 	require_once("../vars.php");
 	require_once("../libs.php");
+	require_once("../api_swgoh_help.php");
 	$db = new mymysqli("swgoh");
 	error_reporting(0);
 } else {
 	require_once("../../vars.php");
 	require_once("../libs.php");
+	require_once("../api_swgoh_help.php");
 	$db = new mymysqli("toodledo");
 	error_reporting(E_ALL);
 }
@@ -18,32 +20,12 @@ if(strpos($_SERVER['SERVER_NAME'], "docker")===false) {
 $self = explode("/",$_SERVER['PHP_SELF']);
 $self = array_pop($self);
 
-$gg = empty($_REQUEST['gg']) ? "" : trim($_REQUEST['gg']);
-$manual = empty($_POST['manual']) ? "" : trim($_POST['manual']);
-$manual2 = empty($_POST['manual2']) ? "" : trim($_POST['manual2']);
+$ally = empty($_REQUEST['ally']) ? "" : trim($_REQUEST['ally']);
+$ally = intval(preg_replace("/[^0-9]/","",$ally));
+$username = "";
 
-if(!empty($gg)) {
-	$rs = $db->query("SELECT * FROM player WHERE username='ss' and username='".$db->str($gg)."'");
-	if($row = $db->getNext($rs,1)) {
-		if($row['last']<time()-(86400*0) && !empty($manual)  && !empty($manual2)) {
-			$db->query("UPDATE player SET last = ".time()." WHERE username='".$db->str($gg)."'");
-			$data = getUserFromGG($gg,$manual);
-			foreach($data as $toonKey=>$toon) {	
-				$flags = getToonFlags($toon['title']);
-				$db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel,empire,bounty,trooper) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].",".$flags['empire'].",".$flags['bounty'].",".$flags['trooper'].")");
-			}
-			
-		}
-	} else if(!empty($manual)) {
-		$db->query("INSERT INTO player(username,last) VALUES('".$db->str($gg)."',".time().")");
-		$data = getUserFromGG($gg,$manual);
-		foreach($data as $toonKey=>$toon) {	
-			$flags = getToonFlags($toon['title']);
-			$db->query("REPLACE INTO toons(user,toon,level,gear,stars,percent,light,phoenix,rogue,rebel,empire,bounty,trooper) VALUES('".$db->str($gg)."','".$db->str($toon['title'])."',".intval($toon['level']).",".intval($toon['gear']).",".intval($toon['star']).",".intval($toon['percent']).",".$flags['light'].",".$flags['phoenix'].",".$flags['rogue'].",".$flags['rebel'].",".$flags['empire'].",".$flags['bounty'].",".$flags['trooper'].")");
-		}
-		
-	}
-
+if(!empty($ally)) {
+	$username = fetchPlayerFromSWGOHHelp($ally);
 }
 
 ?><!DOCTYPE html>
@@ -180,21 +162,14 @@ a.seg:hover  {
 		if(window.localStorage) storage = window.localStorage;
 		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
 
-		var gg = fetch("gg");
-		if(gg) {
-			$('#gg').val(gg);
-			showStep2(gg);
+		var ally = fetch("ally");
+		if(ally) {
+			$('#ally').val(ally);
 		}
-		$('#gg').on("change",function(e) {
-			var gg = $('#gg').val();
-			store("gg",gg);
-			showStep2(gg);
+		$('#ally').on("change",function(e) {
+			var ally = $('#ally').val();
+			store("ally",ally);
 		});
-
-		function showStep2(gg) {
-			$('#step2url').attr("href","https://swgoh.gg/u/"+gg+"/collection/")
-			$('#step2').show();
-		}
 
 		function store(key,val) {
 			storage.setItem(key,val);
@@ -226,37 +201,17 @@ a.seg:hover  {
 
 		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Sith Triumvirate Raid Readiness</h1>
 
-		<? if(empty($gg)) { ?>
-			<p>This tool will inspect your account and give advice on what you need to work on for the Sith Triumvirate Raid. It needs to fetch your roster information from <a href="https://www.swgoh.gg">swgoh.gg</a> to do this. If you don't have an account there, please make one. </p>
+		<? if(empty($ally)) { ?>
+			<p>This tool will inspect your account and give advice on what you need to work on for the Sith Triumvirate Raid. To find your ally code, open the game to the main screen and tap on your name in the upper left corner. Then look below your name for a 9 digit number.</p>
 		
-			<form action="<?=$self?>" method="post">
-			<b>What is your SWGOH.GG Name:</b><br />
-			https://swgoh.gg/u/<input type="text" id="gg" name="gg" />/ <input type="button" value="ok" /><br /><br />
-
-			<div id="step2" style="display:none">
-				<b>SWGOH.GG does not allow automatic fetching of your account information, so we'll have to do it manually <i class="fa fa-smile-o"></i>.</b>
-				<br />
-				<br />
-				Step 1:<br />
-				<a href="" id="step2url" target="_blank">Click here to open your toon collection page on swgoh.gg</a>
-				<br /><br />
-				Step 2:<br />
-				In your web browser, find the "View Page Source" menu option and select it. You'll see a bunch of HTML code in a new window.  Copy and Paste that entire page of text into the following text box.
-				<br /><br />				
-				Step 3:<br />
-				Copy and paste the HTML from your SWGOH.GG toon collection page here:<br />
-				<textarea name="manual"></textarea>
-				<br />
-
-
-				<input type="submit" value="Inspect My Account" class="btn" />
-			</div>
-
+			<form action="<?=$self?>" method="get">
+			<b>What is your SWGOH Ally Code:</b><br />
+			<input type="text" id="ally" name="ally" placeholder="123-456-789" /> <input type="submit" value="ok" />
 			</form>
 
-		<? } else if(empty($_GET['dark'])) { ?>
+		<? } else { ?>
 
-			SWGOH Account: <?=$gg?> (<a href="raid_sith.php">pick another</a>)
+			Account: <?=$username?> (<?=$ally?>) (<a href="raid_sith.php">pick another</a>)
 
 			<br />
 			<p>The goal of this tool is to show you the optimal minimum number of squads that you will need in order to contribute your 2% share of damage towards the Raid. There are many teams that can work for the Sith Triumvirate Raid beyond what is displayed here. This tool has simply picked the best known team for each phase and as better teams are discovered this will be updated.</p>
@@ -266,21 +221,21 @@ a.seg:hover  {
 			<p>Jedi Training Rey and Friends can do 4% or more of phase 1. Required Zetas: JTR Lead, BB8 Roll With the Punches. Optional Zetas: JTR Insight, R2D2 Combat Analysis. The main idea is to use specials on Darth Nihilus to prevent his protection regeneration. If you have to use a basic attack attack one of the Assassins. You need to time the shield carefully to protect you from Annihilate. Videos <a href="https://www.youtube.com/watch?v=43PPNO8MfR8&feature=youtu.be&t=1m">Here</a> and <a href="https://www.youtube.com/watch?v=z1a5hqTKYUI&feature=youtu.be">Here</a>.</p>
 			<? 
 				$red = 0;
-				$rs = $db->query("SELECT * from toons WHERE (toon='Rey (Jedi Training)') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Rey (Jedi Training)') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("Rey (Jedi Training)");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='BB-8') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='BB-8') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("BB-8");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='Resistance Trooper') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Resistance Trooper') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
@@ -288,9 +243,9 @@ a.seg:hover  {
 					$red++;
 				}
 
-				$rs = $db->query("SELECT * from toons WHERE (toon='R2-D2') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='R2-D2') AND user='".$db->str($ally)."' order by toon desc");
 				$row1 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='Visas Marr') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Visas Marr') AND user='".$db->str($ally)."' order by toon desc");
 				$row2 = $db->getNext($rs,1);
 				if($row1 && $row2) {
 					if(printTwoToons($row1,$row2,7,11)) $red++;
@@ -304,11 +259,11 @@ a.seg:hover  {
 				}
 
 				
-				$rs = $db->query("SELECT * from toons WHERE (toon='Rey (Scavenger)') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Rey (Scavenger)') AND user='".$db->str($ally)."' order by toon desc");
 				$row1 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='Barriss Offee') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Barriss Offee') AND user='".$db->str($ally)."' order by toon desc");
 				$row2 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='Hermit Yoda') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Hermit Yoda') AND user='".$db->str($ally)."' order by toon desc");
 				$row3 = $db->getNext($rs,1);
 				if($row1 && $row2 && $row3) {
 					if(printThreeToons($row1,$row2,$row3,7,11)) $red++;
@@ -340,7 +295,7 @@ a.seg:hover  {
 			<? 
 				$red = 0;
 				$green = 0;
-				$rs = $db->query("SELECT * from toons WHERE phoenix=1 AND (toon!='Chopper') AND user='".$db->str($gg)."'");
+				$rs = $db->query("SELECT * from toons WHERE phoenix=1 AND (toon!='Chopper') AND user='".$db->str($ally)."'");
 				while($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,10)) $red++;
 					else $green++;
@@ -352,35 +307,35 @@ a.seg:hover  {
 			<p>Imperial Troopers can do 1-2%. Zeta Required: Veers unique</p>
 			<? 
 				$red = 0;
-				$rs = $db->query("SELECT * from toons WHERE (toon='General Veers') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='General Veers') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("General Veers");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='Grand Admiral Thrawn') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Grand Admiral Thrawn') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("Grand Admiral Thrawn");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='Shoretrooper') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Shoretrooper') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("Shoretrooper");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='Colonel Starck') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Colonel Starck') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("Colonel Starck");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='Snowtrooper') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Snowtrooper') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
@@ -396,21 +351,21 @@ a.seg:hover  {
 			<p>This team is called "Chex Mix" and can do over 4%. The idea is to make Han Solo slow and give him offense up, crit chance up and crit damage up and apply deathmark to Traya. Then have Han Solo use "Standalone". His counter attacks will crit for 100k each. Its a very fast team. Required Zeta: Han Solo's Shoots First. Optional Zetas: CLS Lead, It Binds all Things. Video <a href="https://www.youtube.com/watch?v=Q53Qgxgs09w&feature=youtu.be">here</a></p>
 			<? 
 				$red = 0;
-				$rs = $db->query("SELECT * from toons WHERE (toon='Commander Luke Skywalker') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Commander Luke Skywalker') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("Commander Luke Skywalker");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='Han Solo') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Han Solo') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("Han Solo");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='Death Trooper') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Death Trooper') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
@@ -418,9 +373,9 @@ a.seg:hover  {
 					$red++;
 				}
 
-				$rs = $db->query("SELECT * from toons WHERE (toon='Chirrut Îmwe') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Chirrut Îmwe') AND user='".$db->str($ally)."' order by toon desc");
 				$row1 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='CT-7567 \"Rex\"') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='CT-7567 \"Rex\"') AND user='".$db->str($ally)."' order by toon desc");
 				$row2 = $db->getNext($rs,1);
 				if($row1 && $row2) {
 					if(printTwoToons($row1,$row2,7,10)) $red++;
@@ -434,11 +389,11 @@ a.seg:hover  {
 				}
 
 				
-				$rs = $db->query("SELECT * from toons WHERE (toon='Pao') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Pao') AND user='".$db->str($ally)."' order by toon desc");
 				$row1 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='Jedi Knight Anakin') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Jedi Knight Anakin') AND user='".$db->str($ally)."' order by toon desc");
 				$row2 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='Poggle the Lesser') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Poggle the Lesser') AND user='".$db->str($ally)."' order by toon desc");
 				$row3 = $db->getNext($rs,1);
 				if($row1 && $row2 && $row3) {
 					if(printThreeToons($row1,$row2,$row3,7,10)) $red++;
@@ -466,14 +421,14 @@ a.seg:hover  {
 			<p>You can use your JTR team from Phase 1 here if you still have it, otherwise Night Sisters can take out up to 10% of Darth Nihilus's health and some of Sion's as a bonus. Its important to avoid hitting Nihilus with a basic to prevent him from regaining protection. Required Zeta: Asajj leadership. Optional Zetas: Asajj Unique, Talzin Unique, Daka Unique. Video <a href="https://www.youtube.com/watch?v=l3tJvYhOuvg&feature=youtu.be">here</a>.</p>
 			<? 
 				$red = 0;
-				$rs = $db->query("SELECT * from toons WHERE (toon='Asajj Ventress') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Asajj Ventress') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("Asajj Ventress");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='Old Daka') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Old Daka') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
@@ -481,7 +436,7 @@ a.seg:hover  {
 					$red++;
 				}
 		
-				$rs = $db->query("SELECT * from toons WHERE (toon='Talia') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Talia') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
@@ -489,9 +444,9 @@ a.seg:hover  {
 					$red++;
 				}
 
-				$rs = $db->query("SELECT * from toons WHERE (toon='Nightsister Acolyte') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Nightsister Acolyte') AND user='".$db->str($ally)."' order by toon desc");
 				$row1 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='Nightsister Zombie') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Nightsister Zombie') AND user='".$db->str($ally)."' order by toon desc");
 				$row2 = $db->getNext($rs,1);
 				if($row1 && $row2) {
 					if(printTwoToons($row1,$row2,7,10)) $red++;
@@ -504,9 +459,9 @@ a.seg:hover  {
 					$red++;
 				}
 
-				$rs = $db->query("SELECT * from toons WHERE (toon='Mother Talzin') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Mother Talzin') AND user='".$db->str($ally)."' order by toon desc");
 				$row1 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='Nightsister Initiate') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Nightsister Initiate') AND user='".$db->str($ally)."' order by toon desc");
 				$row2 = $db->getNext($rs,1);
 				if($row1 && $row2) {
 					if(printTwoToons($row1,$row2,7,10)) $red++;
@@ -526,21 +481,21 @@ a.seg:hover  {
 			<p>First Order, lead by Kylo Ren Unmasked can remove 2% or more from Sion once Darth Nihilus has been defeated. The main strategy is to remove Isolate when you can and remove Cycle of Pain when it's above 20.</p>
 			<? 
 				$red = 0;
-				$rs = $db->query("SELECT * from toons WHERE (toon='Kylo Ren (Unmasked)') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Kylo Ren (Unmasked)') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("Kylo Ren (Unmasked)");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='First Order Stormtrooper') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='First Order Stormtrooper') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
 					printEmptyToon("First Order Storm Trooper");
 					$red++;
 				}
-				$rs = $db->query("SELECT * from toons WHERE (toon='First Order Officer') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='First Order Officer') AND user='".$db->str($ally)."' order by toon desc");
 				if($row = $db->getNext($rs,1)) {
 					if(printOneToon2($row,7,11)) $red++;
 				} else {
@@ -548,9 +503,9 @@ a.seg:hover  {
 					$red++;
 				}
 				
-				$rs = $db->query("SELECT * from toons WHERE (toon='First Order Executioner') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='First Order Executioner') AND user='".$db->str($ally)."' order by toon desc");
 				$row1 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='Kylo Ren') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='Kylo Ren') AND user='".$db->str($ally)."' order by toon desc");
 				$row2 = $db->getNext($rs,1);
 				if($row1 && $row2) {
 					if(printTwoToons($row1,$row2,7,10)) $red++;
@@ -563,9 +518,9 @@ a.seg:hover  {
 					$red++;
 				}
 
-				$rs = $db->query("SELECT * from toons WHERE (toon='First Order SF TIE Pilot') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='First Order SF TIE Pilot') AND user='".$db->str($ally)."' order by toon desc");
 				$row1 = $db->getNext($rs,1);
-				$rs = $db->query("SELECT * from toons WHERE (toon='First Order TIE Pilot') AND user='".$db->str($gg)."' order by toon desc");
+				$rs = $db->query("SELECT * from toons WHERE (toon='First Order TIE Pilot') AND user='".$db->str($ally)."' order by toon desc");
 				$row2 = $db->getNext($rs,1);
 				if($row1 && $row2) {
 					if(printTwoToons($row1,$row2,7,10)) $red++;
