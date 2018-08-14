@@ -246,8 +246,6 @@ while($row = $db->getNext($rs,1)) {
 			<td>938</td></tr>	
 			<tr><td>Mk 9 Fabritech Data Pad Prototype</td><td>750</td>
 			<td>938</td></tr>	
-			<tr><td>Mk 5 A/KT Stun Gun</td><td>1400</td>
-			<td>1699</td></tr>	
 			<tr><td>Mk 6 Nubian Security Scanner</td><td>545</td>
 			<td>623</td></tr>	
 			<tr><td>Mk 2 Zaltin Bacta Gel Prototype</td><td>273</td>
@@ -316,6 +314,8 @@ while($row = $db->getNext($rs,1)) {
 			<td>300</td></tr>	
 			<tr><td>Mk 3 Carbanti Sensor Array</td><td>1400</td>
 			<td>750</td></tr>	
+			<tr><td>Mk 5 A/KT Stun Gun</td><td>2541</td>
+			<td>1699</td></tr>	
 			<tr><td>Mk 4 A/KT Stun Gun</td><td>1400</td>
 			<td>300</td></tr></table>
 
