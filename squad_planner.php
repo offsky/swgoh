@@ -2,13 +2,13 @@
 if(strpos($_SERVER['SERVER_NAME'], "docker")===false) {
 	require_once("../vars.php");
 	require_once("../libs.php");
-	require_once("../api_swgoh_help2.php");
+	require_once("../api_swgoh_help3.php");
 	$db = new mymysqli("swgoh");
 	error_reporting(0);
 } else {
 	require_once("../../vars.php");
 	require_once("../libs.php");
-	require_once("../api_swgoh_help2.php");
+	require_once("../api_swgoh_help3.php");
 	$db = new mymysqli("toodledo");
 	error_reporting(E_ALL);
 }
@@ -19,6 +19,7 @@ $self = array_pop($self);
 $ally = empty($_REQUEST['ally']) ? "" : trim($_REQUEST['ally']);
 $ally = intval(preg_replace("/[^0-9]/","",$ally));
 
+$data = array();
 if(!empty($ally)) {
 	$data = fetchGuildFromSWGOHHelp($ally);
 }
@@ -154,6 +155,12 @@ if(!empty($ally)) {
 			var t4 = $('#toon4');
 			var t5 = $('#toon5');
 
+			var t1b = $('#toon1b');
+			var t2b = $('#toon2b');
+			var t3b = $('#toon3b');
+			var t4b = $('#toon4b');
+			var t5b = $('#toon5b');
+
 			var names = [];
 
 			for(var toon in toonData) {
@@ -173,6 +180,12 @@ if(!empty($ally)) {
 				t3.append(option);
 				t4.append(option);
 				t5.append(option);
+
+				t1b.append(option);
+				t2b.append(option);
+				t3b.append(option);
+				t4b.append(option);
+				t5b.append(option);
 			});
 
 			$('#toon1 option[value="HERASYNDULLAS3"]').prop("selected", "selected");
@@ -180,6 +193,12 @@ if(!empty($ally)) {
 			$('#toon3 option[value="KANANJARRUSS3"]').prop("selected", "selected");
 			$('#toon4 option[value="ZEBS3"]').prop("selected", "selected");
 			$('#toon5 option[value="SABINEWRENS3"]').prop("selected", "selected");
+
+			$('#toon1b option[value="REYJEDITRAINING"]').prop("selected", "selected");
+			$('#toon2b option[value="BB8"]').prop("selected", "selected");
+			$('#toon3b option[value="R2D2_LEGENDARY"]').prop("selected", "selected");
+			$('#toon4b option[value="GENERALKENOBI"]').prop("selected", "selected");
+			$('#toon5b option[value="OLDBENKENOBI"]').prop("selected", "selected");
 		}
 
 		function shortcut(e) {
@@ -244,6 +263,13 @@ if(!empty($ally)) {
 		$('#toon3').on("change",runReport);
 		$('#toon4').on("change",runReport);
 		$('#toon5').on("change",runReport);
+		$('#toon1b').on("change",runReport);
+		$('#toon2b').on("change",runReport);
+		$('#toon3b').on("change",runReport);
+		$('#toon4b').on("change",runReport);
+		$('#toon5b').on("change",runReport);
+		$('#limit').on("change",runReport);
+		$('#limitb').on("change",runReport);
 
 		$('.js_ss').on("click",shortcut);
 
@@ -254,27 +280,44 @@ if(!empty($ally)) {
 			var t4 = $('#toon4').val();
 			var t5 = $('#toon5').val();
 
-			var squad = [];
+			var t1b = $('#toon1b').val();
+			var t2b = $('#toon2b').val();
+			var t3b = $('#toon3b').val();
+			var t4b = $('#toon4b').val();
+			var t5b = $('#toon5b').val();
 
-			for(var toon in toonData) {
-				if(toonData[toon][0].type==1) {
-					if(toon==t1) squad[0] = toonData[toon];
+			var squad = [];
+			var squadB = [];
+
+
+			for(var toon in toonData) { //for each toon in the raw data
+				if(toonData[toon][0].type==1) { //if its a character
+					if(toon==t1) squad[0] = toonData[toon]; //if its the one we want, add our guilds roster into the array
 					if(toon==t2) squad[1] = toonData[toon];
 					if(toon==t3) squad[2] = toonData[toon];
 					if(toon==t4) squad[3] = toonData[toon];
 					if(toon==t5) squad[4] = toonData[toon];
+
+					if(toon==t1b) squadB[0] = toonData[toon]; //if its the one we want, add our guilds roster into the array
+					if(toon==t2b) squadB[1] = toonData[toon];
+					if(toon==t3b) squadB[2] = toonData[toon];
+					if(toon==t4b) squadB[3] = toonData[toon];
+					if(toon==t5b) squadB[4] = toonData[toon];
 				}
 			}
 
-			rankSquads(squad);
+			var g1 = rankSquads(squad);
+			var g2 = rankSquads(squadB);
+
+			printTable(g1,g2);
 		}
 
 		function rankSquads(squad) {
 			var guild = [];
 
-			squad.forEach(function(toon,index) {
-				toon.forEach(function(player) {
-					if(guild[player.player]==undefined) guild[player.player] = {url:player.url,power:0,toon:[]};
+			squad.forEach(function(toon,index) { //for each toon in the squad
+				toon.forEach(function(player) { //for each player that has the toon
+					if(guild[player.player]==undefined) guild[player.player] = {power:0,toon:[]};
 					
 					if(player.gp>=6000) {
 						guild[player.player].toon[index+1] = [player.starLevel,player.gearLevel,player.level,player.gp];
@@ -283,32 +326,51 @@ if(!empty($ally)) {
 				});
 			});
 
-			printTable(guild);
+			return guild;
 		}
 
-		function printTable(guild) {
+		function printTable(guild, guildB) {
 
 			var rows = [];
 			for(var player in guild) {
 				var squad = guild[player];
-				//if(squad.toon[1]!==undefined && squad.toon[2]!==undefined && squad.toon[3]!==undefined && squad.toon[4]!==undefined && squad.toon[5]!==undefined) {
-					var row = "<td>"+player+"</td><td>"+printToon(squad.toon[1])+"</td><td>"+printToon(squad.toon[2])+"</td><td>"+printToon(squad.toon[3])+"</td><td>"+printToon(squad.toon[4])+"</td><td>"+printToon(squad.toon[5])+"</td><td>"+numberWithCommas(squad.power)+"</td></tr>";
-					rows.push({power:squad.power,html:row});
-				//}
-			}
 
+				var row = "<td>"+player+"</td><td>Squad 1</td><td>"+printToon(squad.toon[1])+"</td><td>"+printToon(squad.toon[2])+"</td><td>"+printToon(squad.toon[3])+"</td><td>"+printToon(squad.toon[4])+"</td><td>"+printToon(squad.toon[5])+"</td><td>"+numberWithCommas(squad.power)+"</td></tr>";
+				rows.push({power:squad.power,html:row});
+			}
 			rows.sort(function(a,b) {
+				return b.power-a.power;
+			});
+
+			var rowsB = [];
+			for(var player in guildB) {
+				var squadB = guildB[player];
+
+				var rowB = "<td>"+player+"</td><td>Squad 2</td><td>"+printToon(squadB.toon[1])+"</td><td>"+printToon(squadB.toon[2])+"</td><td>"+printToon(squadB.toon[3])+"</td><td>"+printToon(squadB.toon[4])+"</td><td>"+printToon(squadB.toon[5])+"</td><td>"+numberWithCommas(squadB.power)+"</td></tr>";
+				rowsB.push({power:squadB.power,html:rowB});
+			}
+			rowsB.sort(function(a,b) {
+				return b.power-a.power;
+			});
+
+			var limit = $('#limit').val();
+			var limitB = $('#limitb').val();
+			
+			rows = rows.slice(0,limit);		
+			rowsB = rowsB.slice(0,limitB);		
+
+			var toPrint = rows.concat(rowsB);
+			toPrint.sort(function(a,b) {
 				return b.power-a.power;
 			});
 
 			var table = $('#table');
 			table.html("");
 			var rownum = 0;
-			rows.forEach(function(row) {
+			toPrint.forEach(function(row) {
 				rownum++;
 				table.append("<tr><td>"+rownum+"</td>"+row.html);
 			});
-
 		}
 
 		function printToon(toon) {
@@ -353,7 +415,7 @@ if(!empty($ally)) {
 
 		<? if(empty($ally)) { ?>
 
-			<p>This tool will inspect your guild's roster and allow you to build different squads for Territory War.To find your ally code, open the game to the main screen and tap on your name in the upper left corner. Then look below your name for a 9 digit number.</p>
+			<p>This tool will inspect your guild's roster and allow you to build different squads for Territory War. To find your ally code, open the game to the main screen and tap on your name in the upper left corner. Then look below your name for a 9 digit number.</p>
 
 			<form action="<?=$self?>" method="get">
 			<b>What is your SWGOH Ally Code:</b><br />
@@ -367,12 +429,30 @@ if(!empty($ally)) {
 				<table class="styled">
 					<thead>
 					<tr>
-						<td colspan="2">Player</td>
+						<td colspan="3">Squad 1</td>
 						<td><select id="toon1"><option value="">ANY TOON</option></select></td>
 						<td><select id="toon2"><option value="">ANY TOON</option></select></td>
 						<td><select id="toon3"><option value="">ANY TOON</option></select></td>
 						<td><select id="toon4"><option value="">ANY TOON</option></select></td>
 						<td><select id="toon5"><option value="">ANY TOON</option></select></td>
+						<td><select id="limit"><option value="10">Show Top 10</option><option value="20">Show Top 20</option><option value="25">Show Top 25</option><option value="50">Show All</option></select></td>
+					</tr>
+					<tr>
+						<td colspan="3">Squad 2</td>
+						<td><select id="toon1b"><option value="">ANY TOON</option></select></td>
+						<td><select id="toon2b"><option value="">ANY TOON</option></select></td>
+						<td><select id="toon3b"><option value="">ANY TOON</option></select></td>
+						<td><select id="toon4b"><option value="">ANY TOON</option></select></td>
+						<td><select id="toon5b"><option value="">ANY TOON</option></select></td>
+						<td><select id="limitb"><option value="10">Show Top 10</option><option value="20">Show Top 20</option><option value="25">Show Top 25</option><option value="50">Show All</option></select></td>
+					</tr>
+					<tr>
+						<td colspan="3">Player</td>
+						<td>Leader</td>
+						<td>Toon 2</td>
+						<td>Toon 3</td>
+						<td>Toon 4</td>
+						<td>Toon 5</td>
 						<td>Squad Power</td>
 					</tr>
 					</thead>
