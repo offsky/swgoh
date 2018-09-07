@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SWGOH Tools - Solo Panic Farming Calculator</title>
+	  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+		<meta charset="utf-8" />
+		<style>
+			p { max-width: 800px;}
+			.swgoh_ad {
+			position: absolute;
+			left:0;
+			top:90px;
+			width:0;
+			height:0px;
+			}
+			#ad {
+			width:100%;
+			height:60px;
+			}
+
+			h3 {
+				font-size: 1.2em;
+				margin-bottom: 4px;
+			}
+			@-webkit-keyframes blinker {
+				from,
+				49.9% {
+					opacity: 0;
+				}
+				50%,
+				to {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fader {
+				50% {
+					opacity: 0;
+				}
+			}
+			b.nowrap {
+				white-space: nowrap;
+			}
+			#panic {
+				text-align: center;
+			}
+			.dontpanic {
+				color: green;
+				font-size: 50px;
+			}
+			.panic {
+				color: red;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			.maybepanic {
+				color: black;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			#dontpanic, #dont, #do {
+				display: none;
+			}
+
+			@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
+			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
+			@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
+			@media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
+  	</style>
+  	<script src="https://use.fontawesome.com/c278e2b3ff.js"></script>
+  	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+  	<script src="jquery.js"></script>
+	<script>
+	$(document).ready(function() {
+
+		var storage = null;
+		if(window.localStorage) storage = window.localStorage;
+		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
+
+		var left = 0;
+
+		function cacheForm(name) {
+			var val = fetch(name);
+			if(val) $('#'+name).val(val);
+			$('#'+name).on("change",function(e) {
+				store(name,$('#'+name).val());
+			});
+		}
+
+		function store(key,val) {
+			storage.setItem(key,val);
+		}
+		function fetch(key) {
+			return storage.getItem(key);
+		}
+
+		function getLeft() {
+			var days = parseInt($("#days").val())+6;
+
+			left = new Date().setHours(24*days);
+			update();
+		}
+
+		function timer() {
+			var now = new Date().getTime();
+			var display = (left - now)/(1000*60);
+
+			$('#timeleft').html(display.toFixed(3)+" minutes left!");
+		}
+
+		function update() {
+			var c =  parseInt(update1('chew')); //hard node
+			var h =  parseInt(update1('han')); //guild shipments
+			var l =  parseInt(update1('lando')); //ship node
+			var q =  parseInt(update1('qira')); //cantina
+			var d =  parseInt(update1('l337')); //cantina
+			var n =  parseInt(update1('nest')); //hard node
+			var total = c+h+l+q+d+n;
+			var cantinaTotal = q+d;
+
+			$('#total_total').html(total);
+
+			var days = parseInt($("#days").val())+6;
+			var perDay = total/days;
+			
+
+			$('#ends').html(days+1);
+			$('#perday').html(Math.ceil(perDay*10)/10);
+			var panic = false;
+
+			//CANTINA
+			//free = 189 energy = 3.9 shards
+			//1 = 120 = 2.4 shards (100 crystals)
+			//2 = 120 = 2.4 shards (100 crystals)
+			//3 = 120 = 2.4 shards (100 crystals)
+			
+			// 16 shards per day avaialable from shipments at 320/4 shards (80/s)
+
+			//4 = 120 = 2.4 shards (200 crystals)
+			//5 = 120 = 2.4 shards (200 crystals)
+			//6 = 120 = 2.4 shards (400 crystals)
+			var cantinaPerDay = cantinaTotal/days;
+			var refreshes = 0;
+			var shipments = 0;
+			var crystals = 0;
+			var special_total = 0;
+			$('#dont').hide();
+			$('#do').hide();
+			if(cantinaPerDay<=3.9) { //free crystals
+				refreshes = 0;
+				crystals = 0;
+			} else if(cantinaPerDay<=6.3) { //1 refresh
+				refreshes = 1;
+				crystals = 100;
+			} else if(cantinaPerDay<=8.7) { //2 refreshes
+				refreshes = 2;
+				crystals = 200;
+			} else if(cantinaPerDay<=11.1) { //3 refreshes
+				refreshes = 3;
+				crystals = 300;
+			} else if(cantinaPerDay<=13.5) { //4 refreshes
+				refreshes = 4;
+				crystals = 500;
+			} else if(cantinaPerDay<=15.1) { //3 refreshes + 1 shipment
+				refreshes = 3;
+				shipments = 1;
+				crystals = 620;
+			} else if(cantinaPerDay<=15.9) { //5 refreshes
+				refreshes = 5;
+				crystals = 700;
+			} else if(cantinaPerDay<=17.5) { //4 refreshes + 1 shipment
+				refreshes = 4;
+				shipments = 1;
+				crystals = 820;
+			} else if(cantinaPerDay<=19.1) { //3 refreshes + 2 shipments
+				refreshes = 3;
+				shipments = 2;
+				crystals = 940;
+			} else if(cantinaPerDay<=19.9) { //5 refreshes + 1 shipment
+				refreshes = 5;
+				shipments = 1;
+				crystals = 1020;
+			} else if(cantinaPerDay<=21.5) { //4 refreshes + 2 shipment
+				refreshes = 4;
+				shipments = 2;
+				crystals = 1140;
+			} else if(cantinaPerDay<=23.1) { //3 refreshes + 3 shipments
+				refreshes = 3;
+				shipments = 3;
+				crystals = 1260;
+			} else if(cantinaPerDay<=23.9) { //5 refreshes + 2 shipments
+				refreshes = 5;
+				shipments = 2;
+				crystals = 1340;
+			} else if(cantinaPerDay<=25.5) { //4 refreshes + 3 shipments
+				refreshes = 4;
+				shipments = 3;
+				crystals = 1460;
+			} else if(cantinaPerDay<=27.1) { //3 refreshes + 4 shipments
+				refreshes = 3;
+				shipments = 4;
+				crystals = 1580;
+			} else if(cantinaPerDay<=27.9) { //5 refreshes + 3 shipments
+				refreshes = 5;
+				shipments = 3;
+				crystals = 1660;
+			} else if(cantinaPerDay<=29.5) { //4 refreshes + 4 shipments
+				refreshes = 4;
+				shipments = 4;
+				crystals = 1780;
+			} else if(cantinaPerDay<=31.9) { //5 refreshes + 4 shipments
+				refreshes = 5;
+				shipments = 4;
+				crystals = 1980;
+			} else if(cantinaPerDay<=34.3) { //6 refreshes + 4 shipments
+				refreshes = 6;
+				shipments = 4;
+				crystals = 2380;
+			} else if(cantinaPerDay<=36.7) { //7 refreshes + 4 shipments
+				refreshes = 7;
+				shipments = 4;
+				crystals = 2780;
+			} else {
+				refreshes = "7+";
+				shipments = 4;
+				crystals = "2780+";
+				special_total = 2780*days;
+			}
+
+			//GUILD SHIPMENTS
+			var guildPerDay = h/days;
+			var guildPurchases = 0;
+			if(guildPerDay<=5) {
+				guildPurchases = 1;
+			} else if(guildPerDay<=10) {
+				guildPurchases = 2;
+			} else if(guildPerDay<=15) {
+				guildPurchases = 3;
+				panic = true;
+			} else if(guildPerDay<=20) {
+				guildPurchases = 4;
+				panic = true;
+			} else {			
+				guildPurchases = "4+";
+				panic = true;
+			}
+
+			//HARD NODES
+			var hardPerDay = (c+l+n)/days;
+			var cpd = c/days;
+			var lpd = l/days;
+			var npd = n/days;
+			$("#hardPerDayc").html(Math.ceil(cpd*10)/10);
+			$("#hardPerDayl").html(Math.ceil(lpd*10)/10);
+			$("#hardPerDayn").html(Math.ceil(npd*10)/10);
+			$('#hard_supc').hide();
+			$('#hard_supl').hide();
+			$('#hard_supn').hide();
+			if(cpd>2) {
+				var extraNeeded = c-(2*days);
+				//one refresh costs 50
+				if(extraNeeded<2*days){
+					crystals += 50;
+					$('#hard_supc_pd').html(1);
+					extraNeeded=0;
+				} else {
+					crystals += 50;
+					extraNeeded -= days*2;
+				}
+				//next 3 refreshes are 100 crystals
+				if(extraNeeded<6*days) {
+					if(extraNeeded>0) {
+						$('#hard_supc_pd').html(2);
+						crystals += 100;
+					}
+					if(extraNeeded>2*days) {
+						$('#hard_supc_pd').html(3);
+						crystals += 100;
+					}
+					if(extraNeeded>4*days) {
+						$('#hard_supc_pd').html(4);
+						crystals += 100;
+					}
+				} else {
+					crystals += 300;
+					extraNeeded -= days*6;
+					$('#hard_supc_pd').html("5+");
+				}
+				panic = true;
+				$('#hard_supc').show();
+			}
+			if(lpd>2) {
+				var extraNeeded = l-(2*days);
+				//one refresh costs 50
+				if(extraNeeded<2*days){
+					crystals += 50;
+					$('#hard_supl_pd').html(1);
+					extraNeeded=0;
+				} else {
+					crystals += 50;
+					extraNeeded -= days*2;
+				}
+				//next 3 refreshes are 100 crystals
+				if(extraNeeded<6*days) {
+					if(extraNeeded>0) {
+						$('#hard_supl_pd').html(2);
+						crystals += 100;
+					}
+					if(extraNeeded>2*days) {
+						$('#hard_supl_pd').html(3);
+						crystals += 100;
+					}
+					if(extraNeeded>4*days) {
+						$('#hard_supl_pd').html(4);
+						crystals += 100;
+					}
+				} else {
+					crystals += 300;
+					extraNeeded -= days*6;
+					$('#hard_supl_pd').html("5+");
+				}
+				panic = true;
+				$('#hard_supl').show();
+			}
+			if(npd>2) {
+				var extraNeeded = n-(2*days);
+				//one refresh costs 50
+				if(extraNeeded<2*days){
+					crystals += 50;
+					$('#hard_supn_pd').html(1);
+					extraNeeded=0;
+				} else {
+					crystals += 50;
+					extraNeeded -= days*2;
+				}
+				//next 3 refreshes are 100 crystals
+				if(extraNeeded<6*days) {
+					if(extraNeeded>0) {
+						$('#hard_supn_pd').html(2);
+						crystals += 100;
+					}
+					if(extraNeeded>2*days) {
+						$('#hard_supn_pd').html(3);
+						crystals += 100;
+					}
+					if(extraNeeded>4*days) {
+						$('#hard_supn_pd').html(4);
+						crystals += 100;
+					}
+				} else {
+					crystals += 300;
+					extraNeeded -= days*6;
+					$('#hard_supn_pd').html("5+");
+				}
+				panic = true;
+				$('#hard_supn').show();
+			}
+
+			if(crystals>500 || panic) $('#do').show();
+			else $('#dont').show();
+
+			$("#refreshes").html(refreshes);
+			$("#shipments").html(shipments);
+			$("#guildPurchases").html(guildPurchases);
+			$("#crystals").html(crystals);
+			$("#totalcrystals").html(crystals*days);
+			if(refreshes=="7+") $("#totalcrystals").html(special_total+"+");
+		}
+
+		function update1(who) {
+			var stars = parseInt($('#'+who+'_stars').val());
+			var shards = parseInt($('#'+who+'_shards').val());
+			if(isNaN(stars)) stars = 0;
+			if(isNaN(shards)) shards = 0;
+
+			if(stars>=7) {
+				$("#"+who+"_sh").hide();
+			} else {
+				$("#"+who+"_sh").show();
+			}
+		
+			var remain7 = 0;
+			if(stars==7) {
+				remain7 = 0;
+			} else if(stars==6) {
+				$('#'+who+'_max').html("100");
+				remain7 = 100-shards;
+			} else if(stars==5) {
+				$('#'+who+'_max').html("85");
+				remain7 = 185-shards;
+			} else if(stars==4) {
+				$('#'+who+'_max').html("65");
+				remain7 = 250-shards;
+			} else if(stars==3) {
+				$('#'+who+'_max').html("30");
+				remain7 = 280-shards;
+			} else if(stars==2) {
+				$('#'+who+'_max').html("25");
+				remain7 = 305-shards;
+			} else if(stars==1) {
+				$('#'+who+'_max').html("15");
+				remain7 = 320-shards;
+			} else {
+				$('#'+who+'_max').html("10");
+				remain7 = 330-shards;
+			}
+
+			$('#'+who+'_total').html(remain7);
+			return remain7;
+		}
+
+		function panic() {
+			update();
+
+			$('#panic').hide();
+			$('#dontpanic').show();
+
+			return false;
+		}
+
+		cacheForm("chew_stars");
+		cacheForm("chew_shards");
+		cacheForm("han_stars");
+		cacheForm("han_shards");
+		cacheForm("lando_stars");
+		cacheForm("lando_shards");
+		cacheForm("qira_stars");
+		cacheForm("qira_shards");
+		cacheForm("l337_stars");
+		cacheForm("l337_shards");
+		cacheForm("nest_stars");
+		cacheForm("nest_shards");
+
+		$("#chew_stars").on("change", update);
+		$("#chew_shards").on("change", update);
+		$("#han_stars").on("change", update);
+		$('#han_shards').on("change", update);
+		$("#lando_stars").on("change", update);
+		$('#lando_shards').on("change", update);
+		$("#qira_stars").on("change", update);
+		$('#qira_shards').on("change", update);
+		$("#l337_stars").on("change", update);
+		$('#l337_shards').on("change", update);
+		$("#nest_stars").on("change", update);
+		$('#nest_shards').on("change", update);
+
+		$('#days').on("change", getLeft);
+		
+		var now = new Date().getTime();
+		var days = 1513299681000-now;
+		days = Math.ceil(days/(86400000));
+		//$('#days').val(days);
+		
+		$('#button').on("click", panic);
+
+		
+		setInterval(timer,130);
+
+		getLeft();
+		update();
+	});
+	</script>
+	</head>
+	<body>
+		<div id="top">
+      	<a href="http://www.swgoh.life/index.html" id="logoClick"></a>
+			<div id="ad">
+			<!-- Swgoh.life -->
+			<ins class="adsbygoogle swgoh_ad"
+			 style="display:block"
+			 data-ad-client="ca-pub-0176506581219642"
+			 data-ad-slot="9855290481"
+			 data-ad-format="horizontal"></ins>
+			<script>
+			//https://support.google.com/adsense/answer/6307124
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			</div>
+	</div>
+	<div id="middleSolo">
+		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Panic Farming Calculator</h1>
+
+		<p>Enter your stars/shards for each toon you are panicing about and we'll tell you if you really need to panic.</p>
+
+		<div class="half">
+			<form action="#" method="post">
+				<h3>Young Han Solo:</h3>
+				Stars: <input type="text" id="han_stars" name="han_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="han_sh">Shards: <input type="text" id="han_shards" name="han_shards" value="0" size="2" />/ <span id="han_max">15</span><br /></span>
+				<br />
+
+				<h3>Vandor Chewbacca:</h3>
+				Stars: <input type="text" id="chew_stars" name="chew_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="chew_sh">Shards: <input type="text" id="chew_shards" name="chew_shards" value="0" size="2" />/ <span id="chew_max">15</span><br /></span>
+				<br />
+
+				<h3>Young Lando Calrissian:</h3>
+				Stars: <input type="text" id="lando_stars" name="lando_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="lando_sh">Shards: <input type="text" id="lando_shards" name="lando_shards" value="0" size="2" />/ <span id="lando_max">15</span><br /></span>
+				<br />
+
+				<h3>Qi'ra:</h3>
+				Stars: <input type="text" id="qira_stars" name="qira_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="qira_sh">Shards: <input type="text" id="qira_shards" name="qira_shards" value="0" size="2" />/ <span id="qira_max">15</span><br /></span>
+				<br />
+
+				<h3>L3-37:</h3>
+				Stars: <input type="text" id="l337_stars" name="l337_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="l337_sh">Shards: <input type="text" id="l337_shards" name="l337_shards" value="0" size="2" />/ <span id="l337_max">15</span><br /></span>
+				<br />
+
+				<h3>Enfys Nest:</h3>
+				Stars: <input type="text" id="nest_stars" name="nest_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="nest_sh">Shards: <input type="text" id="nest_shards" name="nest_shards" value="0" size="2" />/ <span id="nest_max">15</span><br /></span>
+				<br />
+	
+				<h3>How many days until the event starts?</h3>
+				<input type="text" id="days" name="days" value="20" size="3" /><br /><br />
+
+				<input type="submit" id="button" value="Should I Panic?" class="btn" />
+				<br /><br />
+			</form>
+		</div>
+		<div class="half">
+			<div id="panic">
+				<b class="maybepanic">DON'T PANIC</b>
+			</div>
+			<div id="dontpanic">
+				<h3>Shards Needed:</h3>
+
+				<span id="han_total"></span> shards needed for Young Han Solo.<br />
+				<span id="chew_total"></span> shards needed for Vandor Chewbacca.<br />
+				<span id="lando_total"></span> shards needed for Young Lando Calrissian.<br />
+				<span id="qira_total"></span> shards needed for Qi'ra.<br />
+				<span id="l337_total"></span> shards needed for L3-37.<br />
+				<span id="nest_total"></span> shards needed for Enfys Nest.<br />
+				<span id="total_total"></span> total shards needed.<br />
+				<br />
+
+				<h3>Farming Required:</h3>
+
+				The event ends in <span id="ends"></span> days. You need to farm <span id="perday"></span> shards per day.<br /><br />
+				To get Qi'ra and L3-37 you need to do <b class="nowrap"><span id="refreshes"></span> cantina refreshes</b> every day and purchase
+				<b class="nowrap"><span id="shipments"></span> shipments</b> (4 shards for 320 crystals) each day.<br />
+				<br />
+				To get Young Han Solo you need to purchase <b class="nowrap"><span id="guildPurchases"></span> guild store shipment</b> (5 shards for 450 tokens) each day.
+				<br /><br />
+				To get Vandor Chewbacca you need to get <b class="nowrap"><span id="hardPerDayc"></span> shards per day</b> from hard nodes. <span id="hard_supc">You will need to refresh the hard node <span id="hard_supc_pd"></span> times per day.</span>
+				<br /><br />
+				To get Young Lando Calrissian you need to get <b class="nowrap"><span id="hardPerDayl"></span> shards per day</b> from hard nodes. <span id="hard_supl">You will need to refresh the hard node <span id="hard_supl_pd"></span> times per day.</span>
+				<br /><br />
+				To get Enfys Nest you need to get <b class="nowrap"><span id="hardPerDayn"></span> shards per day</b> from hard nodes. <span id="hard_supn">You will need to refresh the hard node <span id="hard_supn_pd"></span> times per day.</span>
+				<br /><br />
+				This will require <span id="crystals"></span> crystals per day. <b class="nowrap"><span id="totalcrystals"></span> crystals total</b>.<br />
+				<br />
+				<b class="dontpanic" id="dont">DON'T PANIC</b>
+				<b class="panic" id="do">PANIC! PANIC!</b>
+				<b id="timeleft"></b>
+			</div>
+		</div>
+	
+		<br /><br /><hr /><ins class="adsbygoogle"
+		 style="display:block; text-align:center;"
+		 data-ad-format="fluid"
+		 data-ad-layout="in-article"
+		 data-ad-client="ca-pub-0176506581219642"
+		 data-ad-slot="6732943283"></ins>
+		<script>
+			 (adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+		
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-92624-14', 'auto');
+			ga('send', 'pageview');
+		</script>
+
+	</div>
+	<div id="foot">
+		<p>SWGOH.LIFE is not affiliated with EA, EA Capital Games, Disney or Lucasfilm LTD.</p>
+	</div>
+</body>
+</html>

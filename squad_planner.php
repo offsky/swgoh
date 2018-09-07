@@ -21,7 +21,7 @@ $ally = intval(preg_replace("/[^0-9]/","",$ally));
 
 $data = array();
 if(!empty($ally)) {
-	$data = fetchGuildFromSWGOHHelp($ally);
+	list($guild_id,$data) = fetchGuildFromSWGOHHelp($ally);
 }
 
 ?><!DOCTYPE html>
@@ -120,9 +120,18 @@ if(!empty($ally)) {
 		if(window.localStorage) storage = window.localStorage;
 		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
 
-		var toonData = JSON.parse('<?=json_encode($data)?>');
+		var toonData = <?=json_encode($data)?>;
+		
+		<?
+			$toonDict = array();
+			$rs = $db->query("SELECT id,name FROM swgoh_toons2 order by type asc, name asc");
+			while($row = $db->getNext($rs,1)) {
+				$toonDict[$row['id']] = $row['name'];
+			}
+			$toonDictStr = json_encode($toonDict);
+		?>
+		var id2Name = <?=$toonDictStr?>;
 
-		var id2Name = {"AAYLASECURA":"Aayla Secura","ADMIRALACKBAR":"Admiral Ackbar","AHSOKATANO":"Ahsoka Tano","FULCRUMAHSOKA":"Ahsoka Tano (Fulcrum)","AMILYNHOLDO":"Amilyn Holdo","ASAJVENTRESS":"Asajj Ventress","B2SUPERBATTLEDROID":"B2 Super Battle Droid","BARRISSOFFEE":"Barriss Offee","BASTILASHAN":"Bastila Shan","BAZEMALBUS":"Baze Malbus","BB8":"BB-8","BIGGSDARKLIGHTER":"Biggs Darklighter","BISTAN":"Bistan","BOBAFETT":"Boba Fett","BODHIROOK":"Bodhi Rook","BOSSK":"Bossk","CADBANE":"Cad Bane","HOTHHAN":"Captain Han Solo","PHASMA":"Captain Phasma","CASSIANANDOR":"Cassian Andor","CC2224":"CC-2224 \"Cody\"","CHIEFCHIRPA":"Chief Chirpa","CHIEFNEBIT":"Chief Nebit","CHIRRUTIMWE":"Chirrut Îmwe","CHOPPERS3":"Chopper","CLONESERGEANTPHASEI":"Clone Sergeant - Phase I","CLONEWARSCHEWBACCA":"Clone Wars Chewbacca","COLONELSTARCK":"Colonel Starck","COMMANDERLUKESKYWALKER":"Commander Luke Skywalker","CORUSCANTUNDERWORLDPOLICE":"Coruscant Underworld Police","COUNTDOOKU":"Count Dooku","CT210408":"CT-21-0408 \"Echo\"","CT5555":"CT-5555 \"Fives\"","CT7567":"CT-7567 \"Rex\"","MAUL":"Darth Maul","DARTHNIHILUS":"Darth Nihilus","DARTHSIDIOUS":"Darth Sidious","DARTHSION":"Darth Sion","DARTHTRAYA":"Darth Traya","VADER":"Darth Vader","DATHCHA":"Dathcha","DEATHTROOPER":"Death Trooper","DENGAR":"Dengar","DIRECTORKRENNIC":"Director Krennic","EETHKOTH":"Eeth Koth","EMBO":"Embo","EMPERORPALPATINE":"Emperor Palpatine","ENFYSNEST":"Enfys Nest","EWOKELDER":"Ewok Elder","EWOKSCOUT":"Ewok Scout","EZRABRIDGERS3":"Ezra Bridger","FINN":"Finn","FIRSTORDEREXECUTIONER":"First Order Executioner","FIRSTORDEROFFICERMALE":"First Order Officer","FIRSTORDERSPECIALFORCESPILOT":"First Order SF TIE Pilot","FIRSTORDERTROOPER":"First Order Stormtrooper","FIRSTORDERTIEPILOT":"First Order TIE Pilot","GAMORREANGUARD":"Gamorrean Guard","GARSAXON":"Gar Saxon","ZEBS3":"Garazeb \"Zeb\" Orrelios","GRIEVOUS":"General Grievous","GENERALKENOBI":"General Kenobi","VEERS":"General Veers","GEONOSIANSOLDIER":"Geonosian Soldier","GEONOSIANSPY":"Geonosian Spy","GRANDADMIRALTHRAWN":"Grand Admiral Thrawn","GRANDMASTERYODA":"Grand Master Yoda","GRANDMOFFTARKIN":"Grand Moff Tarkin","GREEDO":"Greedo","HANSOLO":"Han Solo","HERASYNDULLAS3":"Hera Syndulla","HERMITYODA":"Hermit Yoda","HK47":"HK-47","HOTHREBELSCOUT":"Hoth Rebel Scout","HOTHREBELSOLDIER":"Hoth Rebel Soldier","MAGNAGUARD":"IG-100 MagnaGuard","IG86SENTINELDROID":"IG-86 Sentinel Droid","IG88":"IG-88","IMAGUNDI":"Ima-Gun Di","IMPERIALPROBEDROID":"Imperial Probe Droid","IMPERIALSUPERCOMMANDO":"Imperial Super Commando","JAWA":"Jawa","JAWAENGINEER":"Jawa Engineer","JAWASCAVENGER":"Jawa Scavenger","JEDIKNIGHTCONSULAR":"Jedi Consular","ANAKINKNIGHT":"Jedi Knight Anakin","JEDIKNIGHTGUARDIAN":"Jedi Knight Guardian","JOLEEBINDO":"Jolee Bindo","JYNERSO":"Jyn Erso","K2SO":"K-2SO","KANANJARRUSS3":"Kanan Jarrus","KITFISTO":"Kit Fisto","KYLOREN":"Kylo Ren","KYLORENUNMASKED":"Kylo Ren (Unmasked)","L3_37":"L3-37","ADMINISTRATORLANDO":"Lando Calrissian","LOBOT":"Lobot","LOGRAY":"Logray","LUKESKYWALKER":"Luke Skywalker (Farmboy)","LUMINARAUNDULI":"Luminara Unduli","MACEWINDU":"Mace Windu","MAGMATROOPER":"Magmatrooper","MISSIONVAO":"Mission Vao","HUMANTHUG":"Mob Enforcer","MOTHERTALZIN":"Mother Talzin","NIGHTSISTERACOLYTE":"Nightsister Acolyte","NIGHTSISTERINITIATE":"Nightsister Initiate","NIGHTSISTERSPIRIT":"Nightsister Spirit","NIGHTSISTERZOMBIE":"Nightsister Zombie","NUTEGUNRAY":"Nute Gunray","OLDBENKENOBI":"Obi-Wan Kenobi (Old Ben)","DAKA":"Old Daka","PAO":"Pao","PAPLOO":"Paploo","PLOKOON":"Plo Koon","POE":"Poe Dameron","POGGLETHELESSER":"Poggle the Lesser","PRINCESSLEIA":"Princess Leia","QIRA":"Qi'ra","QUIGONJINN":"Qui-Gon Jinn","R2D2_LEGENDARY":"R2-D2","RANGETROOPER":"Range Trooper","HOTHLEIA":"Rebel Officer Leia Organa","RESISTANCEPILOT":"Resistance Pilot","RESISTANCETROOPER":"Resistance Trooper","REYJEDITRAINING":"Rey (Jedi Training)","REY":"Rey (Scavenger)","ROSETICO":"Rose Tico","ROYALGUARD":"Royal Guard","SABINEWRENS3":"Sabine Wren","SAVAGEOPRESS":"Savage Opress","SCARIFREBEL":"Scarif Rebel Pathfinder","SHORETROOPER":"Shoretrooper","SITHASSASSIN":"Sith Assassin","SITHMARAUDER":"Sith Marauder","SITHTROOPER":"Sith Trooper","SNOWTROOPER":"Snowtrooper","STORMTROOPER":"Stormtrooper","STORMTROOPERHAN":"Stormtrooper Han","SUNFAC":"Sun Fac","T3_M4":"T3-M4","TALIA":"Talia","TEEBO":"Teebo","TIEFIGHTERPILOT":"TIE Fighter Pilot","TUSKENRAIDER":"Tusken Raider","TUSKENSHAMAN":"Tusken Shaman","UGNAUGHT":"Ugnaught","URORRURRR":"URoRRuR'R'R","YOUNGCHEWBACCA":"Vandor Chewbacca","SMUGGLERCHEWBACCA":"Veteran Smuggler Chewbacca","SMUGGLERHAN":"Veteran Smuggler Han Solo","VISASMARR":"Visas Marr","WAMPA":"Wampa","WEDGEANTILLES":"Wedge Antilles","WICKET":"Wicket","YOUNGHAN":"Young Han Solo","YOUNGLANDO":"Young Lando Calrissian","ZAALBAR":"Zaalbar","ZAMWESELL":"Zam Wesell"};
 		// var names = []; //Take from https://swgoh.gg/api/characters/
 		// var fixed = {};
 		// names.forEach(function(toon) {

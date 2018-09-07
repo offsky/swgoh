@@ -22,11 +22,15 @@ $ally = empty($_REQUEST['ally']) ? "" : trim($_REQUEST['ally']);
 $ally = intval(preg_replace("/[^0-9]/","",$ally));
 
 $guild = isset($_GET['guild'])?1:0;
+$guild_id = 0;
 
 if(!empty($ally) && !$guild) {
 	$username = fetchPlayerFromSWGOHHelp($ally);
 } else if(!empty($ally) && $guild) {
-	$data = fetchGuildFromSWGOHHelp($ally);
+	list($guild_id,$data) = fetchGuildFromSWGOHHelp($ally);
+} else if(empty($ally) && $guild && !empty($_GET['g'])) {
+	$guild_id = intval($_GET['g']);
+	list($guild_id,$data) = fetchGuildFromSWGOHHelp(0,$guild_id);
 }
 
 ?><!DOCTYPE html>
@@ -247,7 +251,7 @@ a.seg:hover  {
 
 		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Farming Priority List Maker</h1>
 
-		<? if(empty($ally)) { ?>
+		<? if(empty($ally) && empty($guild_id)) { ?>
 
 			<p>This tool will allow you to make a list of farming priorities for personal use, or to share with your guild. To find your ally code, open the game to the main screen and tap on your name in the upper left corner. Then look below your name for a 9 digit number.</p>
 
@@ -255,7 +259,7 @@ a.seg:hover  {
 			<b>What is your SWGOH Ally Code:</b><br />
 			<input type="text" id="ally" name="ally" placeholder="123-456-789" /> 
 			<br /><br />
-			<b>Pick the <?=$numberOftoons?> characters that you want to work on:</b><br />
+			<b>Pick up to <?=$numberOftoons?> characters that you want to work on:</b><br />
 			<? 
 				$options = "";
 				$rs = $db->query("SELECT id,name,type FROM swgoh_toons2 order by type asc, name asc");
@@ -272,6 +276,7 @@ a.seg:hover  {
 					<? 
 				} 
 			?>
+			(you can leave some blank)<br />
 			<br />
 			<input type="submit" value="Show Me" class="btn" />
 			</form>
@@ -284,8 +289,17 @@ a.seg:hover  {
 			unset($_GET['guild']);
 			$query = http_build_query($_GET);
 			?>
-			Account: <?=!empty($username)?$username:""?> (<?=$ally?>) (<a href="priority.php?<?=$query?>">pick another</a>)<br />
-			<b>Share:</b><input type="text" value="http://shard.swgoh.life/priority.php?<?=$query?>" />
+			<? if(!empty($ally)) { ?>
+				Account: <?=!empty($username)?$username:""?> (<?=$ally?>) (<a href="priority.php?<?=$query?>">pick another</a>)<br />
+			<? } else { ?>
+				Account: Guild (<?=$guild_id?>) (<a href="priority.php?<?=$query?>">pick another</a>)<br />
+			<? } ?>
+
+			<? if(!$guild) { ?>
+				<b>Share Generic Link:</b><input type="text" value="http://shard.swgoh.life/priority.php?<?=$query?>" size="40" /> (copy and paste this link)
+			<? } else { ?>
+				<b>Share Guild Link:</b><input type="text" value="http://shard.swgoh.life/priority.php?g=<?=$guild_id?>&guild=1&<?=$query?>" size="40" /> (copy and paste this link)
+			<? } ?>
 			<br />
 
 			<div class="link_grp">
@@ -335,7 +349,7 @@ a.seg:hover  {
 					else $sql .= " OR toon='".$db->str($toon)."'";
 				}
 			}
-		 
+
 			if(!$guild) {
 				$rs = $db->query("SELECT toon,level,gear,stars,zeta,ship from toons WHERE (".$sql.") AND user='".$db->str($ally)."' order by toon asc");
 				while($row = $db->getNext($rs,1)) {
@@ -378,6 +392,8 @@ a.seg:hover  {
 					</tbody>
 				</table>
 			<? } ?>
+
+			<? if(count($selected)==0) echo "You didn't pick any characters to farm. Please go back and pick at least one character from the drop down menus.";?>
 
 		<? } ?>
 

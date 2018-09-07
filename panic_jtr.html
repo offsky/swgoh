@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>SWGOH Tools - Panic Farming Calculator</title>
+		<title>SWGOH Tools - JTR Panic Farming Calculator</title>
 	  	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
@@ -24,7 +24,44 @@
 				font-size: 1.2em;
 				margin-bottom: 4px;
 			}
-			
+			@-webkit-keyframes blinker {
+				from,
+				49.9% {
+					opacity: 0;
+				}
+				50%,
+				to {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fader {
+				50% {
+					opacity: 0;
+				}
+			}
+			b.nowrap {
+				white-space: nowrap;
+			}
+			#panic {
+				text-align: center;
+			}
+			.dontpanic {
+				color: green;
+				font-size: 50px;
+			}
+			.panic {
+				color: red;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			.maybepanic {
+				color: black;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			#dontpanic, #dont, #do {
+				display: none;
+			}
 
 			@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
 			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
@@ -306,18 +343,51 @@
 	<div id="middleSolo">
 		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Panic Farming Calculator</h1>
 
-		<p>Is there some legendary event on the horizon and you're not sure if you need to panic farm yet? We can tell you.</p>
+		<p>Enter your stars/shards for each toon you are panicing about and we'll tell you if you really need to panic.</p>
 
-		<div class="square">
-		  <a href="panic_jtr.html"><img src="images/icon_panic_jtr.png" width="200" height="200" /></a><br />
-		  <b><a href="panic_jtr.html">Jedi Training Rey</a></b><br />
-		  <p>Are you going to have your vets ready?</p>
+		<div class="half">
+			<form action="#" method="post">
+				<h3>Veteran Smuggler Chewbacca:</h3>
+				Stars: <input type="text" id="chew_stars" name="chew_stars" value="1" size="2" />/ 7<br />
+				<span id="chew_sh">Shards: <input type="text" id="chew_shards" name="chew_shards" value="0" size="2" />/ <span id="chew_max">15</span><br /></span>
+				<br />
+
+				<h3>Veteran Smuggler Han Solo:</h3>
+				Stars: <input type="text" id="han_stars" name="han_stars" value="1" size="2" />/ 7<br />
+				<span id="han_sh">Shards: <input type="text" id="han_shards" name="han_shards" value="0" size="2" />/ <span id="han_max">15</span><br /></span>
+				<br />
+
+				<h3>How many days until the event starts?</h3>
+				<input type="text" id="days" name="days" value="" size="3" /><br /><br />
+
+				<input type="submit" id="button" value="Should I Panic?" class="btn" />
+				<br /><br />
+			</form>
 		</div>
+		<div class="half">
+			<div id="panic">
+				<b class="maybepanic">DON'T PANIC</b>
+			</div>
+			<div id="dontpanic">
+				<h3>Shards Needed:</h3>
 
-		<div class="square">
-		  <a href="panic_solo.html"><img src="images/icon_panic_solo.png" width="200" height="200" /></a><br />
-		  <b><a href="panic_solo.html">Solo Legendary Event</a></b><br />
-		  <p>Are you panic farming all the Solo characters? Should you be?</p>
+				<span id="chew_total"></span> shards needed for Veteran Smuggler Chewbacca.<br />
+				<span id="han_total"></span> shards needed for Veteran Smuggler Han Solo.<br />
+				<span id="total_total"></span> total shards needed.<br />
+				<br />
+
+				<h3>Farming Required:</h3>
+
+				The event ends in <span id="ends"></span> days. You need to farm <span id="perday"></span> shards per day.<br /><br />
+				You need to do <b class="nowrap"><span id="refreshes"></span> cantina refreshes</b> every day and purchase
+				<b class="nowrap"><span id="shipments"></span> shipments</b> (4 shards for 320 crystals) each day.<br />
+				<br />
+				This will require <span id="crystals"></span> crystals per day. <b class="nowrap"><span id="totalcrystals"></span> crystals total</b>.<br />
+				<br />
+				<b class="dontpanic" id="dont">DON'T PANIC</b>
+				<b class="panic" id="do">OK, PANIC</b>
+				<b id="timeleft"></b>
+			</div>
 		</div>
 	
 		<br /><br /><hr /><ins class="adsbygoogle"
