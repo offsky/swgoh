@@ -230,128 +230,119 @@
 			}
 
 			//GUILD SHIPMENTS
-			var guildPerDay = h/days;
-			var guildPurchases = 0;
-			if(guildPerDay<=5) {
-				guildPurchases = 1;
-			} else if(guildPerDay<=10) {
-				guildPurchases = 2;
-			} else if(guildPerDay<=15) {
-				guildPurchases = 3;
+			var guildShipments = Math.ceil(h/5);
+			var guildPerDay = guildShipments/days;
+			guildPerDay = Math.ceil(guildPerDay*10)/10;
+			if(guildPerDay>=3) {
 				panic = true;
-			} else if(guildPerDay<=20) {
-				guildPurchases = 4;
-				panic = true;
-			} else {			
-				guildPurchases = "4+";
-				panic = true;
-			}
+			} 
 
 			//HARD NODES
 			var hardPerDay = (c+l+n)/days;
 			var cpd = c/days;
 			var lpd = l/days;
 			var npd = n/days;
+			var shardsPerDayPossible = 8*.333;
 			$("#hardPerDayc").html(Math.ceil(cpd*10)/10);
 			$("#hardPerDayl").html(Math.ceil(lpd*10)/10);
 			$("#hardPerDayn").html(Math.ceil(npd*10)/10);
 			$('#hard_supc').hide();
 			$('#hard_supl').hide();
 			$('#hard_supn').hide();
-			if(cpd>2) {
-				var extraNeeded = c-(2*days);
+			if(cpd>shardsPerDayPossible) {
+				var extraNeeded = c-(shardsPerDayPossible*days);
 				//one refresh costs 50
-				if(extraNeeded<2*days){
+				if(extraNeeded<shardsPerDayPossible*days){
 					crystals += 50;
 					$('#hard_supc_pd').html(1);
 					extraNeeded=0;
 				} else {
 					crystals += 50;
-					extraNeeded -= days*2;
+					extraNeeded -= days*shardsPerDayPossible;
 				}
 				//next 3 refreshes are 100 crystals
-				if(extraNeeded<6*days) {
+				if(extraNeeded<3*shardsPerDayPossible*days) {
 					if(extraNeeded>0) {
 						$('#hard_supc_pd').html(2);
 						crystals += 100;
 					}
-					if(extraNeeded>2*days) {
+					if(extraNeeded>shardsPerDayPossible*days) {
 						$('#hard_supc_pd').html(3);
 						crystals += 100;
 					}
-					if(extraNeeded>4*days) {
+					if(extraNeeded>2*shardsPerDayPossible*days) {
 						$('#hard_supc_pd').html(4);
 						crystals += 100;
 					}
 				} else {
 					crystals += 300;
-					extraNeeded -= days*6;
+					extraNeeded -= days*3*shardsPerDayPossible;
 					$('#hard_supc_pd').html("5+");
 				}
 				panic = true;
 				$('#hard_supc').show();
 			}
-			if(lpd>2) {
-				var extraNeeded = l-(2*days);
+			if(lpd>shardsPerDayPossible) {
+				var extraNeeded = l-(shardsPerDayPossible*days);
 				//one refresh costs 50
-				if(extraNeeded<2*days){
+				if(extraNeeded<shardsPerDayPossible*days){
 					crystals += 50;
 					$('#hard_supl_pd').html(1);
 					extraNeeded=0;
 				} else {
 					crystals += 50;
-					extraNeeded -= days*2;
+					extraNeeded -= days*shardsPerDayPossible;
 				}
 				//next 3 refreshes are 100 crystals
-				if(extraNeeded<6*days) {
+				if(extraNeeded<3*shardsPerDayPossible*days) {
 					if(extraNeeded>0) {
 						$('#hard_supl_pd').html(2);
 						crystals += 100;
 					}
-					if(extraNeeded>2*days) {
+					if(extraNeeded>shardsPerDayPossible*days) {
 						$('#hard_supl_pd').html(3);
 						crystals += 100;
 					}
-					if(extraNeeded>4*days) {
+					if(extraNeeded>2*shardsPerDayPossible*days) {
 						$('#hard_supl_pd').html(4);
 						crystals += 100;
 					}
 				} else {
 					crystals += 300;
-					extraNeeded -= days*6;
+					extraNeeded -= days*3*shardsPerDayPossible;
 					$('#hard_supl_pd').html("5+");
 				}
 				panic = true;
 				$('#hard_supl').show();
 			}
-			if(npd>2) {
-				var extraNeeded = n-(2*days);
+			if(npd>shardsPerDayPossible) {
+				var extraNeeded = n-(shardsPerDayPossible*days);
 				//one refresh costs 50
-				if(extraNeeded<2*days){
+				if(extraNeeded<shardsPerDayPossible*days){
 					crystals += 50;
 					$('#hard_supn_pd').html(1);
 					extraNeeded=0;
 				} else {
 					crystals += 50;
-					extraNeeded -= days*2;
+					extraNeeded -= days*shardsPerDayPossible;
 				}
 				//next 3 refreshes are 100 crystals
-				if(extraNeeded<6*days) {
+				if(extraNeeded<3*shardsPerDayPossible*days) {
 					if(extraNeeded>0) {
 						$('#hard_supn_pd').html(2);
 						crystals += 100;
 					}
-					if(extraNeeded>2*days) {
+					if(extraNeeded>shardsPerDayPossible*days) {
 						$('#hard_supn_pd').html(3);
 						crystals += 100;
 					}
-					if(extraNeeded>4*days) {
+					if(extraNeeded>2*shardsPerDayPossible*days) {
 						$('#hard_supn_pd').html(4);
 						crystals += 100;
 					}
 				} else {
 					crystals += 300;
-					extraNeeded -= days*6;
+					extraNeeded -= days*3*shardsPerDayPossible;
 					$('#hard_supn_pd').html("5+");
 				}
 				panic = true;
@@ -363,7 +354,8 @@
 
 			$("#refreshes").html(refreshes);
 			$("#shipments").html(shipments);
-			$("#guildPurchases").html(guildPurchases);
+			$("#guildPurchases").html(guildShipments);
+			$("#guildPurchasesDay").html(guildPerDay);
 			$("#crystals").html(crystals);
 			$("#totalcrystals").html(crystals*days);
 			if(refreshes=="7+") $("#totalcrystals").html(special_total+"+");
@@ -374,6 +366,8 @@
 			var shards = parseInt($('#'+who+'_shards').val());
 			if(isNaN(stars)) stars = 0;
 			if(isNaN(shards)) shards = 0;
+
+			var rarity = $('#rarity').val();
 
 			if(stars>=7) {
 				$("#"+who+"_sh").hide();
@@ -406,6 +400,10 @@
 				$('#'+who+'_max').html("10");
 				remain7 = 330-shards;
 			}
+
+			if(rarity==6) remain7-=100;
+			if(rarity==5) remain7-=185;
+			if(remain7<0) remain7 = 0;
 
 			$('#'+who+'_total').html(remain7);
 			return remain7;
@@ -445,6 +443,7 @@
 		$('#l337_shards').on("change", update);
 		$("#nest_stars").on("change", update);
 		$('#nest_shards').on("change", update);
+		$('#rarity').on("change", update);
 
 		$('#days').on("change", getLeft);
 		
@@ -488,6 +487,9 @@
 			<form action="#" method="post">
 				<h3>How many days until the event starts?</h3>
 				<input type="text" id="days" name="days" value="20" size="3" /> (nobody knows. take a guess)<br /><br />
+
+				<h3>How many stars do you want?</h3>
+				<select id="rarity"><option value="7">7&#9733;</option><option value="6">6&#9733;</option><option value="5">5&#9733;</option></select><br /><br />
 
 				<h3>Young Han Solo:</h3>
 				Stars: <input type="text" id="han_stars" name="han_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
@@ -545,7 +547,7 @@
 				To get Qi'ra and L3-37 you need to do <b class="nowrap"><span id="refreshes"></span> cantina refreshes</b> every day and purchase
 				<b class="nowrap"><span id="shipments"></span> shipments</b> (4 shards for 320 crystals) each day.<br />
 				<br />
-				To get Young Han Solo you need to purchase <b class="nowrap"><span id="guildPurchases"></span> guild store shipment</b> (5 shards for 450 tokens) each day.
+				To get Young Han Solo you need to purchase <b class="nowrap"><span id="guildPurchases"></span> guild store shipment</b> (5 shards for 450 tokens) or <span id="guildPurchasesDay"></span> per day.
 				<br /><br />
 				To get Vandor Chewbacca you need to get <b class="nowrap"><span id="hardPerDayc"></span> shards per day</b> from hard nodes. <span id="hard_supc">You will need to refresh the hard node <span id="hard_supc_pd"></span> times per day.</span>
 				<br /><br />
