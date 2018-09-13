@@ -141,6 +141,7 @@
 			$('#hard_supn').hide();
 			if(cpd>shardsPerDayPossible) {
 				var extraNeeded = c-(shardsPerDayPossible*days);
+				shardsPerDayPossible = 8*.333;
 				//one refresh costs 25
 				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
 					crystals += 25;
@@ -178,8 +179,10 @@
 				$('#hard_supc').show();
 			}
 
+			shardsPerDayPossible = 16*.333;
 			if(npd>shardsPerDayPossible) {
 				var extraNeeded = n-(shardsPerDayPossible*days);
+				shardsPerDayPossible = 8*.333;
 				//one refresh costs 25
 				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
 					crystals += 25;
