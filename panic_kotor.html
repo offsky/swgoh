@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SWGOH Tools - Revan/KOTOR Panic Farming Calculator</title>
+	  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+		<meta charset="utf-8" />
+		<style>
+			p { max-width: 800px;}
+			.swgoh_ad {
+			position: absolute;
+			left:0;
+			top:90px;
+			width:0;
+			height:0px;
+			}
+			#ad {
+			width:100%;
+			height:60px;
+			}
+
+			h3 {
+				font-size: 1.2em;
+				margin-bottom: 4px;
+			}
+			@-webkit-keyframes blinker {
+				from,
+				49.9% {
+					opacity: 0;
+				}
+				50%,
+				to {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fader {
+				50% {
+					opacity: 0;
+				}
+			}
+			b.nowrap {
+				white-space: nowrap;
+			}
+			#panic {
+				text-align: center;
+			}
+			.dontpanic {
+				color: green;
+				font-size: 50px;
+			}
+			.panic {
+				color: red;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			.maybepanic {
+				color: black;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			#dontpanic, #dont, #do {
+				display: none;
+			}
+
+			@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
+			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
+			@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
+			@media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
+  	</style>
+  	<script src="https://use.fontawesome.com/c278e2b3ff.js"></script>
+  	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+  	<script src="jquery.js"></script>
+	<script>
+	$(document).ready(function() {
+
+		var storage = null;
+		if(window.localStorage) storage = window.localStorage;
+		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
+
+		var left = 0;
+
+		function cacheForm(name) {
+			var val = fetch(name);
+			if(val) $('#'+name).val(val);
+			$('#'+name).on("change",function(e) {
+				store(name,$('#'+name).val());
+			});
+		}
+
+		function store(key,val) {
+			storage.setItem(key,val);
+		}
+		function fetch(key) {
+			return storage.getItem(key);
+		}
+
+		function getLeft() {
+			var days = parseInt($("#days").val())+6;
+
+			left = new Date().setHours(24*days);
+			update();
+		}
+
+		function timer() {
+			var now = new Date().getTime();
+			var display = (left - now)/(1000*60);
+
+			$('#timeleft').html(display.toFixed(3)+" minutes left!");
+		}
+
+		function update() {
+			var c =  parseInt(update1('bindo')); //hard node
+			var n =  parseInt(update1('shan')); //hard nodes
+
+			var crystals = 0;
+			var shipments = 0;
+
+			var total = c+n;
+			$('#total_total').html(total);
+
+			var days = parseInt($("#days").val())+6;
+			var perDay = total/days;
+
+			$('#ends').html(days+1);
+			$('#perday').html(Math.ceil(perDay*10)/10);
+			var panic = false;
+
+			$('#dont').hide();
+			$('#do').hide();
+
+			//HARD NODES
+			var hardPerDay = (c+n)/days;
+			var cpd = c/days;
+			var npd = n/days;
+			var shardsPerDayPossible = 8*.333;
+			$("#hardPerDayc").html(Math.ceil(cpd*10)/10);
+			$("#hardPerDayn").html(Math.ceil(npd*10)/10);
+			$('#hard_supc').hide();
+			$('#hard_supn').hide();
+			if(cpd>shardsPerDayPossible) {
+				var extraNeeded = c-(shardsPerDayPossible*days);
+				//one refresh costs 25
+				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+					crystals += 25;
+					$('#hard_supc_pd').html(1);
+					extraNeeded=0;
+				} else if(extraNeeded>0) {
+					crystals += 25;
+					extraNeeded -= days*shardsPerDayPossible;
+				}
+				//next refresh costs 50 plus 50 for the energy (guess)
+				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+					crystals += 50+50;
+					$('#hard_supc_pd').html(2);
+					extraNeeded=0;
+				} else if(extraNeeded>0) {
+					crystals += 50+50;
+					extraNeeded -= days*shardsPerDayPossible;
+				}
+				//next refresh costs 100 plus 50 for the energy (guess)
+				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+					crystals += 100+50;
+					$('#hard_supc_pd').html(3);
+					extraNeeded=0;
+				} else if(extraNeeded>0) {
+					crystals += 100+50;
+					extraNeeded -= days*shardsPerDayPossible;
+				}
+				//still need more from shipments
+				if(extraNeeded>0) {
+					$('#hard_supc_ship').html(Math.ceil(extraNeeded/days));
+					crystals += Math.round(extraNeeded*80/days);
+				} else {
+					$('#hard_supc_ship').html(0);
+				}
+				$('#hard_supc').show();
+			}
+
+			if(npd>shardsPerDayPossible) {
+				var extraNeeded = n-(shardsPerDayPossible*days);
+				//one refresh costs 25
+				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+					crystals += 25;
+					$('#hard_supn_pd').html(1);
+					extraNeeded=0;
+				} else if(extraNeeded>0) {
+					crystals += 25;
+					extraNeeded -= days*shardsPerDayPossible;
+				}
+				//next refresh costs 50 plus 50 for the energy (guess)
+				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+					crystals += 50+50;
+					$('#hard_supn_pd').html(2);
+					extraNeeded=0;
+				} else if(extraNeeded>0) {
+					crystals += 50+50;
+					extraNeeded -= days*shardsPerDayPossible;
+				}
+				//next refresh costs 100 plus 50 for the energy (guess)
+				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+					crystals += 100+50;
+					$('#hard_supn_pd').html(3);
+					extraNeeded=0;
+				} else if(extraNeeded>0) {
+					crystals += 100+50;
+					extraNeeded -= days*shardsPerDayPossible;
+				}
+				//still need more from shipments
+				if(extraNeeded>0) {
+					$('#hard_supn_ship').html(Math.ceil(extraNeeded/days));
+					crystals += Math.round(extraNeeded*80/days);
+				} else {
+					$('#hard_supn_ship').html(0);
+				}
+				$('#hard_supn').show();
+			}
+
+			if(crystals>500 || panic) $('#do').show();
+			else $('#dont').show();
+
+			$("#crystals").html(crystals);
+			$("#totalcrystals").html(crystals*days);
+		}
+
+		function update1(who) {
+			var stars = parseInt($('#'+who+'_stars').val());
+			var shards = parseInt($('#'+who+'_shards').val());
+			if(isNaN(stars)) stars = 0;
+			if(isNaN(shards)) shards = 0;
+
+			var rarity = $('#rarity').val();
+
+			if(stars>=7) {
+				$("#"+who+"_sh").hide();
+			} else {
+				$("#"+who+"_sh").show();
+			}
+		
+			var remain7 = 0;
+			if(stars==7) {
+				remain7 = 0;
+			} else if(stars==6) {
+				$('#'+who+'_max').html("100");
+				remain7 = 100-shards;
+			} else if(stars==5) {
+				$('#'+who+'_max').html("85");
+				remain7 = 185-shards;
+			} else if(stars==4) {
+				$('#'+who+'_max').html("65");
+				remain7 = 250-shards;
+			} else if(stars==3) {
+				$('#'+who+'_max').html("30");
+				remain7 = 280-shards;
+			} else if(stars==2) {
+				$('#'+who+'_max').html("25");
+				remain7 = 305-shards;
+			} else if(stars==1) {
+				$('#'+who+'_max').html("15");
+				remain7 = 320-shards;
+			} else {
+				$('#'+who+'_max').html("10");
+				remain7 = 330-shards;
+			}
+
+			if(rarity==6) remain7-=100;
+			if(rarity==5) remain7-=185;
+			if(remain7<0) remain7 = 0;
+
+			$('#'+who+'_total').html(remain7);
+			return remain7;
+		}
+
+		function panic() {
+			update();
+
+			$('#panic').hide();
+			$('#dontpanic').show();
+
+			return false;
+		}
+
+		cacheForm("bindo_stars");
+		cacheForm("bindo_shards");
+		cacheForm("shan_stars");
+		cacheForm("shan_shards");
+
+		$("#bindo_stars").on("change", update);
+		$("#bindo_shards").on("change", update);
+		$("#shan_stars").on("change", update);
+		$('#shan_shards').on("change", update);
+		
+
+		$('#rarity').on("change", update);
+		$('#days').on("change", getLeft);
+		
+		var now = new Date().getTime();
+		var days = 1513299681000-now;
+		days = Math.ceil(days/(86400000));
+		//$('#days').val(days);
+		
+		$('#button').on("click", panic);
+
+		
+		setInterval(timer,130);
+
+		getLeft();
+		update();
+	});
+	</script>
+	</head>
+	<body>
+		<div id="top">
+      	<a href="http://www.swgoh.life/index.html" id="logoClick"></a>
+			<div id="ad">
+			<!-- Swgoh.life -->
+			<ins class="adsbygoogle swgoh_ad"
+			 style="display:block"
+			 data-ad-client="ca-pub-0176506581219642"
+			 data-ad-slot="9855290481"
+			 data-ad-format="horizontal"></ins>
+			<script>
+			//https://support.google.com/adsense/answer/6307124
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			</div>
+	</div>
+	<div id="middleSolo">
+		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Revan/KOTOR Panic Farming Calculator</h1>
+
+		<p>Enter your stars/shards for each toon you are panicing about and we'll tell you if you really need to panic.</p>
+
+		<div class="half">
+			<form action="#" method="post">
+				<h3>How many days until the event starts?</h3>
+				<input type="text" id="days" name="days" value="20" size="3" /> (nobody knows. take a guess)<br /><br />
+
+				<h3>How many stars do you want?</h3>
+				<select id="rarity"><option value="7">7&#9733;</option><option value="6">6&#9733;</option><option value="5">5&#9733;</option></select><br /><br />
+
+				<h3>Bastila Shan:</h3>
+				Stars: <input type="text" id="shan_stars" name="shan_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="shan_sh">Shards: <input type="text" id="shan_shards" name="shan_shards" value="0" size="2" />/ <span id="shan_max">15</span><br /></span>
+				<br />
+
+				<h3>Jolee Bindo:</h3>
+				Stars: <input type="text" id="bindo_stars" name="bindo_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="bindo_sh">Shards: <input type="text" id="bindo_shards" name="bindo_shards" value="0" size="2" />/ <span id="bindo_max">15</span><br /></span>
+				<br />
+	
+				<input type="submit" id="button" value="Should I Panic?" class="btn" />
+				<br /><br />
+			</form>
+		</div>
+		<div class="half">
+			<div id="panic">
+				<b class="maybepanic">DON'T PANIC</b>
+			</div>
+			<div id="dontpanic">
+				<h3>Shards Needed:</h3>
+
+				<span id="shan_total"></span> shards needed for Bastila Shan.<br />
+				<span id="bindo_total"></span> shards needed for Jolee Bindo.<br />
+				<br />
+
+				<h3>Farming Required:</h3>
+
+				The event ends in <span id="ends"></span> days. You need to farm <span id="perday"></span> shards per day.
+				<br /><br />
+				To get Bastila Shan you need to get <b class="nowrap"><span id="hardPerDayn"></span> shards per day</b> from hard nodes and shipments. <span id="hard_supn">You will need to refresh the hard node <span id="hard_supn_pd"></span> times per day and purchase <span id="hard_supn_ship"></span> shards per day from shipments.</span>
+				<br /><br />
+				To get Jolee Bindo you need to get <b class="nowrap"><span id="hardPerDayc"></span> shards per day</b> from hard nodes and shipments. <span id="hard_supc">You will need to refresh the hard node <span id="hard_supc_pd"></span> times per day and purchase <span id="hard_supc_ship"></span> shards per day from shipments.</span>
+				<br /><br />
+				This will require <span id="crystals"></span> crystals per day. <b class="nowrap"><span id="totalcrystals"></span> crystals total</b>.<br />
+				<br />
+				<b class="dontpanic" id="dont">DON'T PANIC</b>
+				<b class="panic" id="do">PANIC! PANIC!</b>
+				<b id="timeleft"></b>
+			</div>
+		</div>
+	
+		<br /><br /><hr /><ins class="adsbygoogle"
+		 style="display:block; text-align:center;"
+		 data-ad-format="fluid"
+		 data-ad-layout="in-article"
+		 data-ad-client="ca-pub-0176506581219642"
+		 data-ad-slot="6732943283"></ins>
+		<script>
+			 (adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+		
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-92624-14', 'auto');
+			ga('send', 'pageview');
+		</script>
+
+	</div>
+	<div id="foot">
+		<p>SWGOH.LIFE is not affiliated with EA, EA Capital Games, Disney or Lucasfilm LTD.</p>
+	</div>
+</body>
+</html>
