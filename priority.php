@@ -27,10 +27,10 @@ $guild_id = 0;
 if(!empty($ally) && !$guild) {
 	$username = fetchPlayerFromSWGOHHelp($ally);
 } else if(!empty($ally) && $guild) {
-	list($guild_id,$data) = fetchGuildFromSWGOHHelp($ally);
+	list($guild_id,$data,$newData) = fetchGuildFromSWGOHHelp($ally,0,true);
 } else if(empty($ally) && $guild && !empty($_GET['g'])) {
 	$guild_id = intval($_GET['g']);
-	list($guild_id,$data) = fetchGuildFromSWGOHHelp(0,$guild_id);
+	list($guild_id,$data,$newData) = fetchGuildFromSWGOHHelp(0,$guild_id,true);
 }
 
 ?><!DOCTYPE html>
@@ -41,6 +41,10 @@ if(!empty($ally) && !$guild) {
 	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
 		<meta charset="utf-8" />
 		<style>
+	#refresh {
+		float:right;
+		padding: 10px;
+	}
 	h3 {
 	 	margin-top: 50px;
 	}
@@ -228,6 +232,32 @@ a.seg:hover  {
 			return storage.getItem(key);
 		}
 
+		var url = "";
+		<?
+		if(!empty($ally) && $guild) {
+			echo "url='http://shard.swgoh.life/api/guild.php?a=".$ally."';";
+		} else if(empty($ally) && $guild && !empty($_GET['g'])) {
+			$guild_id = intval($_GET['g']);
+			echo "url='http://shard.swgoh.life/api/guild.php?g=".$guild_id."';";
+		}
+		?>
+
+		if(url) {
+			$.ajax({
+				url: url,
+				dataType: "json"
+			})
+			.done(function(d) {
+				console.log(d);
+				if(d==1) {
+					$('#refresh').html("New data availble. Refresh the page to see it.");
+				} else {
+					$('#refresh').hide();
+				}
+			});
+		} else {
+			$('#refresh').hide();
+		}
 	});
 	</script>
 	</head>
@@ -301,7 +331,7 @@ a.seg:hover  {
 				<b>Share Guild Link:</b><input type="text" value="http://shard.swgoh.life/priority.php?g=<?=$guild_id?>&guild=1&<?=$query?>" size="40" /> (copy and paste this link)
 			<? } ?>
 			<br />
-
+			<span id="refresh"><i class="fa fa-spin fa-spinner"></i> Refreshing</span>
 			<div class="link_grp">
 				<a href="priority.php?ally=<?=$ally?>&<?=$query?>" class="seg<? if(!$guild) echo ' active';?>">Show Just Me</a>
 				<a href="priority.php?ally=<?=$ally?>&guild=1&<?=$query?>" class="seg<? if($guild) echo ' active';?>">Show My Guild</a>
@@ -352,10 +382,14 @@ a.seg:hover  {
 
 			if(!$guild) {
 				$rs = $db->query("SELECT toon,level,gear,stars,zeta,ship from toons WHERE (".$sql.") AND user='".$db->str($ally)."' order by toon asc");
+				$count = $db->count($rs);
 				while($row = $db->getNext($rs,1)) {
 					$per = 0;
 					if(isset($perday[$row['toon']])) $per = $perday[$row['toon']];
 					printOneToonFarm($row,7,11,$per);
+				}
+				if(empty($count)) {
+					echo "We were unable to fetch your account. Sorry. Please check your ally code.";
 				}
 			} else { 
 				
@@ -391,6 +425,13 @@ a.seg:hover  {
 						<? } ?>
 					</tbody>
 				</table>
+
+				<? 
+				if(empty($roster)) {
+					echo "<br /><br />We were unable to fetch your guild's account. Sorry. Please check your ally code.";
+				}
+				?>
+
 			<? } ?>
 
 			<? if(count($selected)==0) echo "You didn't pick any characters to farm. Please go back and pick at least one character from the drop down menus.";?>

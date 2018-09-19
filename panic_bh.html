@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SWGOH Tools - Legendary Chewbacca Farming Calculator</title>
+	  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+		<meta charset="utf-8" />
+		<style>
+			p { max-width: 800px;}
+			.swgoh_ad {
+			position: absolute;
+			left:0;
+			top:90px;
+			width:0;
+			height:0px;
+			}
+			#ad {
+			width:100%;
+			height:60px;
+			}
+
+			h3 {
+				font-size: 1.2em;
+				margin-bottom: 4px;
+			}
+			@-webkit-keyframes blinker {
+				from,
+				49.9% {
+					opacity: 0;
+				}
+				50%,
+				to {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fader {
+				50% {
+					opacity: 0;
+				}
+			}
+			b.nowrap {
+				white-space: nowrap;
+			}
+			#panic {
+				text-align: center;
+			}
+			.dontpanic {
+				color: green;
+				font-size: 50px;
+			}
+			.panic {
+				color: red;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			.maybepanic {
+				color: black;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			#dontpanic, #dont, #do {
+				display: none;
+			}
+
+			@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
+			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
+			@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
+			@media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
+  	</style>
+  	<script src="https://use.fontawesome.com/c278e2b3ff.js"></script>
+  	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+  	<script src="jquery.js"></script>
+	<script>
+	$(document).ready(function() {
+
+		var storage = null;
+		if(window.localStorage) storage = window.localStorage;
+		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
+
+		var left = 0;
+
+		function cacheForm(name) {
+			var val = fetch(name);
+			if(val) $('#'+name).val(val);
+			$('#'+name).on("change",function(e) {
+				store(name,$('#'+name).val());
+			});
+		}
+
+		function store(key,val) {
+			storage.setItem(key,val);
+		}
+		function fetch(key) {
+			return storage.getItem(key);
+		}
+
+		function getLeft() {
+			var days = parseInt($("#days").val())+6;
+
+			left = new Date().setHours(24*days);
+			update();
+		}
+
+		function timer() {
+			var now = new Date().getTime();
+			var display = (left - now)/(1000*60);
+
+			$('#timeleft').html(display.toFixed(3)+" minutes left!");
+		}
+
+		function update() {
+			var a = 0;
+			var b = 0;
+			var c = 0;
+			var d = 0;
+			var e = 0;
+			var f = 0;
+			var g = 0;
+			var h = 0;
+			var i = 0;
+			var j = 0;
+
+			
+
+			if($('#singch').is(":checked")) a =  parseInt(update1('sing')); //??
+			if($('#fettch').is(":checked")) b =  parseInt(update1('fett')); //cantina store + 2 hard nodes (12,12) + fleet store
+			if($('#bosskch').is(":checked")) c =  parseInt(update1('bossk')); //hard node (20)
+			if($('#cadch').is(":checked")) d =  parseInt(update1('cad')); //gw store
+			if($('#dengarch').is(":checked")) e =  parseInt(update1('dengar')); //guild shipments
+			if($('#greedoch').is(":checked")) f =  parseInt(update1('greedo')); //squad arena store
+			if($('#emboch').is(":checked")) g =  parseInt(update1('embo')); //???
+			if($('#ig88ch').is(":checked")) h =  parseInt(update1('ig88')); //squad arena store
+			if($('#jangoch').is(":checked")) i =  parseInt(update1('jango')); //???
+			if($('#zamch').is(":checked")) j =  parseInt(update1('zam')); //fleet store + guild shipments
+
+			var total = a+b+c+d+e+f+g+h+i+j;
+			$('#total_total').html(total);
+
+			var days = parseInt($("#days").val())+6;
+			var perDay = total/days;
+
+			$('#ends').html(days+1);
+			$('#perday').html(Math.ceil(perDay*10)/10);
+			var panic = false;
+
+			$('#dont').hide();
+			$('#do').hide();
+			var crystals = 0;
+
+			//DENGAR GUILD SHIPMENTS
+			if($('#dengarch').is(":checked")) {
+				var guildPerDay = e/days;
+				guildPerDay = Math.ceil(guildPerDay*10)/10;
+				if(guildPerDay>=6) {
+					panic = true;
+				} 
+				$("#dengar_perday").html(guildPerDay);
+			}
+
+			//ZAM GUILD SHIPMENTS + FLEET STORE
+			if($('#zamch').is(":checked")) {
+				var guildPerDay = j/days;
+				guildPerDay = Math.ceil(guildPerDay*10)/10;
+				if(guildPerDay>=11) {
+					panic = true;
+				} 
+				$("#zam_perday").html(guildPerDay);
+			}
+
+			//IG88 SQUAD ARENA STORE
+			if($('#ig88ch').is(":checked")) {
+				var guildPerDay = h/days;
+				guildPerDay = Math.ceil(guildPerDay*10)/10;
+				if(guildPerDay>=11) {
+					panic = true;
+				} 
+				$("#ig88_perday").html(guildPerDay);
+			}
+
+			//GREEDO SQUAD ARENA STORE
+			if($('#greedoch').is(":checked")) {
+				var guildPerDay = f/days;
+				guildPerDay = Math.ceil(guildPerDay*10)/10;
+				if(guildPerDay>=11) {
+					panic = true;
+				} 
+				$("#greedo_perday").html(guildPerDay);
+			}
+
+			//CAD GW ARENA STORE
+			if($('#cadch').is(":checked")) {
+				var guildPerDay = d/days;
+				guildPerDay = Math.ceil(guildPerDay*10)/10;
+				if(guildPerDay>=16) {
+					panic = true;
+				} 
+				$("#cad_perday").html(guildPerDay);
+			}
+
+			//BOSSK HARD NODES
+			if($('#bosskch').is(":checked")) {
+				var cpd = c/days;
+				
+				var shardsPerDayPossible = 8*.333;
+				$("#bossk_perday").html(Math.ceil(cpd*10)/10);
+				
+				$('#hard_supc').hide();
+				if(cpd>shardsPerDayPossible) {
+					var extraNeeded = c-(shardsPerDayPossible*days);
+					shardsPerDayPossible = 8*.333;
+					//one refresh costs 25
+					if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+						crystals += 25;
+						$('#hard_supc_pd').html(1);
+						extraNeeded=0;
+					} else if(extraNeeded>0) {
+						crystals += 25;
+						extraNeeded -= days*shardsPerDayPossible;
+					}
+					//next refresh costs 50 plus 50 for the energy (guess)
+					if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+						crystals += 50+50;
+						$('#hard_supc_pd').html(2);
+						extraNeeded=0;
+					} else if(extraNeeded>0) {
+						crystals += 50+50;
+						extraNeeded -= days*shardsPerDayPossible;
+					}
+					//next refresh costs 100 plus 50 for the energy (guess)
+					if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+						crystals += 100+50;
+						$('#hard_supc_pd').html(3);
+						extraNeeded=0;
+					} else if(extraNeeded>0) {
+						crystals += 100+50;
+						extraNeeded -= days*shardsPerDayPossible;
+					}
+					//still need more from shipments
+					if(extraNeeded>0) {
+						$('#hard_supc_pd').html("4+");
+						crystals += Math.round(extraNeeded*80/days);
+					} 
+					$('#hard_supc').show();
+				}
+			}
+
+			//BOBA FETT
+			if($('#fettch').is(":checked")) {
+				var guildPerDay = b/days;
+				guildPerDay = Math.ceil(guildPerDay*10)/10;
+				if(guildPerDay>=15) {
+					panic = true;
+				} 
+				$("#fett_perday").html(guildPerDay);
+				
+				var shardsPerDayPossible = 16*.333;
+				var bpd = guildPerDay - 10;
+				b -= 10*days;
+				if(bpd<0) bpd = 0;
+				$('#hard_supb').hide();
+				if(bpd>shardsPerDayPossible) {
+					var extraNeeded = b-(shardsPerDayPossible*days);
+					shardsPerDayPossible = 8*.333;
+					//one refresh costs 25
+					if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+						crystals += 25;
+						$('#hard_supb_pd').html(1);
+						extraNeeded=0;
+					} else if(extraNeeded>0) {
+						crystals += 25;
+						extraNeeded -= days*shardsPerDayPossible;
+					}
+					//next refresh costs 50 plus 50 for the energy (guess)
+					if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+						crystals += 50+50;
+						$('#hard_supb_pd').html(2);
+						extraNeeded=0;
+					} else if(extraNeeded>0) {
+						crystals += 50+50;
+						extraNeeded -= days*shardsPerDayPossible;
+					}
+					//next refresh costs 100 plus 50 for the energy (guess)
+					if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+						crystals += 100+50;
+						$('#hard_supb_pd').html(3);
+						extraNeeded=0;
+					} else if(extraNeeded>0) {
+						crystals += 100+50;
+						extraNeeded -= days*shardsPerDayPossible;
+					}
+					//still need more from shipments
+					if(extraNeeded>0) {
+						$('#hard_supb_pd').html("4+");
+						crystals += Math.round(extraNeeded*80/days);
+					} 
+					$('#hard_supb').show();
+				}
+			}
+
+			if(crystals>500 || panic) $('#do').show();
+			else $('#dont').show();
+
+			$("#crystals").html(crystals);
+			$("#totalcrystals").html(crystals*days);
+		}
+
+		function update1(who) {
+			var stars = parseInt($('#'+who+'_stars').val());
+			var shards = parseInt($('#'+who+'_shards').val());
+			if(isNaN(stars)) stars = 0;
+			if(isNaN(shards)) shards = 0;
+
+			var rarity = $('#rarity').val();
+
+			if(stars>=7) {
+				$("#"+who+"_sh").hide();
+			} else {
+				$("#"+who+"_sh").show();
+			}
+		
+			var remain7 = 0;
+			if(stars==7) {
+				remain7 = 0;
+			} else if(stars==6) {
+				$('#'+who+'_max').html("100");
+				remain7 = 100-shards;
+			} else if(stars==5) {
+				$('#'+who+'_max').html("85");
+				remain7 = 185-shards;
+			} else if(stars==4) {
+				$('#'+who+'_max').html("65");
+				remain7 = 250-shards;
+			} else if(stars==3) {
+				$('#'+who+'_max').html("30");
+				remain7 = 280-shards;
+			} else if(stars==2) {
+				$('#'+who+'_max').html("25");
+				remain7 = 305-shards;
+			} else if(stars==1) {
+				$('#'+who+'_max').html("15");
+				remain7 = 320-shards;
+			} else {
+				$('#'+who+'_max').html("10");
+				remain7 = 330-shards;
+			}
+
+			if(rarity==6) remain7-=100;
+			if(rarity==5) remain7-=185;
+			if(remain7<0) remain7 = 0;
+
+			$('#'+who+'_total').html(remain7);
+			return remain7;
+		}
+
+		function panic() {
+			update();
+
+			$('#panic').hide();
+			$('#dontpanic').show();
+
+			return false;
+		}
+
+		function checkcheckboxes() {
+			if($('#singch').is(":checked")) $('.sing_div').show(); else $('.sing_div').hide();
+			if($('#fettch').is(":checked")) $('.fett_div').show(); else $('.fett_div').hide();
+			if($('#bosskch').is(":checked")) $('.bossk_div').show(); else $('.bossk_div').hide();
+			if($('#cadch').is(":checked")) $('.cad_div').show(); else $('.cad_div').hide();
+			if($('#dengarch').is(":checked")) $('.dengar_div').show(); else $('.dengar_div').hide();
+			if($('#greedoch').is(":checked")) $('.greedo_div').show(); else $('.greedo_div').hide();
+			if($('#emboch').is(":checked")) $('.embo_div').show(); else $('.embo_div').hide();
+			if($('#ig88ch').is(":checked")) $('.ig88_div').show(); else $('.ig88_div').hide();
+			if($('#jangoch').is(":checked")) $('.jango_div').show(); else $('.jango_div').hide();
+			if($('#zamch').is(":checked")) $('.zam_div').show(); else $('.zam_div').hide();
+
+			update();
+		}
+
+		cacheForm("sing_stars");
+		cacheForm("sing_shards");
+		cacheForm("fett_stars");
+		cacheForm("fett_shards");
+		cacheForm("bossk_stars");
+		cacheForm("bossk_shards");
+		cacheForm("cad_stars");
+		cacheForm("cad_shards");
+		cacheForm("dengar_stars");
+		cacheForm("dengar_shards");
+		cacheForm("greedo_stars");
+		cacheForm("greedo_shards");
+		cacheForm("embo_stars");
+		cacheForm("embo_shards");
+		cacheForm("ig88_stars");
+		cacheForm("ig88_shards");
+		cacheForm("jango_stars");
+		cacheForm("jango_shards");
+		cacheForm("zam_stars");
+		cacheForm("zam_shards");
+
+		$("#sing_stars").on("change", update);
+		$("#sing_shards").on("change", update);
+		$("#fett_stars").on("change", update);
+		$('#fett_shards').on("change", update);
+		$("#bossk_stars").on("change", update);
+		$('#bossk_shards').on("change", update);
+		$("#cad_stars").on("change", update);
+		$('#cad_shards').on("change", update);
+		$("#dengar_stars").on("change", update);
+		$('#dengar_shards').on("change", update);
+		$("#greedo_stars").on("change", update);
+		$('#greedo_shards').on("change", update);
+		$("#embo_stars").on("change", update);
+		$('#embo_shards').on("change", update);
+		$("#ig88_stars").on("change", update);
+		$('#ig88_shards').on("change", update);
+		$("#jango_stars").on("change", update);
+		$('#jango_shards').on("change", update);
+		$("#zam_stars").on("change", update);
+		$('#zam_shards').on("change", update);
+		$('#rarity').on("change", update);
+
+		$('#days').on("change", getLeft);
+		
+		var now = new Date().getTime();
+		var days = 1513299681000-now;
+		days = Math.ceil(days/(86400000));
+		//$('#days').val(days);
+		
+		$('#button').on("click", panic);
+
+
+		$('#singch').on("change", checkcheckboxes);
+		$('#fettch').on("change", checkcheckboxes);
+		$('#bosskch').on("change", checkcheckboxes);
+		$('#cadch').on("change", checkcheckboxes);
+		$('#dengarch').on("change", checkcheckboxes);
+		$('#greedoch').on("change", checkcheckboxes);
+		$('#emboch').on("change", checkcheckboxes);
+		$('#ig88ch').on("change", checkcheckboxes);
+		$('#jangoch').on("change", checkcheckboxes);
+		$('#zamch').on("change", checkcheckboxes);
+		
+		setInterval(timer,130);
+
+		getLeft();
+		update();
+	});
+	</script>
+	</head>
+	<body>
+		<div id="top">
+      	<a href="http://www.swgoh.life/index.html" id="logoClick"></a>
+			<div id="ad">
+			<!-- Swgoh.life -->
+			<ins class="adsbygoogle swgoh_ad"
+			 style="display:block"
+			 data-ad-client="ca-pub-0176506581219642"
+			 data-ad-slot="9855290481"
+			 data-ad-format="horizontal"></ins>
+			<script>
+			//https://support.google.com/adsense/answer/6307124
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			</div>
+	</div>
+	<div id="middleSolo">
+		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Legendary Chewbacca Panic Farming Calculator</h1>
+
+		<p>This Legendary event requires any 5 Bounty Hunters, so pick which ones you want to farm, enter your stars/shards for each and we'll tell you if you really need to panic.</p>
+
+		<div class="half">
+			<form action="#" method="post">
+				<h3>How many days until the event starts?</h3>
+				<input type="text" id="days" name="days" value="20" size="3" /> (nobody knows. take a guess)<br /><br />
+
+				<h3>How many stars do you want?</h3>
+				<select id="rarity"><option value="7">7&#9733;</option><option value="6">6&#9733;</option><option value="5">5&#9733;</option></select><br /><br />
+
+				<h3>Who do you want to farm (pick 5)?</h3>
+
+				<h3><input type="checkbox" id="singch" /> Aurra Sing</h3>
+				<div class="sing_div" style="display:none">
+				Stars: <input type="text" id="sing_stars" name="sing_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="sing_sh">Shards: <input type="text" id="sing_shards" name="sing_shards" value="0" size="2" />/ <span id="sing_max">15</span><br /></span>
+				<br />
+				</div>
+
+				<h3><input type="checkbox" id="fettch" /> Boba Fett</h3>
+				<div class="fett_div" style="display:none">
+				Stars: <input type="text" id="fett_stars" name="fett_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="fett_sh">Shards: <input type="text" id="fett_shards" name="fett_shards" value="0" size="2" />/ <span id="fett_max">15</span><br /></span>
+				<br />
+				</div>
+
+				<h3><input type="checkbox" id="bosskch" /> Bossk</h3>
+				<div class="bossk_div" style="display:none">
+				Stars: <input type="text" id="bossk_stars" name="bossk_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="bossk_sh">Shards: <input type="text" id="bossk_shards" name="bossk_shards" value="0" size="2" />/ <span id="bossk_max">15</span><br /></span>
+				<br />
+				</div>
+
+				<h3><input type="checkbox" id="cadch" /> Cad Bane</h3>
+				<div class="cad_div" style="display:none">
+				Stars: <input type="text" id="cad_stars" name="cad_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="cad_sh">Shards: <input type="text" id="cad_shards" name="cad_shards" value="0" size="2" />/ <span id="cad_max">15</span><br /></span>
+				<br />
+				</div>
+
+				<h3><input type="checkbox" id="dengarch" /> Dengar</h3>
+				<div class="dengar_div" style="display:none">
+				Stars: <input type="text" id="dengar_stars" name="dengar_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="dengar_sh">Shards: <input type="text" id="dengar_shards" name="dengar_shards" value="0" size="2" />/ <span id="dengar_max">15</span><br /></span>
+				<br />
+				</div>
+
+				<h3><input type="checkbox" id="emboch" /> Embo</h3>
+				<div class="embo_div" style="display:none">
+				Stars: <input type="text" id="embo_stars" name="embo_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="embo_sh">Shards: <input type="text" id="embo_shards" name="embo_shards" value="0" size="2" />/ <span id="embo_max">15</span><br /></span>
+				<br />
+				</div>
+
+				<h3><input type="checkbox" id="greedoch" /> Greedo</h3>
+				<div class="greedo_div" style="display:none">
+				Stars: <input type="text" id="greedo_stars" name="greedo_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="greedo_sh">Shards: <input type="text" id="greedo_shards" name="greedo_shards" value="0" size="2" />/ <span id="greedo_max">15</span><br /></span>
+				<br />
+				</div>
+
+				<h3><input type="checkbox" id="ig88ch" /> IG-88</h3>
+				<div class="ig88_div" style="display:none">
+				Stars: <input type="text" id="ig88_stars" name="ig88_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="ig88_sh">Shards: <input type="text" id="ig88_shards" name="ig88_shards" value="0" size="2" />/ <span id="ig88_max">15</span><br /></span>
+				<br />
+				</div>
+
+				<h3><input type="checkbox" id="jangoch" /> Jango Fett</h3>
+				<div class="jango_div" style="display:none">
+				Stars: <input type="text" id="jango_stars" name="jango_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="jango_sh">Shards: <input type="text" id="jango_shards" name="jango_shards" value="0" size="2" />/ <span id="jango_max">15</span><br /></span>
+				<br />
+				</div>
+
+				<h3><input type="checkbox" id="zamch" /> Zam Wessell</h3>
+				<div class="zam_div" style="display:none">
+				Stars: <input type="text" id="zam_stars" name="zam_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="zam_sh">Shards: <input type="text" id="zam_shards" name="zam_shards" value="0" size="2" />/ <span id="zam_max">15</span><br /></span>
+				</div>
+				<br />
+				<input type="submit" id="button" value="Should I Panic?" class="btn" />
+				<br /><br />
+			</form>
+		</div>
+		<div class="half">
+			<div id="panic">
+				<b class="maybepanic">DON'T PANIC</b>
+			</div>
+			<div id="dontpanic">
+				<h3>Shards Needed:</h3>
+
+				<span class="sing_div"><span id="sing_total"></span> shards needed for Aurra Sing.<br /></span>
+				<span class="fett_div"><span id="fett_total"></span> shards needed for Boba Fett.<br /></span>
+				<span class="bossk_div"><span id="bossk_total"></span> shards needed for Bossk.<br /></span>
+				<span class="cad_div"><span id="cad_total"></span> shards needed for Cad Bane.<br /></span>
+				<span class="dengar_div"><span id="dengar_total"></span> shards needed for Dengar.<br /></span>
+				<span class="embo_div"><span id="embo_total"></span> shards needed for Embo.<br /></span>
+				<span class="greedo_div"><span id="greedo_total"></span> shards needed for Greedo.<br /></span>
+				<span class="ig88_div"><span id="ig88_total"></span> shards needed for IG-88.<br /></span>
+				<span class="jango_div"><span id="jango_total"></span> shards needed for Jango Fett.<br /></span>
+				<span class="zam_div"><span id="zam_total"></span> shards needed for Zam Wessell.<br /></span>
+
+				<span id="total_total"></span> total shards needed.<br />
+				<br />
+
+				<h3>Farming Required:</h3>
+				The event ends in <span id="ends"></span> days. You need to farm <span id="perday"></span> shards per day.<br /><br />
+
+
+				<!-- 
+				var a =  parseInt(update1('sing')); //??
+				var b =  parseInt(update1('fett')); //cantina store + 2 hard nodes (12,12) + fleet store
+				var c =  parseInt(update1('bossk')); //hard node (20)
+				var d =  parseInt(update1('cad')); //gw store
+				var e =  parseInt(update1('dengar')); //guild shipments
+				var f =  parseInt(update1('greedo')); //squad arena store
+				var g =  parseInt(update1('embo')); //???
+				var h =  parseInt(update1('ig88')); //squad arena store
+				var i =  parseInt(update1('jango')); //???
+				var j =  parseInt(update1('zam')); //fleet store + guild shipments
+ 				-->
+ 				<span class="sing_div">To get Aurra Sing, you will need to purchase shards from shipments until she becomes farmable.
+ 				<br /><br /></span>
+ 				<span class="fett_div">To get Boba Fett you need to get <b class="nowrap"><span id="fett_perday"></span> shards per day</b> from 2 hard nodes, the Cantina Battles Store and the Fleet Arena Store. <span id="hard_supb">You will need to refresh the hard node <span id="hard_supb_pd"></span> times per day.</span>
+				<br /><br /></span>
+				<span class="bossk_div">To get Bossk you need to get <b class="nowrap"><span id="bossk_perday"></span> shards per day</b> from hard nodes. <span id="hard_supc">You will need to refresh the hard node <span id="hard_supc_pd"></span> times per day.</span>
+				<br /><br /></span>
+				<span class="cad_div">To get Cad Bane you need to get <b class="nowrap"><span id="cad_perday"></span> shards per day</b> from the Galactic War Store. 
+				<br /><br /></span>
+				<span class="dengar_div">To get Dengar you need to get <b class="nowrap"><span id="dengar_perday"></span> shards per day</b> from the Guild Store.
+				<br /><br /></span>
+				<span class="greedo_div">To get Greedo you need to get <b class="nowrap"><span id="greedo_perday"></span> shards per day</b> from the Squad Arena Store.
+				<br /><br /></span>
+ 				<span class="embo_div">To get Embo, you will need to purchase shards from shipments until he becomes farmable.
+ 				<br /><br /></span>
+				<span class="ig88_div">To get IG-88 you need to get <b class="nowrap"><span id="ig88_perday"></span> shards per day</b> from the Squad Arena Store.
+				<br /><br /></span>
+ 				<span class="jango_div">To get Jango Fett, you will need to purchase shards from shipments until he becomes farmable.
+ 				<br /><br /></span>
+ 				<span class="zam_div">To get Zam Wessell you need to get <b class="nowrap"><span id="zam_perday"></span> shards per day</b> from the Guild Store and the Fleet Store.
+				<br /><br /></span>
+
+				This will require <span id="crystals"></span> crystals per day. <b class="nowrap"><span id="totalcrystals"></span> crystals total</b>.<br />
+				<br />
+				<b class="dontpanic" id="dont">DON'T PANIC</b>
+				<b class="panic" id="do">PANIC! PANIC!</b>
+				<b id="timeleft"></b>
+			</div>
+		</div>
+	
+		<br /><br /><hr /><ins class="adsbygoogle"
+		 style="display:block; text-align:center;"
+		 data-ad-format="fluid"
+		 data-ad-layout="in-article"
+		 data-ad-client="ca-pub-0176506581219642"
+		 data-ad-slot="6732943283"></ins>
+		<script>
+			 (adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+		
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-92624-14', 'auto');
+			ga('send', 'pageview');
+		</script>
+
+	</div>
+	<div id="foot">
+		<p>SWGOH.LIFE is not affiliated with EA, EA Capital Games, Disney or Lucasfilm LTD.</p>
+	</div>
+</body>
+</html>
