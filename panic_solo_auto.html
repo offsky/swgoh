@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SWGOH Tools - Panic Farming Calculator</title>
+	  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	  	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+		<meta charset="utf-8" />
+		<style>
+			p { max-width: 800px;}
+			.swgoh_ad {
+			position: absolute;
+			left:0;
+			top:90px;
+			width:0;
+			height:0px;
+			}
+			#ad {
+			width:100%;
+			height:60px;
+			}
+
+			h3 {
+				font-size: 1.2em;
+				margin-bottom: 4px;
+			}
+			@-webkit-keyframes blinker {
+				from,
+				49.9% {
+					opacity: 0;
+				}
+				50%,
+				to {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fader {
+				50% {
+					opacity: 0;
+				}
+			}
+			b.nowrap {
+				white-space: nowrap;
+			}
+			#panic {
+				text-align: center;
+			}
+			.dontpanic {
+				color: green;
+				font-size: 50px;
+			}
+			.panic {
+				color: red;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			.maybepanic {
+				color: black;
+				font-size: 50px;
+  				animation: blinker 1s linear infinite;
+			}
+			#dontpanic, #dont, #do {
+				display: none;
+			}
+
+			@media(min-width: 520px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 328px; height: 90px; } }
+			@media(min-width: 720px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 528px; height: 90px; } }
+			@media(min-width: 920px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 728px; height: 90px; } }
+			@media(min-width: 1200px) { #top { padding-bottom:0px} #ad { height:90px;} .swgoh_ad { left:inherit; top:0; right:0; width: 1000px; height: 90px; } }
+  	</style>
+  	<script src="https://use.fontawesome.com/c278e2b3ff.js"></script>
+  	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+  	<script src="jquery.js"></script>
+	<script>
+	$(document).ready(function() {
+
+		var storage = null;
+		if(window.localStorage) storage = window.localStorage;
+		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
+
+		var ally = fetch("ally");
+		if(ally) {
+			$('#ally').val(ally);
+		}
+		$('#ally').on("change",function(e) {
+			var ally = $('#ally').val();
+			store("ally",ally);
+		});
+
+		$('#ally_form').on("submit",getPlayer);
+
+		var data = [];
+
+		function getPlayer(e) {
+			e.preventDefault();
+
+			$.ajax({
+				url: "http://shard.swgoh.life/api/player.php?a=494-875-451",
+				dataType: "json"
+			})
+			.done(function(d) {
+				console.log(d);
+				data = d;
+				showPanic();
+			});
+		}
+
+		function findToon(name) {
+			for(var i=0;i<data.length;i++) {
+				if(name===data[i].toon) return data[i];
+			};
+		}
+
+		function showPanic() {
+			$('#step2').show();
+			$('#panic_pane').show();
+
+			var t1 = findToon("Qi'ra");
+			var t2 = findToon("Vandor Chewbacca");
+			var t3 = findToon("Enfys Nest");
+			var t4 = findToon("Young Han Solo");
+			var t5 = findToon("Young Lando Calrissian");
+			var t6 = findToon("L3-37");
+
+			appendToon(t1);
+			appendToon(t2);
+			appendToon(t3);
+			appendToon(t4);
+			appendToon(t5);
+			appendToon(t6);
+		}
+
+		function appendToon(t) {
+			$('#toons_here').append("<h3>"+t.toon+":</h3>");
+			$('#toons_here').append("Stars:"+t.stars+"/7</h3>");
+			$('#toons_here').append("Shards::</h3>");
+			
+
+		}
+
+		function store(key,val) {
+			storage.setItem(key,val);
+		}
+		function fetch(key) {
+			return storage.getItem(key);
+		}
+
+		function getLeft() {
+			var days = parseInt($("#days").val())+6;
+
+			left = new Date().setHours(24*days);
+			update();
+		}
+
+		function timer() {
+			var now = new Date().getTime();
+			var display = (left - now)/(1000*60);
+
+			$('#timeleft').html(display.toFixed(3)+" minutes left!");
+		}
+
+		function update() {
+			return;
+			var c =  parseInt(update1('chew'));
+			var h =  parseInt(update1('han'));
+			var total = c+h;
+
+			$('#total_total').html(total);
+
+			var days = parseInt($("#days").val())+6;
+			var perDay = total/days;
+
+			$('#ends').html(days+1);
+			$('#perday').html(Math.ceil(perDay*10)/10);
+
+			//free = 189 energy = 3.9 shards
+			//1 = 120 = 2.4 shards (100 crystals)
+			//2 = 120 = 2.4 shards (100 crystals)
+			//3 = 120 = 2.4 shards (100 crystals)
+			
+			// 16 shards per day avaialable from shipments at 320/4 shards (80/s)
+
+			//4 = 120 = 2.4 shards (200 crystals)
+			//5 = 120 = 2.4 shards (200 crystals)
+			//6 = 120 = 2.4 shards (400 crystals)
+			var refreshes = 0;
+			var shipments = 0;
+			var crystals = 0;
+			var special_total = 0;
+			$('#dont').hide();
+			$('#do').hide();
+			if(perDay<=3.9) { //free crystals
+				$('#dont').show();
+			} else if(perDay<=6.3) { //1 refresh
+				refreshes = 1;
+				crystals = 100;
+				$('#dont').show();
+			} else if(perDay<=8.7) { //2 refreshes
+				refreshes = 2;
+				crystals = 200;
+				$('#dont').show();
+			} else if(perDay<=11.1) { //3 refreshes
+				refreshes = 3;
+				crystals = 300;
+				$('#dont').show();
+			} else if(perDay<=13.5) { //4 refreshes
+				refreshes = 4;
+				crystals = 500;
+				$('#dont').show();
+			} else if(perDay<=15.1) { //3 refreshes + 1 shipment
+				refreshes = 3;
+				shipments = 1;
+				crystals = 620;
+				$('#do').show();
+			} else if(perDay<=15.9) { //5 refreshes
+				refreshes = 5;
+				crystals = 700;
+				$('#do').show();
+			} else if(perDay<=17.5) { //4 refreshes + 1 shipment
+				refreshes = 4;
+				shipments = 1;
+				crystals = 820;
+				$('#do').show();
+			} else if(perDay<=19.1) { //3 refreshes + 2 shipments
+				refreshes = 3;
+				shipments = 2;
+				crystals = 940;
+				$('#do').show();
+			} else if(perDay<=19.9) { //5 refreshes + 1 shipment
+				refreshes = 5;
+				shipments = 1;
+				crystals = 1020;
+				$('#do').show();
+			} else if(perDay<=21.5) { //4 refreshes + 2 shipment
+				refreshes = 4;
+				shipments = 2;
+				crystals = 1140;
+				$('#do').show();
+			} else if(perDay<=23.1) { //3 refreshes + 3 shipments
+				refreshes = 3;
+				shipments = 3;
+				crystals = 1260;
+				$('#do').show();
+			} else if(perDay<=23.9) { //5 refreshes + 2 shipments
+				refreshes = 5;
+				shipments = 2;
+				crystals = 1340;
+				$('#do').show();
+			} else if(perDay<=25.5) { //4 refreshes + 3 shipments
+				refreshes = 4;
+				shipments = 3;
+				crystals = 1460;
+				$('#do').show();
+			} else if(perDay<=27.1) { //3 refreshes + 4 shipments
+				refreshes = 3;
+				shipments = 4;
+				crystals = 1580;
+				$('#do').show();
+			} else if(perDay<=27.9) { //5 refreshes + 3 shipments
+				refreshes = 5;
+				shipments = 3;
+				crystals = 1660;
+				$('#do').show();
+			} else if(perDay<=29.5) { //4 refreshes + 4 shipments
+				refreshes = 4;
+				shipments = 4;
+				crystals = 1780;
+				$('#do').show();
+			} else if(perDay<=31.9) { //5 refreshes + 4 shipments
+				refreshes = 5;
+				shipments = 4;
+				crystals = 1980;
+				$('#do').show();
+			} else if(perDay<=34.3) { //6 refreshes + 4 shipments
+				refreshes = 6;
+				shipments = 4;
+				crystals = 2380;
+				$('#do').show();
+			} else if(perDay<=36.7) { //7 refreshes + 4 shipments
+				refreshes = 7;
+				shipments = 4;
+				crystals = 2780;
+				$('#do').show();
+			} else {
+				refreshes = "7+";
+				shipments = 4;
+				crystals = "2780+";
+				special_total = 2780*days;
+				$('#do').show();
+			}
+
+			$("#refreshes").html(refreshes);
+			$("#shipments").html(shipments);
+			$("#crystals").html(crystals);
+			$("#totalcrystals").html(crystals*days);
+			if(refreshes=="7+") $("#totalcrystals").html(special_total+"+");
+		}
+
+		function update1(who) {
+			var stars = parseInt($('#'+who+'_stars').val());
+			var shards = parseInt($('#'+who+'_shards').val());
+			if(isNaN(stars)) stars = 0;
+			if(isNaN(shards)) shards = 0;
+
+			if(stars>=7) {
+				$("#"+who+"_sh").hide();
+			} else {
+				$("#"+who+"_sh").show();
+			}
+		
+			var remain7 = 0;
+			if(stars==7) {
+				remain7 = 0;
+			} else if(stars==6) {
+				$('#'+who+'_max').html("100");
+				remain7 = 100-shards;
+			} else if(stars==5) {
+				$('#'+who+'_max').html("85");
+				remain7 = 185-shards;
+			} else if(stars==4) {
+				$('#'+who+'_max').html("65");
+				remain7 = 250-shards;
+			} else if(stars==3) {
+				$('#'+who+'_max').html("30");
+				remain7 = 280-shards;
+			} else if(stars==2) {
+				$('#'+who+'_max').html("25");
+				remain7 = 305-shards;
+			} else if(stars==1) {
+				$('#'+who+'_max').html("15");
+				remain7 = 320-shards;
+			} else {
+				$('#'+who+'_max').html("10");
+				remain7 = 330-shards;
+			}
+
+			$('#'+who+'_total').html(remain7);
+			return remain7;
+		}
+
+		function panic() {
+			update();
+
+			$('#panic').hide();
+			$('#dontpanic').show();
+
+			return false;
+		}
+
+		
+		$('#days').on("change", getLeft);
+		
+		var now = new Date().getTime();
+		var days = 1513299681000-now;
+		days = Math.ceil(days/(86400000));
+		//$('#days').val(days);
+		//enable this if we know the actual date
+		
+		setInterval(timer,130);
+
+		getLeft();
+		update();
+	});
+	</script>
+	</head>
+	<body>
+		<div id="top">
+      	<a href="http://www.swgoh.life/index.html" id="logoClick"></a>
+			<div id="ad">
+			<!-- Swgoh.life -->
+			<ins class="adsbygoogle swgoh_ad"
+			 style="display:block"
+			 data-ad-client="ca-pub-0176506581219642"
+			 data-ad-slot="9855290481"
+			 data-ad-format="horizontal"></ins>
+			<script>
+			//https://support.google.com/adsense/answer/6307124
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			</div>
+	</div>
+	<div id="middleSolo">
+		<h1><a href="http://www.swgoh.life/index.html">More Tools</a> &gt; Panic Farming Calculator</h1>
+
+		<p>This tool will inspect your account and tell you if you need to panic. To find your ally code, open the game to the main screen and tap on your name in the upper left corner. Then look below your name for a 9 digit number.</p>
+		
+		<div class="half">
+			<form action="#" id="ally_form" method="get">
+				<b>What is your SWGOH Ally Code:</b><br />
+				<input type="text" id="ally" name="ally" placeholder="123-456-789" /> <input type="submit" id="ally_btn" value="ok" />
+			</form>
+			<div id="step2" style="display:none">
+				<h3>How many days until the event starts?</h3>
+				<input type="text" id="days" name="days" value="20" size="3" /> (Take your guess. Nobody knows)<br /><br />
+	
+				<div id="toons_here">
+
+				</div>
+
+			</div>
+		
+		</div>
+		<div class="half" style="display:none" id="panic_pane">
+			<div id="panic">
+				<b class="maybepanic">DON'T PANIC</b>
+			</div>
+			<div id="dontpanic">
+				<h3>Shards Needed:</h3>
+
+				<span id="chew_total"></span> shards needed for Veteran Smuggler Chewbacca.<br />
+				<span id="han_total"></span> shards needed for Veteran Smuggler Han Solo.<br />
+				<span id="total_total"></span> total shards needed.<br />
+				<br />
+
+				<h3>Farming Required:</h3>
+
+				The event ends in <span id="ends"></span> days. You need to farm <span id="perday"></span> shards per day.<br /><br />
+				You need to do <b class="nowrap"><span id="refreshes"></span> cantina refreshes</b> every day and purchase
+				<b class="nowrap"><span id="shipments"></span> shipments</b> (4 shards for 320 crystals) each day.<br />
+				<br />
+				This will require <span id="crystals"></span> crystals per day. <b class="nowrap"><span id="totalcrystals"></span> crystals total</b>.<br />
+				<br />
+				<b class="dontpanic" id="dont">DON'T PANIC</b>
+				<b class="panic" id="do">OK, PANIC</b>
+				<b id="timeleft"></b>
+			</div>
+		</div>
+	
+		<br /><br /><hr /><ins class="adsbygoogle"
+		 style="display:block; text-align:center;"
+		 data-ad-format="fluid"
+		 data-ad-layout="in-article"
+		 data-ad-client="ca-pub-0176506581219642"
+		 data-ad-slot="6732943283"></ins>
+		<script>
+			 (adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+		
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-92624-14', 'auto');
+			ga('send', 'pageview');
+		</script>
+
+	</div>
+	<div id="foot">
+		<p>SWGOH.LIFE is not affiliated with EA, EA Capital Games, Disney or Lucasfilm LTD.</p>
+	</div>
+</body>
+</html>

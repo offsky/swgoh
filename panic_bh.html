@@ -122,8 +122,6 @@
 			var i = 0;
 			var j = 0;
 
-			
-
 			if($('#singch').is(":checked")) a =  parseInt(update1('sing')); //??
 			if($('#fettch').is(":checked")) b =  parseInt(update1('fett')); //cantina store + 2 hard nodes (12,12) + fleet store
 			if($('#bosskch').is(":checked")) c =  parseInt(update1('bossk')); //hard node (20)
@@ -148,6 +146,19 @@
 			$('#dont').hide();
 			$('#do').hide();
 			var crystals = 0;
+
+			//SING UNFARMABLE
+			if($('#singch').is(":checked")) {
+				crystals += Math.ceil(a*80/days);
+			}
+			//EMBO UNFARMABLE
+			if($('#emboch').is(":checked")) {
+				crystals += Math.ceil(g*80/days);
+			}
+			//JANGO UNFARMABLE
+			if($('#jangoch').is(":checked")) {
+				crystals += Math.ceil(i*80/days);
+			}
 
 			//DENGAR GUILD SHIPMENTS
 			if($('#dengarch').is(":checked")) {
