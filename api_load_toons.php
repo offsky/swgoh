@@ -20,11 +20,16 @@ try {
     //https://api.swgoh.help/swgoh
     $swgoh = new SwgohHelp($swgohHelpKeys);
     
-    $data = $swgoh->fetchData('unitsList',"eng_us",array("rarity"=>7),array("id"=>1,"nameKey"=>1,"combatType"=>1));
+    $db->query("DELETE FROM swgoh_toons2");
+
+    $data = $swgoh->fetchData('unitsList',"eng_us",array("rarity"=>7,"obtainable"=>true,"obtainableTime"=>0),array("id"=>1,"nameKey"=>1,"combatType"=>1,"obtainable"=>1,"maxRarity"=>1,"forceAlignment"=>1,"obtainableTime"=>1));
     print_r($data);
     foreach($data as $toon) {
         $id = explode(":", $toon->id);
-        $db->query("REPLACE INTO swgoh_toons2(id,name,type) VALUES('".$db->str($id[0])."','".$db->str($toon->nameKey)."',".intval($toon->combatType).")");
+        if($toon->obtainable && $toon->maxRarity==7 && $toon->obtainableTime==0) {
+            $db->query("REPLACE INTO swgoh_toons2(id,name,type) VALUES('".$db->str($id[0])."','".$db->str($toon->nameKey)."',".intval($toon->combatType).")");
+            echo $toon->nameKey."<br />";
+        }
     }
 
 //TODO: Get farming locations

@@ -295,10 +295,15 @@ a.seg:hover  {
 			<br /><br />
 			<b>Pick up to <?=$numberOftoons?> characters that you want to work on:</b><br />
 			<? 
-				$options = "";
+				$ships = false;
+				$options = "<option disabled>-- TOONS --</option>";
 				$rs = $db->query("SELECT id,name,type FROM swgoh_toons2 order by type asc, name asc");
 				while($row = $db->getNext($rs,1)) {
-					$options .= "<option value='".$row['id']."'>".($row['type']==2?"SHIP: ":"TOON: ").$row['name']."</option>";
+					if($row['type']==2 && !$ships) {
+						$ships = true;
+						$options .= "<option disabled> </option><option disabled>-- SHIPS --</option>";
+					}
+					$options .= "<option value='".$row['id']."'>".$row['name']."</option>";
 				}
 
 				for($i=1;$i<=$numberOftoons;$i++) { 
