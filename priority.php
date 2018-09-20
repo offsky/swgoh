@@ -234,6 +234,8 @@ a.seg:hover  {
 
 		var url = "";
 		<?
+		//http://docker.experiment.com:8090/swgoh/api/guild.php
+		//http://shard.swgoh.life/api/guild.php
 		if(!empty($ally) && $guild) {
 			echo "url='http://shard.swgoh.life/api/guild.php?a=".$ally."';";
 		} else if(empty($ally) && $guild && !empty($_GET['g'])) {
@@ -253,6 +255,8 @@ a.seg:hover  {
 					$('#refresh').html("New data availble. Refresh the page to see it.");
 				} else {
 					$('#refresh').hide();
+					$('#sync_notice').hide();
+					$('#sync_error').show();
 				}
 			});
 		} else {
@@ -428,7 +432,7 @@ a.seg:hover  {
 
 				<? 
 				if(empty($roster)) {
-					echo "<br /><br />We were unable to fetch your guild's account. Sorry. Please check your ally code.";
+					echo "<br /><br /><span id='sync_notice'>We are fetching your data. Please refresh the page when it's ready (see above). It may take a full minute.</span><span id='sync_error' style='display:none'>We were unable to fetch your guild's account. Sorry. Please check your ally code.</span>";
 				}
 				?>
 
