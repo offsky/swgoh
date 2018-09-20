@@ -89,6 +89,15 @@
 			});
 		}
 
+		function cacheCheck(name) {
+			var val = fetch(name);
+			if(val) $('#'+name).attr('checked','checked');
+			checkcheckboxes();
+			$('#'+name).on("change",function(e) {
+				store(name,$('#'+name).attr('checked'));
+			});
+		}
+
 		function store(key,val) {
 			storage.setItem(key,val);
 		}
@@ -410,6 +419,17 @@
 		cacheForm("zam_stars");
 		cacheForm("zam_shards");
 
+		cacheCheck("singch");
+		cacheCheck("fettch");
+		cacheCheck("bosskch");
+		cacheCheck("cadch");
+		cacheCheck("dengarch");
+		cacheCheck("greedoch");
+		cacheCheck("emboch");
+		cacheCheck("ig88ch");
+		cacheCheck("jangoch");
+		cacheCheck("zamch");
+
 		$("#sing_stars").on("change", update);
 		$("#sing_shards").on("change", update);
 		$("#fett_stars").on("change", update);
@@ -489,7 +509,7 @@
 				<h3>How many stars do you want?</h3>
 				<select id="rarity"><option value="7">7&#9733;</option><option value="6">6&#9733;</option><option value="5">5&#9733;</option></select><br /><br />
 
-				<h3>Who do you want to farm (pick 5)?</h3>
+				<h3>Who do you want to farm?</h3>
 
 				<h3><input type="checkbox" id="singch" /> Aurra Sing</h3>
 				<div class="sing_div" style="display:none">
