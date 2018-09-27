@@ -113,11 +113,14 @@
 		function update() {
 			var c =  parseInt(update1('bindo')); //hard node
 			var n =  parseInt(update1('shan')); //hard nodes
+			var m =  parseInt(update1('mission')); //cantina nodes (16)
+			var t =  parseInt(update1('t3m4')); //cantina nodes (12)
+			var z =  parseInt(update1('zaal')); //hard nodes
 
 			var crystals = 0;
 			var shipments = 0;
 
-			var total = c+n;
+			var total = c+n+m+t+z;
 			$('#total_total').html(total);
 
 			var days = parseInt($("#days").val())+6;
@@ -130,15 +133,121 @@
 			$('#dont').hide();
 			$('#do').hide();
 
+			//CANTINA
+			//free = 189 energy = 3.9 shards
+			//1 = 120 = 2.4 shards (100 crystals)
+			//2 = 120 = 2.4 shards (100 crystals)
+			//3 = 120 = 2.4 shards (100 crystals)
+			
+			// 16 shards per day avaialable from shipments at 320/4 shards (80/s)
+
+			//4 = 120 = 2.4 shards (200 crystals)
+			//5 = 120 = 2.4 shards (200 crystals)
+			//6 = 120 = 2.4 shards (400 crystals)
+			var cantinaTotal = m+t;
+			var cantinaPerDay = cantinaTotal/days;
+			var refreshes = 0;
+			var shipments = 0;
+			var crystals = 0;
+			var special_total = 0;
+			$('#dont').hide();
+			$('#do').hide();
+			if(cantinaPerDay<=3.9) { //free crystals
+				refreshes = 0;
+				crystals = 0;
+			} else if(cantinaPerDay<=6.3) { //1 refresh
+				refreshes = 1;
+				crystals = 100;
+			} else if(cantinaPerDay<=8.7) { //2 refreshes
+				refreshes = 2;
+				crystals = 200;
+			} else if(cantinaPerDay<=11.1) { //3 refreshes
+				refreshes = 3;
+				crystals = 300;
+			} else if(cantinaPerDay<=13.5) { //4 refreshes
+				refreshes = 4;
+				crystals = 500;
+			} else if(cantinaPerDay<=15.1) { //3 refreshes + 1 shipment
+				refreshes = 3;
+				shipments = 1;
+				crystals = 620;
+			} else if(cantinaPerDay<=15.9) { //5 refreshes
+				refreshes = 5;
+				crystals = 700;
+			} else if(cantinaPerDay<=17.5) { //4 refreshes + 1 shipment
+				refreshes = 4;
+				shipments = 1;
+				crystals = 820;
+			} else if(cantinaPerDay<=19.1) { //3 refreshes + 2 shipments
+				refreshes = 3;
+				shipments = 2;
+				crystals = 940;
+			} else if(cantinaPerDay<=19.9) { //5 refreshes + 1 shipment
+				refreshes = 5;
+				shipments = 1;
+				crystals = 1020;
+			} else if(cantinaPerDay<=21.5) { //4 refreshes + 2 shipment
+				refreshes = 4;
+				shipments = 2;
+				crystals = 1140;
+			} else if(cantinaPerDay<=23.1) { //3 refreshes + 3 shipments
+				refreshes = 3;
+				shipments = 3;
+				crystals = 1260;
+			} else if(cantinaPerDay<=23.9) { //5 refreshes + 2 shipments
+				refreshes = 5;
+				shipments = 2;
+				crystals = 1340;
+			} else if(cantinaPerDay<=25.5) { //4 refreshes + 3 shipments
+				refreshes = 4;
+				shipments = 3;
+				crystals = 1460;
+			} else if(cantinaPerDay<=27.1) { //3 refreshes + 4 shipments
+				refreshes = 3;
+				shipments = 4;
+				crystals = 1580;
+			} else if(cantinaPerDay<=27.9) { //5 refreshes + 3 shipments
+				refreshes = 5;
+				shipments = 3;
+				crystals = 1660;
+			} else if(cantinaPerDay<=29.5) { //4 refreshes + 4 shipments
+				refreshes = 4;
+				shipments = 4;
+				crystals = 1780;
+			} else if(cantinaPerDay<=31.9) { //5 refreshes + 4 shipments
+				refreshes = 5;
+				shipments = 4;
+				crystals = 1980;
+			} else if(cantinaPerDay<=34.3) { //6 refreshes + 4 shipments
+				refreshes = 6;
+				shipments = 4;
+				crystals = 2380;
+			} else if(cantinaPerDay<=36.7) { //7 refreshes + 4 shipments
+				refreshes = 7;
+				shipments = 4;
+				crystals = 2780;
+			} else {
+				refreshes = "7+";
+				shipments = 4;
+				crystals = "2780+";
+				special_total = 2780*days;
+			}
+			$("#cantinaPerDay").html(Math.ceil(cantinaPerDay*10)/10);
+			$("#refreshes").html(refreshes);
+			$("#shipments").html(shipments);
+
 			//HARD NODES
-			var hardPerDay = (c+n)/days;
+			var hardPerDay = (c+n+z)/days;
 			var cpd = c/days;
 			var npd = n/days;
+			var zpd = z/days;
 			var shardsPerDayPossible = 16*.333;
 			$("#hardPerDayc").html(Math.ceil(cpd*10)/10);
 			$("#hardPerDayn").html(Math.ceil(npd*10)/10);
+			$("#hardPerDayz").html(Math.ceil(zpd*10)/10);
 			$('#hard_supc').hide();
 			$('#hard_supn').hide();
+			$('#hard_supz').hide();
 			if(cpd>shardsPerDayPossible) {
 				var extraNeeded = c-(shardsPerDayPossible*days);
 				shardsPerDayPossible = 8*.333;
@@ -220,11 +329,54 @@
 				$('#hard_supn').show();
 			}
 
+			shardsPerDayPossible = 16*.333;
+			if(zpd>shardsPerDayPossible) {
+				var extraNeeded = z-(shardsPerDayPossible*days);
+				shardsPerDayPossible = 8*.333;
+				//one refresh costs 25
+				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+					crystals += 25;
+					$('#hard_supz_pd').html(1);
+					extraNeeded=0;
+				} else if(extraNeeded>0) {
+					crystals += 25;
+					extraNeeded -= days*shardsPerDayPossible;
+				}
+				//next refresh costs 50 plus 50 for the energy (guess)
+				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+					crystals += 50+50;
+					$('#hard_supz_pd').html(2);
+					extraNeeded=0;
+				} else if(extraNeeded>0) {
+					crystals += 50+50;
+					extraNeeded -= days*shardsPerDayPossible;
+				}
+				//next refresh costs 100 plus 50 for the energy (guess)
+				if(extraNeeded>0 && extraNeeded<shardsPerDayPossible*days){
+					crystals += 100+50;
+					$('#hard_supz_pd').html(3);
+					extraNeeded=0;
+				} else if(extraNeeded>0) {
+					crystals += 100+50;
+					extraNeeded -= days*shardsPerDayPossible;
+				}
+				//still need more from shipments
+				if(extraNeeded>0) {
+					$('#hard_supz_ship').html(Math.ceil(extraNeeded/days));
+					crystals += Math.round(extraNeeded*80/days);
+				} else {
+					$('#hard_supz_ship').html(0);
+				}
+				$('#hard_supz').show();
+			}
+
 			if(crystals>500 || panic) $('#do').show();
 			else $('#dont').show();
 
 			$("#crystals").html(crystals);
 			$("#totalcrystals").html(crystals*days);
+			if(refreshes=="7+") $("#totalcrystals").html(special_total+"+");
+
 		}
 
 		function update1(who) {
@@ -288,12 +440,23 @@
 		cacheForm("bindo_shards");
 		cacheForm("shan_stars");
 		cacheForm("shan_shards");
+		cacheForm("mission_stars");
+		cacheForm("mission_shards");
+		cacheForm("t3m4_stars");
+		cacheForm("t3m4_shards");
+		cacheForm("zaal_stars");
+		cacheForm("zaal_shards");
 
 		$("#bindo_stars").on("change", update);
 		$("#bindo_shards").on("change", update);
 		$("#shan_stars").on("change", update);
 		$('#shan_shards').on("change", update);
-		
+		$("#mission_stars").on("change", update);
+		$('#mission_shards').on("change", update);
+		$("#t3m4_stars").on("change", update);
+		$('#t3m4_shards').on("change", update);
+		$("#zaal_stars").on("change", update);
+		$('#zaal_shards').on("change", update);
 
 		$('#rarity').on("change", update);
 		$('#days').on("change", getLeft);
@@ -337,7 +500,7 @@
 		<div class="half">
 			<form action="#" method="post">
 				<h3>How many days until the event starts?</h3>
-				<input type="text" id="days" name="days" value="20" size="3" /> (nobody knows. take a guess)<br /><br />
+				<input type="text" id="days" name="days" value="30" size="3" /> (nobody knows. take a guess)<br /><br />
 
 				<h3>How many stars do you want?</h3>
 				<select id="rarity"><option value="7">7&#9733;</option><option value="6">6&#9733;</option><option value="5">5&#9733;</option></select><br /><br />
@@ -350,6 +513,21 @@
 				<h3>Jolee Bindo:</h3>
 				Stars: <input type="text" id="bindo_stars" name="bindo_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
 				<span id="bindo_sh">Shards: <input type="text" id="bindo_shards" name="bindo_shards" value="0" size="2" />/ <span id="bindo_max">15</span><br /></span>
+				<br />
+
+				<h3>Mission Vao:</h3>
+				Stars: <input type="text" id="mission_stars" name="mission_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="mission_sh">Shards: <input type="text" id="mission_shards" name="mission_shards" value="0" size="2" />/ <span id="mission_max">15</span><br /></span>
+				<br />
+
+				<h3>T3-M4:</h3>
+				Stars: <input type="text" id="t3m4_stars" name="t3m4_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="t3m4_sh">Shards: <input type="text" id="t3m4_shards" name="t3m4_shards" value="0" size="2" />/ <span id="t3m4_max">15</span><br /></span>
+				<br />
+
+				<h3>Zaalbar:</h3>
+				Stars: <input type="text" id="zaal_stars" name="zaal_stars" value="1" size="2" />/ 7 &nbsp;&nbsp;
+				<span id="zaal_sh">Shards: <input type="text" id="zaal_shards" name="zaal_shards" value="0" size="2" />/ <span id="zaal_max">15</span><br /></span>
 				<br />
 	
 				<input type="submit" id="button" value="Should I Panic?" class="btn" />
@@ -365,6 +543,9 @@
 
 				<span id="shan_total"></span> shards needed for Bastila Shan.<br />
 				<span id="bindo_total"></span> shards needed for Jolee Bindo.<br />
+				<span id="mission_total"></span> shards needed for Mission Vao.<br />
+				<span id="t3m4_total"></span> shards needed for T3-M4.<br />
+				<span id="zaal_total"></span> shards needed for Zaalbar.<br />
 				<br />
 
 				<h3>Farming Required:</h3>
@@ -375,6 +556,12 @@
 				<br /><br />
 				To get Jolee Bindo you need to get <b class="nowrap"><span id="hardPerDayc"></span> shards per day</b> from hard nodes and shipments. <span id="hard_supc">You will need to refresh the hard node <span id="hard_supc_pd"></span> times per day and purchase <span id="hard_supc_ship"></span> shards per day from shipments.</span>
 				<br /><br />
+				To get Zaalbar you need to get <b class="nowrap"><span id="hardPerDayz"></span> shards per day</b> from hard nodes and shipments. <span id="hard_supz">You will need to refresh the hard node <span id="hard_supz_pd"></span> times per day and purchase <span id="hard_supz_ship"></span> shards per day from shipments.</span>
+				<br /><br />
+				To get Mission Vao and T3-M4 you need to get  <b class="nowrap"><span id="cantinaPerDay"></span> shards per day</b> from cantina. Do <b class="nowrap"><span id="refreshes"></span> cantina refreshes</b> every day and purchase
+				<b class="nowrap"><span id="shipments"></span> shipments</b> (4 shards for 320 crystals) each day.<br />
+				<br /><br />
+
 				This will require <span id="crystals"></span> crystals per day. <b class="nowrap"><span id="totalcrystals"></span> crystals total</b>.<br />
 				<br />
 				<b class="dontpanic" id="dont">DON'T PANIC</b>
