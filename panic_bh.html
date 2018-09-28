@@ -455,9 +455,9 @@
 		$('#days').on("change", getLeft);
 		
 		var now = new Date().getTime();
-		var days = 1513299681000-now;
+		var days = 1538006400000-now;
 		days = Math.ceil(days/(86400000));
-		//$('#days').val(days);
+		$('#days').val(days);
 		
 		$('#button').on("click", panic);
 
@@ -504,6 +504,7 @@
 		<div class="half">
 			<form action="#" method="post">
 				<h3>How many days until the event starts?</h3>
+				
 				<input type="text" id="days" name="days" value="0" size="3" /><br /><br />
 
 				<h3>How many stars do you want?</h3>
