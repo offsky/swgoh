@@ -229,7 +229,7 @@
 			} else {
 				refreshes = "7+";
 				shipments = 4;
-				crystals = "2780+";
+				crystals = 3000;
 				special_total = 2780*days;
 			}
 			$("#cantinaPerDay").html(Math.ceil(cantinaPerDay*10)/10);
@@ -376,6 +376,7 @@
 			$("#crystals").html(crystals);
 			$("#totalcrystals").html(crystals*days);
 			if(refreshes=="7+") $("#totalcrystals").html(special_total+"+");
+			if(refreshes=="7+") $("#crystals").html(crystals+"+");
 
 		}
 
