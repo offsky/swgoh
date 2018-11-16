@@ -172,6 +172,11 @@ a.seg:hover  {
 			return storage.getItem(key);
 		}
 
+		$('#clickOnce').on("click", function() {
+			$('#clickOnce').hide();
+			$('#clickOnceWarning').show();
+		});
+
 	});
 	</script>
 	</head>
@@ -200,7 +205,7 @@ a.seg:hover  {
 		
 			<form action="<?=$self?>" method="get">
 			<b>What is your SWGOH Ally Code:</b><br />
-			<input type="text" id="ally" name="ally" placeholder="123-456-789" /> <input type="submit" value="ok" />
+			<input type="text" id="ally" name="ally" placeholder="123-456-789" /> <input type="submit" value="ok" id="clickOnce" /><span id="clickOnceWarning" style="display:none">Please Wait</span>
 			</form>
 
 		<? } else if(empty($_GET['dark'])) { ?>

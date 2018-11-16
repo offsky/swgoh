@@ -120,6 +120,11 @@ if(!empty($ally)) {
 		if(window.localStorage) storage = window.localStorage;
 		else if(window.globalStorage) storage = window.globalStorage[location.hostname];
 
+		$('#clickOnce').on("click", function() {
+			$('#clickOnce').hide();
+			$('#clickOnceWarning').show();
+		});
+
 		var toonData = <?=json_encode($data)?>;
 		
 		<?
@@ -428,7 +433,7 @@ if(!empty($ally)) {
 
 			<form action="<?=$self?>" method="get">
 			<b>What is your SWGOH Ally Code:</b><br />
-			<input type="text" id="ally" name="ally" placeholder="123-456-789" /> <input type="submit" value="ok" />
+			<input type="text" id="ally" name="ally" placeholder="123-456-789" /> <input type="submit" value="ok" id="clickOnce" /><span id="clickOnceWarning" style="display:none">Please Wait</span>
 			</form>
 
 		<? } else { ?>
