@@ -233,30 +233,76 @@ a.seg:hover  {
 		}
 
 		var url = "";
+		var url2 = "";
 		<?
 		//http://docker.experiment.com:8090/swgoh/api/guild.php
 		//http://shard.swgoh.life/api/guild.php
+		$url = "http://docker.experiment.com:8090/swgoh/api/guild.php";
 		if(!empty($ally) && $guild) {
-			echo "url='http://shard.swgoh.life/api/guild.php?a=".$ally."';";
+			echo "url='".$url."?a=".$ally."';\n";
+			echo "url2='".$url."?gg=".$ally."';\n";
 		} else if(empty($ally) && $guild && !empty($_GET['g'])) {
 			$guild_id = intval($_GET['g']);
-			echo "url='http://shard.swgoh.life/api/guild.php?g=".$guild_id."';";
+			echo "url='".$url."?g=".$guild_id."';\n";
 		}
 		?>
+
+		function backupFetch(url) {
+			if(url) {
+				$.ajax({
+					url: url,
+					dataType: "json",
+					timeout: 30000
+				})
+				.done(function(d) {
+					if(d==1) {
+						$('#refresh').html("New data availble. Refresh the page to see it.");
+					} else {
+						$('#refresh').hide();
+						$('#sync_notice').hide();
+						$('#sync_error').show();
+					}
+				}).fail(function(d) {
+					$('#refresh').hide();
+					$('#sync_notice').hide();
+
+					if(d.statusText=="timeout") {
+						$('#sync_timeout').show();
+					} else {
+						$('#sync_error').show();
+					}
+				});
+			} else {
+				$('#refresh').hide();
+			}
+		}
 
 		if(url) {
 			$.ajax({
 				url: url,
-				dataType: "json"
+				dataType: "json",
+				timeout: 30000
 			})
 			.done(function(d) {
-				console.log(d);
 				if(d==1) {
 					$('#refresh').html("New data availble. Refresh the page to see it.");
 				} else {
 					$('#refresh').hide();
 					$('#sync_notice').hide();
 					$('#sync_error').show();
+				}
+			}).fail(function(d) {
+				if(url2) {
+					backupFetch(url2);
+				} else {
+					$('#refresh').hide();
+					$('#sync_notice').hide();
+
+					if(d.statusText=="timeout") {
+						$('#sync_timeout').show();
+					} else {
+						$('#sync_error').show();
+					}
 				}
 			});
 		} else {
@@ -397,8 +443,10 @@ a.seg:hover  {
 					if(isset($perday[$row['toon']])) $per = $perday[$row['toon']];
 					printOneToonFarm($row,7,11,$per);
 				}
-				if(empty($count)) {
+				if(empty($count) && empty($username)) {
 					echo "We were unable to fetch your account. Sorry. Please check your ally code.";
+				} else if(empty($count)) {
+					echo "You do not have any of the selected characters.";
 				}
 			} else { 
 				
@@ -437,7 +485,7 @@ a.seg:hover  {
 
 				<? 
 				if(empty($roster)) {
-					echo "<br /><br /><span id='sync_notice'>We are fetching your data. Please refresh the page when it's ready (see above). It may take a full minute.</span><span id='sync_error' style='display:none'>We were unable to fetch your guild's account. Sorry. Please check your ally code.</span>";
+					echo "<br /><br /><span id='sync_notice'>We are fetching your data. Please refresh the page when it's ready (see above). It may take a full minute.</span><span id='sync_error' style='display:none'>We were unable to fetch your guild's account. Sorry. Please check your ally code.</span><span id='sync_timeout' style='display:none'>Sorry, the servers are overloaded. Please try again later.</span>";
 				}
 				?>
 
