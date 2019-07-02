@@ -9,7 +9,7 @@ if(strpos($_SERVER['SERVER_NAME'], "docker")===false) {
 	require_once("../../vars.php");
 	require_once("../libs.php");
 	require_once("../api_swgoh_help3.php");
-	$db = new mymysqli("toodledo");
+	$db = new mymysqli("swgoh");
 	error_reporting(E_ALL);
 }
 

@@ -7,7 +7,7 @@ if(strpos($_SERVER['SERVER_NAME'], "docker")===false) {
 } else {
 	require_once("../../vars.php");
 	require_once("../libs.php");
-	$db = new mymysqli("toodledo");
+	$db = new mymysqli("swgoh");
 	error_reporting(E_ALL);
 }
 $self = explode("/",$_SERVER['PHP_SELF']);
